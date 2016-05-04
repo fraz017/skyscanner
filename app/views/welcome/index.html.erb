@@ -1,0 +1,155 @@
+<section class="content">
+  <div class="row">
+    <div class="col-md-12">
+      <!-- Horizontal Form -->
+      <div class="box box-info">
+        <div class="box-header with-border">
+          <h3 class="box-title">Flight Search</h3>
+          <form action="/live_prices" method="post" class="form-horizontal">
+            <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %> 
+            <input type="hidden" name="flight[country]" value="<%= cookies[:country] %>">
+            <input type="hidden" name="flight[currency]" value="<%= cookies[:currency] %>">
+            <input type="hidden" name="flight[locale]" value="en-US">
+            <input type="hidden" name="flight[originplace]" class="flight_origin">
+            <input type="hidden" name="flight[destinationplace]" class="flight_dest">
+            <div class="col-md-6">
+              <div class="box-body">
+                <div class="form-group">
+                  <label for="from" class="col-sm-2 control-label">From</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="from" placeholder="From">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="input-daterange" id="datepicker" >
+                    <label for="depart" class="col-sm-2 control-label">Depart</label>
+                    <div class="col-sm-4">
+                      <input type="text" class="form-control" name="flight[outbounddate]" />
+                    </div>
+                    <label for="return" class="col-sm-2 control-label">Return</label>
+                    <div class="col-sm-4">
+                      <input type="text" class="form-control" name="flight[inbounddate]" />
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="children" class="col-sm-2 control-label">Children (under 12)</label>
+                  <div class="col-sm-4">
+                    <select name="flight[children]" class="form-control">
+                      <option value="0">0</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                    </select>
+                  </div>
+                  <label for="infants" class="col-sm-2 control-label">Infants (under 2)</label>
+                  <div class="col-sm-4">
+                    <select name="flight[infants]" class="form-control">
+                      <option value="0">0</option>
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                    </select>
+                  </div>
+                </div>
+              </div><!-- /.box-body -->
+            </div>
+            <div class="col-md-6">
+              <div class="box-body">
+                <div class="form-group">
+                  <label for="destination" class="col-sm-2 control-label">To</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="destination" placeholder="Destination">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="cabin" class="col-sm-2 control-label">Cabin Class</label>
+                  <div class="col-sm-4">
+                    <select name="flight[cabinclass]" class="form-control">
+                      <option value="Economy">Economy</option>
+                      <option value="PremiumEconomy">Premium Economy</option>
+                      <option value="Business">Business Class</option>
+                      <option value="First">First Class</option>
+                    </select>
+                  </div>
+                  <label for="adults" class="col-sm-2 control-label">Adults (12+ years)</label>
+                  <div class="col-sm-4">
+                    <select name="flight[adults]" class="form-control">
+                      <option value="1">1</option>
+                      <option value="2">2</option>
+                      <option value="3">3</option>
+                      <option value="4">4</option>
+                      <option value="5">5</option>
+                      <option value="6">6</option>
+                      <option value="7">7</option>
+                      <option value="8">8</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-sm-12">
+              <div class="box-footer">
+                <button type="submit" class="btn btn-info pull-right">Search Flights</button>
+              </div><!-- /.box-footer -->
+            </div>
+          </form>
+        </div><!-- /.box-header -->
+        <!-- form start -->
+      </div><!-- /.box -->
+    </div><!--/.col (right) -->
+  </div>
+</section>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    $.getScript('http://www.geoplugin.net/javascript.gp?ip=74.125.225.231', function() {
+      var country = geoplugin_countryName();
+      var zone = geoplugin_region();
+      var district = geoplugin_city();
+      var countryCode = geoplugin_countryCode();
+      var currencyCode = geoplugin_currencyCode();
+      var latitude = geoplugin_latitude();
+      var longitude = geoplugin_longitude();
+      Cookies.set('currency', currencyCode);
+      Cookies.set('country', countryCode);
+      Cookies.set('latitude', latitude);
+      Cookies.set('longitude', longitude); 
+    });
+
+    $('#from').autocomplete({
+      serviceUrl: '/countries',
+      dataType: "json",
+      minChars: 2,
+      onSelect: function (suggestion) {
+        $(".flight_origin").val(suggestion.data)
+        // alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
+      }
+    });
+
+    $('#destination').autocomplete({
+      serviceUrl: '/countries',
+      dataType: "json",
+      minChars: 2,
+      onSelect: function (suggestion) {
+        $(".flight_dest").val(suggestion.data)
+        // alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
+      }
+    });
+    $('.input-daterange').datepicker({
+      todayBtn: "linked",
+      format: 'yyyy-mm-dd',
+      startDate: '0d'
+    });
+  })
+</script>
