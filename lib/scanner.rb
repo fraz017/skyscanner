@@ -20,7 +20,10 @@ class Scanner
       :headers => { 'Content-Type' => 'application/x-www-form-urlencoded', 'Accept' => 'application/json' }
     )
     if @results.headers["location"].present?
-      @prices = HTTParty.get(@results.headers["location"]+"?apiKey=#{ENV['API_KEY']}")  
+      price = HTTParty.get(@results.headers["location"]+"?apiKey=#{ENV['API_KEY']}")
+      @prices = Hash.new 
+      @prices[:prices_url] = @results.headers["location"]+"?apiKey=#{ENV['API_KEY']}"  
+      @prices[:prices] = price
     else
       @prices = nil
     end
