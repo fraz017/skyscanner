@@ -1,5 +1,3 @@
-<%= @prices %>
-
-<script type="text/javascript">
-  console.log(<%= raw @prices.to_json %>)
-</script>
+<section class="content">
+  <%= render partial: "prices", :locals => { :prices => @prices, :cheap => @cheap, :duration => @duration } %>
+</section> 
