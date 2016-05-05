@@ -2,7 +2,7 @@
 lock '3.4.0'
 
 set :application, 'scanner'
-set :repo_url, 'https://github.com/fraz017/skyscanner.git'
+set :repo_url, 'https://fraz017:imgreat1@github.com/fraz017/skyscanner.git'
 
 set :branch, 'master'
 
@@ -26,7 +26,7 @@ set :rails_env, 'production'
 # Default value for keep_releases is 5
 set :keep_releases, 2
 
-set :rvm_ruby_version, '2.1.5'
+set :rvm_ruby_version, '2.2.4'
 
 namespace :deploy do
 
