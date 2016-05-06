@@ -29,7 +29,7 @@ class FlightsController < ApplicationController
     itineraries = @prices["Itineraries"]
     carriers = @prices["Carriers"]
     currencies = @prices["Currencies"]
-
+    empty = []
     @cheap.each_with_index do |(k, v), index|
       @cheap[index]["carrierDetail"] = []
       @cheap[index]["Carriers"].each_with_index do |c, cc|
@@ -45,7 +45,8 @@ class FlightsController < ApplicationController
       end
       @cheap[index]["Destination"] = places.find { |h| h['Id'] == @cheap[index]["DestinationStation"] }
       @cheap[index]["Origin"] = places.find { |h| h['Id'] == @cheap[index]["OriginStation"] } 
-      @cheap[index]["PriceInfo"] = itineraries.find { |h| h['OutboundLegId'] == @cheap[index]["Id"] }["PricingOptions"]
+      @cheap[index]["PriceInfo"] = []
+      @cheap[index]["PriceInfo"] = itineraries.find { |h| h['OutboundLegId'] == @cheap[index]["Id"] }["PricingOptions"] if !itineraries.find { |h| h['OutboundLegId'] == @cheap[index]["Id"] }.nil?
       price = 0
       @cheap[index]["PriceInfo"].each do |p|
         price += p["Price"] 
@@ -53,8 +54,8 @@ class FlightsController < ApplicationController
       @cheap[index]["TotalPrice"] = price.round(2)
       @cheap[index]["CurrencyCode"] = currencies.find { |h| h['Code'] == cookies[:currency]}["Symbol"] 
     end
+    @cheap.delete_if{ |key, value| key["TotalPrice"]==0.0 }
     @cheap = @cheap.sort_by { |k| k["TotalPrice"]}
-
     @duration  = @cheap.deep_dup
     @duration = @duration.sort_by { |k| k["Duration"]} 
   end
