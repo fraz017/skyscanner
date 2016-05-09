@@ -1,4 +1,4 @@
-<%if @prices["Legs"].present?%>
+<%if @prices.present? and @prices["Legs"].present?%>
   <div class="row">
     <div class="col-md-12">
       <!-- Custom Tabs -->
@@ -116,15 +116,19 @@
         </div><!-- /.tab-content -->
       </div><!-- nav-tabs-custom -->
     </div><!-- /.col -->
+    <%= will_paginate @cheap, :class =>"pg-link" %>
   </div>
   <script type="text/javascript">
-    var request = <%= raw @prices["Status"].to_json %>
     var update = function(request){
       if (request == "UpdatesPending"){
         $.get( "/refresh.js", function( data ) {}, "json" );
       }
     }
-    setTimeout( update(request), 2000 );
+    setInterval(function() {
+      var request = <%= raw @prices["Status"].to_json %>
+      if(request)
+        update(request);
+    }, 10000);
   </script>
 <%else%>
   <ul class="timeline timeline-inverse">
@@ -141,3 +145,17 @@
     </li>
   </ul>
 <%end%>
+
+<script type="text/javascript">
+ $(".pg-link a").on("click", function(e){
+    a = <%= params[:page] %>
+    e.preventDefault();
+    $.ajax({
+      type: "POST",
+      url: "/custom_pagination",
+      data: {page: $(this).html()  },
+      success : function(data){
+      }
+    });
+  });
+</script>
