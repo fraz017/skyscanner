@@ -2,13 +2,27 @@ require "scanner"
 require "will_paginate/array"
 class FlightsController < ApplicationController
   def live_prices
+    cookies.delete(:tab_1_page)
+    cookies.delete(:tab_2_page)
     response = Scanner.live_price(params[:flight])
     if response.present?
       cookies[:prices_url] = response[:prices_url]
+      cookies[:prices] = response[:prices]
       @prices = HTTParty.get(cookies[:prices_url])
       if @prices["Legs"].present?
         params[:page] ||=1
         set_hash
+        resp = Response.where(:user_id => session.id).last
+        if resp.present?
+          resp.result = @cheap
+          resp.prices = @prices
+        else
+          resp = Response.new
+          resp.result = @cheap
+          resp.user_id = session.id
+          resp.prices = @prices
+        end
+        resp.save!
         @cheap = @cheap.paginate(:page => params[:page], :per_page => 10)
         @duration = @duration.paginate(:page => params[:page], :per_page => 10)
       end
@@ -30,12 +44,33 @@ class FlightsController < ApplicationController
   end
 
   def custom_pagination
-    @prices = HTTParty.get(cookies[:prices_url])
-    if @prices["Legs"].present?
-      set_hash
-      params[:page] ||=1
+    resp = Response.where(:user_id => session.id).last
+    @prices = resp.prices
+    @cheap = resp.result
+    @cheap = @cheap.sort_by { |k| k["TotalPrice"]}
+    @duration  = @cheap.deep_dup
+    @duration = @duration.sort_by { |k| k["Duration"]}
+    @tab_name = params[:tab_name]
+    if params[:tab_name] == "tab_1"
       @cheap = @cheap.paginate(:page => params[:page].to_i, :per_page => 10)
+      cookies[:tab_1_page] = ""
+      cookies[:tab_1_page] = params[:page].to_i
+      if cookies[:tab_2_page].present?
+        page_no = cookies[:tab_2_page]
+      else
+        page_no = 1
+      end
+      @duration = @duration.paginate(:page => page_no.to_i, :per_page => 10)
+    else
       @duration = @duration.paginate(:page => params[:page].to_i, :per_page => 10)
+      cookies[:tab_2_page] = ""
+      cookies[:tab_2_page] = params[:page].to_i
+      if cookies[:tab_1_page].present?
+        page1_no = cookies[:tab_1_page]
+      else
+        page1_no = 1
+      end
+      @cheap = @cheap.paginate(:page => page1_no.to_i, :per_page => 10)
     end
     respond_to do |format|
       format.js{

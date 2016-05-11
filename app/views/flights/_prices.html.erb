@@ -14,8 +14,8 @@
             hrs = minutes/60
             minutes -= hrs*60
           %>
-          <li class="active"><a href="#tab_1" data-toggle="tab">Sort By Price </br>Cheapest <%= @cheap[0]["CurrencyCode"] %><%= @cheap[0]["TotalPrice"] %> (<%= "#{hours}hrs #{mins}"%>)  </a></li>
-          <li><a href="#tab_2" data-toggle="tab">Sort By Duration </br> Shortest <%= @duration[0]["CurrencyCode"] %><%= @duration[0]["TotalPrice"] %> (<%= "#{hrs}hrs #{minutes}"%>)</a></li>
+          <li class="active"><a id ="t1" href="#tab_1" data-toggle="tab">Sort By Price </br>Cheapest <%= @cheap[0]["CurrencyCode"] %><%= @cheap[0]["TotalPrice"] %> (<%= "#{hours}hrs #{mins}"%>)  </a></li>
+          <li><a id ="t2" href="#tab_2" data-toggle="tab">Sort By Duration </br> Shortest <%= @duration[0]["CurrencyCode"] %><%= @duration[0]["TotalPrice"] %> (<%= "#{hrs}hrs #{minutes}"%>)</a></li>
           <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
         </ul>
         <div class="tab-content">
@@ -145,15 +145,34 @@
     </li>
   </ul>
 <%end%>
-
 <script type="text/javascript">
+  var tabName = "tab_1";
+  $("#t1").click(function(){
+    tabName = "tab_1";
+  });
+  $("#t2").click(function(){
+    tabName = "tab_2";
+  })
  $(".pg-link a").on("click", function(e){
-    a = <%= params[:page] %>
     e.preventDefault();
+    if($(this).attr("class") == "next_page")
+    {
+      pageNumber = $(".current").html();
+      pageNumber = parseInt(pageNumber);
+      pageNumber = pageNumber +1;
+    }
+    else if($(this).attr("class") == "previous_page" ){
+      pageNumber = $(".current").html();
+      pageNumber = parseInt(pageNumber);
+      pageNumber = pageNumber -1;
+    }
+    else{
+      pageNumber = $(this).html();
+    }
     $.ajax({
       type: "POST",
       url: "/custom_pagination",
-      data: {page: $(this).html()  },
+      data: {page: pageNumber, tab_name: tabName  },
       success : function(data){
       }
     });

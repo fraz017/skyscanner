@@ -8,7 +8,6 @@ Rails.application.routes.draw do
   post '/custom_pagination' => 'flights#custom_pagination'
   get '/countries' => 'welcome#getCountries'
   post '/live_prices' => 'flights#live_prices'
-  get '/live_prices' => 'flights#live_prices'
   root 'welcome#index'
 
   # Example of regular route:
