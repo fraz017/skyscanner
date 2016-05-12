@@ -5,7 +5,6 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
   get '/refresh' => 'flights#refresh'
-  post '/custom_pagination' => 'flights#custom_pagination'
   get '/countries' => 'welcome#getCountries'
   post '/live_prices' => 'flights#live_prices'
   root 'welcome#index'

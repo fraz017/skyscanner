@@ -20,8 +20,8 @@
         </ul>
         <div class="tab-content">
           <div class="tab-pane active" id="tab_1">
-            <% @cheap.each do |leg| %>
-              <ul class="timeline timeline-inverse">
+            <ul class="cheap-prices timeline timeline-inverse">
+              <% @cheap.each do |leg| %>
                 <li>
                   <div class="timeline-item">
                     <h3 class="timeline-header"><%= leg["Stops"].count == 0 ? "Direct" : "Indirect" %></h3>
@@ -31,7 +31,7 @@
                           <img src="<%= leg['carrierDetail'][0]['ImageUrl'] %>" />
                         </div>
                         <div class="col-md-2">
-                          <h2>
+                          <h2 data-toggle="popover" title="" data-content="<p><%= leg["Origin"]["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= leg["Origin"]["Name"] %></p>">
                             <%= leg["Origin"]["Code"] %> (<%= DateTime.parse(leg["Departure"]).strftime("%H:%M") %>) 
                           </h2>
                         </div>
@@ -46,15 +46,17 @@
                           </h2>
                         </div>
                         <div class="col-md-2">
-                           <h2>
+                           <h2 data-content="<p><%= leg["Destination"]["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= leg["Destination"]["Name"] %></p>">
                             <%= leg["Destination"]["Code"] %> (<%= DateTime.parse(leg["Arrival"]).strftime("%H:%M") %>)
                           </h2>
                         </div>
                         <div class="col-md-3">
-                           <h2>
+                          <h2>
                             <%= leg["CurrencyCode"] %><%= leg["TotalPrice"] %>  
                           </h2>
-                            <span> <%= leg["carrierDetail"][0]["Name"] %> </span>
+                          <span> <%= leg["carrierDetail"][0]["Name"] %></span>
+                          <br/>
+                          <a href="<%= leg["PriceInfo"][0]["DeeplinkUrl"] %>" class="btn btn-success">Select <span class="glyphicon glyphicon-chevron-right"></span></a>
                         </div>
                       </div>
                     </div>
@@ -63,12 +65,14 @@
                     </div>
                   </div>
                 </li>
-              </ul>
-            <%end%>
+              <%end%>
+            </ul>
+            <div class="cheap text-center hidden"></div>
+            <div class="cheap-pages text-center"></div>
           </div><!-- /.tab-pane -->
           <div class="tab-pane" id="tab_2">
-            <% @duration.each do |leg| %>
-              <ul class="timeline timeline-inverse">
+            <ul class="duration-prices timeline timeline-inverse">
+              <% @duration.each do |leg| %>
                 <li>
                   <div class="timeline-item">
                     <h3 class="timeline-header"><%= leg["Stops"].count == 0 ? "Direct" : "Indirect" %></h3>
@@ -78,7 +82,7 @@
                           <img src="<%= leg['carrierDetail'][0]['ImageUrl'] %>" />
                         </div>
                         <div class="col-md-2">
-                          <h2>
+                          <h2 data-content="<p><%= leg["Origin"]["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= leg["Origin"]["Name"] %></p>">
                             <%= leg["Origin"]["Code"] %> (<%= DateTime.parse(leg["Departure"]).strftime("%H:%M") %>) 
                           </h2>
                         </div>
@@ -93,15 +97,17 @@
                           </h2>
                         </div>
                         <div class="col-md-2">
-                           <h2>
+                           <h2 data-content="<p><%= leg["Origin"]["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= leg["Destination"]["Name"] %></p>">
                             <%= leg["Destination"]["Code"] %> (<%= DateTime.parse(leg["Arrival"]).strftime("%H:%M") %>)
                           </h2>
                         </div>
                         <div class="col-md-3">
-                           <h2>
+                          <h2>
                             <%= leg["CurrencyCode"] %><%= leg["TotalPrice"] %>  
                           </h2>
-                            <span> <%= leg["carrierDetail"][0]["Name"] %> </span>
+                          <span> <%= leg["carrierDetail"][0]["Name"] %> </span>
+                          <br/>
+                          <a href="<%= leg["PriceInfo"][0]["DeeplinkUrl"] %>" class="btn btn-success">Select <span class="glyphicon glyphicon-chevron-right"></span></a>
                         </div>
                       </div>
                     </div>
@@ -110,13 +116,14 @@
                     </div>
                   </div>
                 </li>
-              </ul>
-            <%end%>
+              <%end%>
+            </ul>
+            <div class="duration text-center hidden"></div>
+            <div class="duration-pages text-center"></div>
           </div><!-- /.tab-pane -->
         </div><!-- /.tab-content -->
       </div><!-- nav-tabs-custom -->
     </div><!-- /.col -->
-    <%= will_paginate @cheap, :class =>"pg-link" %>
   </div>
   <script type="text/javascript">
     var update = function(request){
@@ -146,35 +153,52 @@
   </ul>
 <%end%>
 <script type="text/javascript">
-  var tabName = "tab_1";
-  $("#t1").click(function(){
-    tabName = "tab_1";
+  console.log(<%= raw @cheap.to_json %>)
+  $('.cheap-prices').Paginationwithhashchange2({    
+
+    // default settings
+    nextSelector: '.next',
+    prevSelector: '.prev',
+    counterSelector: '.counter',
+    pagingSelector: '.cheap',
+    itemsPerPage: 5,
+    initialPage: 1
+
   });
-  $("#t2").click(function(){
-    tabName = "tab_2";
-  })
- $(".pg-link a").on("click", function(e){
-    e.preventDefault();
-    if($(this).attr("class") == "next_page")
-    {
-      pageNumber = $(".current").html();
-      pageNumber = parseInt(pageNumber);
-      pageNumber = pageNumber +1;
+
+  $('.duration-prices').Paginationwithhashchange2({    
+
+    // default settings
+    nextSelector: '.next',
+    prevSelector: '.prev',
+    counterSelector: '.counter',
+    pagingSelector: '.duration',
+    itemsPerPage: 5,
+    initialPage: 1
+
+  });
+  $(".cheap-pages").pagination({
+    items: <%= @cheap.present? ? @cheap.count : 0 %>,
+    itemsOnPage: 5,
+    cssStyle: 'light-theme',
+    hrefTextPrefix: '#',
+    onPageClick: function(pageNumber, event){
+      $(".cheap ."+pageNumber+" a").click();
     }
-    else if($(this).attr("class") == "previous_page" ){
-      pageNumber = $(".current").html();
-      pageNumber = parseInt(pageNumber);
-      pageNumber = pageNumber -1;
+  });
+
+  $(".duration-pages").pagination({
+    items: <%= @duration.present? ? @duration.count : 0 %>,
+    itemsOnPage: 5,
+    cssStyle: 'light-theme',
+    hrefTextPrefix: '#',
+    onPageClick: function(pageNumber, event){
+      $(".duration ."+pageNumber+" a").click();
     }
-    else{
-      pageNumber = $(this).html();
-    }
-    $.ajax({
-      type: "POST",
-      url: "/custom_pagination",
-      data: {page: pageNumber, tab_name: tabName  },
-      success : function(data){
-      }
-    });
+  });
+  $("h2").popover({
+    trigger: 'hover', 
+    placement: 'bottom',
+    html: true     
   });
 </script>
