@@ -1,4 +1,4 @@
-<%if @prices.present? and @prices["Legs"].present?%>
+<%if @prices.present? and @prices["Legs"].present?%> 
   <div class="row">
     <div class="col-md-12">
       <!-- Custom Tabs -->
@@ -138,6 +138,7 @@
     </div><!-- /.col -->
   </div>
   <script type="text/javascript">
+    console.log("hello")
     var update = function(request){
       if (request == "UpdatesPending"){
         $.get( "/refresh.js", function( data ) {}, "json" );
@@ -148,25 +149,8 @@
       if(request)
         update(request);
     }, 15000);
-  </script>
-<%else%>
-  <ul class="timeline timeline-inverse">
-    <li>
-      <div class="timeline-item">
-        <h3 class="timeline-header">Sorry, No results found</h3>
-        <div class="timeline-body">
-          Please try again with different locations
-        </div>
-        <div class="timeline-footer">
-          <p></p>
-        </div>
-      </div>
-    </li>
-  </ul>
-<%end%>
-<script type="text/javascript">
-  console.log(<%= raw @prices.to_json %>)
-  $('.cheap-prices').Paginationwithhashchange2({    
+
+    $('.cheap-prices').Paginationwithhashchange2({    
 
     // default settings
     nextSelector: '.next',
@@ -218,4 +202,19 @@
     placement: 'bottom',
     html: true     
   });
-</script>
+  </script>
+<%else%>
+  <ul class="timeline timeline-inverse">
+    <li>
+      <div class="timeline-item">
+        <h3 class="timeline-header">Sorry, No results found</h3>
+        <div class="timeline-body">
+          Please try again with different locations
+        </div>
+        <div class="timeline-footer">
+          <p></p>
+        </div>
+      </div>
+    </li>
+  </ul>
+<%end%>

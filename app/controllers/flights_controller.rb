@@ -10,7 +10,7 @@ class FlightsController < ApplicationController
       set_hash
     end
     respond_to do |format|
-      format.js { render "refresh", :locals => {:prices => @prices, :cheap => @cheap, :duration => @duration} }
+      format.js { render "refresh"}
     end
   end
 
@@ -27,7 +27,7 @@ class FlightsController < ApplicationController
       set_hash
     end
     respond_to do |format|
-      format.js { render "refresh", :locals => {:prices => @prices, :cheap => @cheap, :duration => @duration} }
+      format.js 
     end
   end
 

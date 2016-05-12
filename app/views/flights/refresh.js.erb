@@ -1,2 +1,2 @@
-$('.flights-content').html("<%= escape_javascript render(:partial => 'prices', :locals => { :prices => @prices, :cheap => @cheap, :duration => @duration }) %>");
+$(".flights-content").html("<%= escape_javascript(render(:partial => 'price', :locals => { :@prices => @prices, :@cheap => @cheap, :@duration => @duration })) %>");
 $("#loader-wrapper").hide();
