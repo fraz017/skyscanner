@@ -12,4 +12,11 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require_tree .
+//= require jquery-ui.min
+//= require jquery-html
+//= require bootstrap.min
+//= require bootstrap-datepicker
+//= require cookies
+//= require icheck.min
+//= require list
+//= require pagination

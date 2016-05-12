@@ -153,7 +153,7 @@
         $(".fake").show();
       }
     });
-    $.getScript('http://www.geoplugin.net/javascript.gp?ip=74.125.225.231', function() {
+    $.getScript('http://www.geoplugin.net/javascript.gp?ip=<%= request.remote_ip %>', function() {
       var country = geoplugin_countryName();
       var zone = geoplugin_region();
       var district = geoplugin_city();
@@ -172,24 +172,37 @@
       $("#loader-wrapper").show();
     })
     $('#from').autocomplete({
-      serviceUrl: '/countries',
-      dataType: "json",
+      source: '/countries',
       minChars: 2,
-      onSelect: function (suggestion) {
-        $(".flight_origin").val(suggestion.data)
+      html: true,
+      select: function (e, ui) {
+        $(".flight_origin").val(ui.item.id)
         // alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
       }
     });
 
     $('#destination').autocomplete({
-      serviceUrl: '/countries',
-      dataType: "json",
+      source: '/countries',
       minChars: 2,
-      onSelect: function (suggestion) {
-        $(".flight_dest").val(suggestion.data)
+      html: true,
+      select: function (e, ui) {
+        $(".flight_dest").val(ui.item.id)
         // alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
       }
     });
+
+    // $('#destination').autoComplete({
+    //   serviceUrl: '/countries',
+    //   dataType: "json",
+    //   minChars: 2,
+    //   transformResult: function(response, originalQuery) {
+    //     console.log(response)
+    //   },
+    //   onSelect: function (suggestion) {
+    //     $(".flight_dest").val(suggestion.data)
+    //     // alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
+    //   }
+    // });
     $('.input-daterange').datepicker({
       todayBtn: "linked",
       format: 'yyyy-mm-dd',

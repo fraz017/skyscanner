@@ -10,7 +10,7 @@ class FlightsController < ApplicationController
       set_hash
     end
     respond_to do |format|
-      format.js { render "refresh", :locals => {:prices => @prices, :cheap => @cheap, :duration => @duration} }
+      format.js { render "refresh"}
     end
   end
 
@@ -27,7 +27,7 @@ class FlightsController < ApplicationController
       set_hash
     end
     respond_to do |format|
-      format.js { render "refresh", :locals => {:prices => @prices, :cheap => @cheap, :duration => @duration} }
+      format.js 
     end
   end
 
@@ -75,8 +75,8 @@ class FlightsController < ApplicationController
     @cheap = @cheap.sort_by { |k| k["TotalPrice"]}
     @duration  = @cheap.deep_dup
     @duration = @duration.sort_by { |k| k["Duration"]}
-    $redis.set("prices", @prices.to_json)
-    $redis.set("cheap", @cheap.to_json)
-    $redis.set("duration", @duration.to_json)
+    # $redis.set("prices", @prices.to_json)
+    # $redis.set("cheap", @cheap.to_json)
+    # $redis.set("duration", @duration.to_json)
   end
 end
