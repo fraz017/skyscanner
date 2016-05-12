@@ -75,8 +75,8 @@ class FlightsController < ApplicationController
     @cheap = @cheap.sort_by { |k| k["TotalPrice"]}
     @duration  = @cheap.deep_dup
     @duration = @duration.sort_by { |k| k["Duration"]}
-    $redis.set("prices", @prices.to_json)
-    $redis.set("cheap", @cheap.to_json)
-    $redis.set("duration", @duration.to_json)
+    # $redis.set("prices", @prices.to_json)
+    # $redis.set("cheap", @cheap.to_json)
+    # $redis.set("duration", @duration.to_json)
   end
 end
