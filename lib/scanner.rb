@@ -14,7 +14,7 @@ class Scanner
         "adults" => object["adults"],
         "children" => object["children"],
         "infants" => object["infants"],
-        "groupPricing" => false,
+        "groupPricing" => true,
         "locationschema" => "Sky"
       ),
       :headers => { 'Content-Type' => 'application/x-www-form-urlencoded', 'Accept' => 'application/json' }
