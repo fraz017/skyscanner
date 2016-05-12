@@ -15,6 +15,22 @@
             <input type="hidden" name="flight[locale]" value="en-US">
             <input type="hidden" name="flight[originplace]" class="flight_origin">
             <input type="hidden" name="flight[destinationplace]" class="flight_dest">
+            <div class="col-md-12">
+              <div class="box-body">
+                <div class="form-group" style="width:10%;float: left;">
+                  <label for="oneWay"> One Way </label>
+                  <label>
+                    <input type="radio" name="return" id="oneWay" class="minimal" checked>
+                  </label>
+                </div>
+                <div class="form-group" style="width:10%;float: left;">  
+                  <label for="return"> Return </label>
+                  <label>
+                    <input type="radio" name="return" id="return" class="minimal">
+                  </label>
+                </div>
+              </div>
+            </div>
             <div class="col-md-6">
               <div class="box-body">
                 <div class="form-group">
@@ -30,10 +46,13 @@
                       <input type="text" class="form-control" name="flight[outbounddate]" />
                     </div>
                     <label for="return" class="col-sm-2 control-label">Return</label>
-                    <div class="col-sm-4">
+                    <div class="col-sm-4 original">
                       <input type="text" class="form-control" name="flight[inbounddate]" />
                     </div>
                   </div>
+                    <div class="col-sm-4 fake">
+                      <input type="text" class="form-control" name="flight[inbounddate]" readonly="readonly" />
+                    </div>
                 </div>
                 <div class="form-group">
                   <label for="children" class="col-sm-2 control-label">Children (under 12)</label>
@@ -118,6 +137,22 @@
 
 <script type="text/javascript">
   $(document).ready(function(){
+    $('input').iCheck({
+      checkboxClass: 'icheckbox_minimal-blue',
+      radioClass: 'iradio_minimal-blue',
+      increaseArea: '20%' // optional
+    });
+
+    $('input').on('ifClicked', function(event){
+      if (event.target.id == "return"){
+        $(".original").show();
+        $(".fake").hide();
+      }
+      else{
+        $(".original").hide();
+        $(".fake").show();
+      }
+    });
     $.getScript('http://www.geoplugin.net/javascript.gp?ip=74.125.225.231', function() {
       var country = geoplugin_countryName();
       var zone = geoplugin_region();
@@ -132,6 +167,7 @@
       Cookies.set('longitude', longitude); 
     });
     $("#loader-wrapper").hide();
+    $(".original").hide()
     $(".form-submit").click(function(){
       $("#loader-wrapper").show();
     })

@@ -2,8 +2,6 @@ require "scanner"
 require "will_paginate/array"
 class FlightsController < ApplicationController
   def live_prices
-    # cookies.delete(:tab_1_page)
-    # cookies.delete(:tab_2_page)
     response = Scanner.live_price(params[:flight])
     cookies[:prices_url] = response[:prices_url]
     cookies[:prices] = response[:prices]
@@ -25,7 +23,6 @@ class FlightsController < ApplicationController
 
   def refresh
     @prices = HTTParty.get(cookies[:prices_url])
-    # $redis.set("price", @prices.to_json) 
     if @prices["Legs"].present?
       set_hash
     end
