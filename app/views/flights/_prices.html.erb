@@ -44,6 +44,12 @@
                           <h2>
                             (<%= "#{hours}hrs #{mins}"%>)
                           </h2>
+                          <br/>
+                          <p><%= leg["Stops"].count > 0 ? "#{leg["Stops"].count} Stop(s)" : "" %>
+                            <% leg["StopPlaces"].each do |s| %>
+                              <span data-toggle="popover" title="" data-content="<p><%= s["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= s["Name"] %></p>"> <strong> <%=s["Code"] %> </strong></span>
+                            <%end%>
+                          </p>
                         </div>
                         <div class="col-md-2">
                            <h2 data-content="<p><%= leg["Destination"]["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= leg["Destination"]["Name"] %></p>">
@@ -56,7 +62,7 @@
                           </h2>
                           <span> <%= leg["carrierDetail"][0]["Name"] %></span>
                           <br/>
-                          <a href="<%= leg["PriceInfo"][0]["DeeplinkUrl"] %>" class="btn btn-success">Select <span class="glyphicon glyphicon-chevron-right"></span></a>
+                          <a href="<%= leg["PriceInfo"][0]["DeeplinkUrl"] %>" class="btn btn-success" rel="nofollow">Select <span class="glyphicon glyphicon-chevron-right"></span></a>
                         </div>
                       </div>
                     </div>
@@ -95,9 +101,15 @@
                           <h2>
                             (<%= "#{hours}hrs #{mins}"%>)
                           </h2>
+                          <br/>
+                          <p><%= leg["Stops"].count > 0 ? "#{leg["Stops"].count} Stop(s)" : "" %>
+                            <% leg["StopPlaces"].each do |s| %>
+                              <span data-toggle="popover" title="" data-content="<p><%= s["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= s["Name"] %></p>"> <strong> <%=s["Code"] %> </strong> </span>
+                            <%end%>
+                          </p>
                         </div>
                         <div class="col-md-2">
-                           <h2 data-content="<p><%= leg["Origin"]["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= leg["Destination"]["Name"] %></p>">
+                          <h2 data-content="<p><%= leg["Origin"]["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= leg["Destination"]["Name"] %></p>">
                             <%= leg["Destination"]["Code"] %> (<%= DateTime.parse(leg["Arrival"]).strftime("%H:%M") %>)
                           </h2>
                         </div>
@@ -107,7 +119,7 @@
                           </h2>
                           <span> <%= leg["carrierDetail"][0]["Name"] %> </span>
                           <br/>
-                          <a href="<%= leg["PriceInfo"][0]["DeeplinkUrl"] %>" class="btn btn-success">Select <span class="glyphicon glyphicon-chevron-right"></span></a>
+                          <a href="<%= leg["PriceInfo"][0]["DeeplinkUrl"] %>" class="btn btn-success" rel="nofollow">Select <span class="glyphicon glyphicon-chevron-right"></span></a>
                         </div>
                       </div>
                     </div>
@@ -135,7 +147,7 @@
       var request = <%= raw @prices["Status"].to_json %>
       if(request)
         update(request);
-    }, 10000);
+    }, 15000);
   </script>
 <%else%>
   <ul class="timeline timeline-inverse">
@@ -153,7 +165,7 @@
   </ul>
 <%end%>
 <script type="text/javascript">
-  console.log(<%= raw @cheap.to_json %>)
+  console.log(<%= raw @prices.to_json %>)
   $('.cheap-prices').Paginationwithhashchange2({    
 
     // default settings
@@ -197,6 +209,11 @@
     }
   });
   $("h2").popover({
+    trigger: 'hover', 
+    placement: 'bottom',
+    html: true     
+  });
+  $("span").popover({
     trigger: 'hover', 
     placement: 'bottom',
     html: true     
