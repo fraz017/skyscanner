@@ -14,5 +14,6 @@
  *= require AdminLTE.min
  *= require _all-skins
  *= require datepicker
+ *= require pagination
  *= require style
  */
