@@ -1,3 +1,6 @@
+<div id="loader-wrapper">
+  <div id="loader"></div>
+</div>
 <section class="content">
   <div class="row">
     <div class="col-md-12">
@@ -5,7 +8,7 @@
       <div class="box box-info">
         <div class="box-header with-border">
           <h3 class="box-title">Flight Search</h3>
-          <form action="/live_prices" method="post" class="form-horizontal">
+          <form action="/live_prices.js" method="post" class="form-horizontal" data-remote = "true">
             <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %> 
             <input type="hidden" name="flight[country]" value="<%= cookies[:country] %>">
             <input type="hidden" name="flight[currency]" value="<%= cookies[:currency] %>">
@@ -100,7 +103,7 @@
             </div>
             <div class="col-sm-12">
               <div class="box-footer">
-                <button type="submit" class="btn btn-info pull-right">Search Flights</button>
+                <button type="submit" class="form-submit btn btn-info pull-right">Search Flights</button>
               </div><!-- /.box-footer -->
             </div>
           </form>
@@ -109,6 +112,8 @@
       </div><!-- /.box -->
     </div><!--/.col (right) -->
   </div>
+</section>
+<section class="flights-content content">
 </section>
 
 <script type="text/javascript">
@@ -126,7 +131,10 @@
       Cookies.set('latitude', latitude);
       Cookies.set('longitude', longitude); 
     });
-
+    $("#loader-wrapper").hide();
+    $(".form-submit").click(function(){
+      $("#loader-wrapper").show();
+    })
     $('#from').autocomplete({
       serviceUrl: '/countries',
       dataType: "json",
