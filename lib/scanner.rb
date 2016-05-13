@@ -38,7 +38,7 @@ class Scanner
   end
 
   def self.cityGrid(origin, destination, country, currency)
-    @results = HTTParty.get("http://partners.api.skyscanner.net/apiservices/browsegrid/v1.0/#{country}/#{currency}/en-US/#{city}/#{destination}/#{Date.today.strftime("%Y-%m")}?apiKey=#{ENV['API_KEY']}",
+    @results = HTTParty.get("http://partners.api.skyscanner.net/apiservices/browsegrid/v1.0/#{country}/#{currency}/en-US/#{origin}/#{destination}/#{Date.today.next_month.strftime("%Y-%m")}?apiKey=#{ENV['API_KEY']}",
       :headers => { 'Content-Type' => 'application/json', 'Accept' => 'application/json' }
     )
     return @results

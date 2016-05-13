@@ -1,0 +1,68 @@
+<%if @grids["Places"].present?%>
+  <div class="row">
+    <div class="col-md-12">
+      <!-- Custom Tabs -->
+        <div class="tab-content">
+          <div class="tab-pane active" id="tab_1">
+            <ul class="cheap-prices timeline timeline-inverse">
+              <% @grids["Dates"][0].each_with_index do |grid, index| %>
+                <%if @grids["Dates"][1][index].present? %>
+                  <li>
+                    <div class="timeline-item">
+                      <h3 class="timeline-header"><%= grid["DateString"] %></h3>
+                      <div class="timeline-body">
+                        <div class="row">
+                          <div class="col-md-2">
+                            <h2><%= @grids["Currencies"][0]["Symbol"] %> <%= @grids["Dates"][1][index]["MinPrice"] %>
+                            </h2>
+                          </div>
+                          <div class="col-md-2">
+                            <h2 data-toggle="popover" title="" data-content="<p><%= @grids["Places"][1]["Type"] == 'Station' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= @grids["Places"][1]["Name"] %></p>">
+                              <%= @grids["Places"][1]["IataCode"] %>
+                            </h2>
+                          </div>
+                          <div class="col-md-3 text-center">
+                            
+                          </div>
+                          <div class="col-md-2">
+                             <h2 data-toggle="popover" title="" data-content="<p><%= @grids["Places"][0]["Type"] == 'Station' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= @grids["Places"][0]["Name"] %></p>">
+                              <%= @grids["Places"][0]["IataCode"] %>
+                            </h2>
+                          </div>
+                          <div class="col-md-3">
+                            
+                          </div>
+                        </div>
+                      </div>
+                      <div class="timeline-footer">
+                      </div>
+                    </div>
+                  </li>
+                <%end%>
+              <%end%>
+            </ul>
+            <div class="cheap text-center hidden"></div>
+            <div class="cheap-pages text-center"></div>
+          </div><!-- /.tab-pane -->
+        </div><!-- /.tab-content -->
+      </div><!-- nav-tabs-custom -->
+    </div><!-- /.col -->
+  </div>
+  <script type="text/javascript">
+    console.log(<%= raw @grids.to_json %>)
+  </script>
+<%else%>
+  <ul class="timeline timeline-inverse">
+    <li>
+      <div class="timeline-item">
+        <h3 class="timeline-header">Sorry, No schedule found</h3>
+        <div class="timeline-body">
+          Please try again later
+        </div>
+        <div class="timeline-footer">
+          <p></p>
+        </div>
+      </div>
+    </li>
+  </ul>
+<%end%>

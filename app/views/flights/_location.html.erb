@@ -5,7 +5,7 @@
     <ul class="clearfix">
       <% @locations.first(10).each do |location| %>
         <li class="destination col-md-3">
-          <a href="#">
+          <a data-params="destination=<%=location['Destination']['IataCode']%>" data-remote="true" data-method="post" href="/grid.js" rel="nofollow">
             <div class="destination_thumb">
               <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFKQ-a_Jt8MnYq_27TNzgKTjPMm5H7NWsYNS4lfFfXhvj6ZYN8YA">
               <div class="price-desc"> 

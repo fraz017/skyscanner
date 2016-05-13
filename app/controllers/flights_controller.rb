@@ -68,6 +68,13 @@ class FlightsController < ApplicationController
     end
   end
 
+  def grid
+    @grids = Scanner.cityGrid("#{cookies[:latitude]},#{cookies[:longitude]}-latlong", params[:destination], cookies[:country], cookies[:currency])
+    respond_to do |format|
+      format.js
+    end
+  end
+
   private
   def set_hash
     @cheap = @prices["Legs"]
