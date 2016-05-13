@@ -1,7 +1,7 @@
 .main-footer{
   margin: 0;
 }
-/*.content{
+.content{
   min-height: 550px;
 }
 .destination-wrapper{
@@ -85,7 +85,7 @@
   background-position: 50% 0;
   margin-bottom: 2%;
 }
-  }*/
+  }
 .ui-widget-content {
     border: 1px solid #000;
     background: #fff !important;

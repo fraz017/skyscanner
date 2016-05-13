@@ -138,6 +138,7 @@
     </div><!-- /.col -->
   </div>
   <script type="text/javascript">
+    
     console.log("hello")
     var update = function(request){
       if (request == "UpdatesPending"){
@@ -218,3 +219,37 @@
     </li>
   </ul>
 <%end%>
+<div class ="europe" id="europe"></div>
+<div class ="usa" id="usa"></div>
+<div class ="asia" id="asia"></div>
+<div class ="africa" id="africa"></div>
+<script type="text/javascript">
+  $.ajax({
+    method: "POST",
+    url: "/fetch_loc",
+    data: {loc: "europe"},
+    success:function(data){
+    }
+  });
+  $.ajax({
+    method: "POST",
+    url: "/fetch_loc",
+    data: {loc: "usa"},
+    success:function(data){
+    }
+  });
+  $.ajax({
+    method: "POST",
+    url: "/fetch_loc",
+    data: {loc: "asia"},
+    success:function(data){
+    }
+  });
+  $.ajax({
+    method: "POST",
+    url: "/fetch_loc",
+    data: {loc: "africa"},
+    success:function(data){
+    }
+  });
+</script>

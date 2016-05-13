@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   get '/refresh' => 'flights#refresh'
   get '/countries' => 'welcome#getCountries'
   post '/live_prices' => 'flights#live_prices'
+  post '/fetch_loc' => 'flights#fetch_loc'
   root 'welcome#index'
 
   # Example of regular route:

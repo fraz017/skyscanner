@@ -1,0 +1,1 @@
+$("#"+"<%=@country%>").html("<%= escape_javascript(render(:partial => 'location', :locals => { :@location_arr => @location_arr, :@country=>@country })) %>");

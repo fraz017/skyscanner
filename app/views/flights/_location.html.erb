@@ -1,0 +1,23 @@
+<div class ="destination-wrapper">
+  <div class = "destination">
+    <h2><strong>Top Cities in <%=@country.try(:titleize)%></strong></h2>
+    <ul class="clearfix">
+      <% @location_arr.each do |i| %>
+        <li class="destination col-md-3">
+          <a href="#">
+            <div class="destination_thumb">
+              <img src="<%=i[:image]%>">
+              <div class="price-desc"> 
+                <span class="price-tag">From: $ <%=i[:price]%></span>
+              </div>
+            </div>
+            <div class="destination_cta" data-icon="forwardBlue after">
+              <h4><%=i[:name]%></h4>
+              <p><%=i[:country]%></p>
+            </div>
+          </a>
+        </li>
+      <%end%>
+    </ul>
+  </div>
+</div>
