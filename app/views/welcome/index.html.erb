@@ -133,8 +133,20 @@
   </div>
 </section>
 <section class="flights-content content">
+  <div class ="cities" id="cities"></div>
+  <div class ="europe" id="europe"></div>
+  <div class ="usa" id="usa"></div>
+  <div class ="asia" id="asia"></div>
+  <div class ="africa" id="africa"></div>
 </section>
-
+<script type="text/javascript">
+  $.ajax({
+    method: "GET",
+    url: "/cities.js",
+    success:function(data){
+    }
+  });
+</script>
 <script type="text/javascript">
   $(document).ready(function(){
     $('input').iCheck({
@@ -161,6 +173,7 @@
       var currencyCode = geoplugin_currencyCode();
       var latitude = geoplugin_latitude();
       var longitude = geoplugin_longitude();
+      Cookies.set('countryName', country);
       Cookies.set('currency', currencyCode);
       Cookies.set('country', countryCode);
       Cookies.set('latitude', latitude);
@@ -190,19 +203,7 @@
         // alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
       }
     });
-
-    // $('#destination').autoComplete({
-    //   serviceUrl: '/countries',
-    //   dataType: "json",
-    //   minChars: 2,
-    //   transformResult: function(response, originalQuery) {
-    //     console.log(response)
-    //   },
-    //   onSelect: function (suggestion) {
-    //     $(".flight_dest").val(suggestion.data)
-    //     // alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
-    //   }
-    // });
+    
     $('.input-daterange').datepicker({
       todayBtn: "linked",
       format: 'yyyy-mm-dd',

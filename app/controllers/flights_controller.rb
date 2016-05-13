@@ -1,5 +1,4 @@
 require "scanner"
-require "will_paginate/array"
 class FlightsController < ApplicationController
   def live_prices
     response = Scanner.live_price(params[:flight])
@@ -14,13 +13,6 @@ class FlightsController < ApplicationController
     end
   end
 
-  def test 
-    @prices = JSON.parse($redis.get("prices")) 
-    @cheap = JSON.parse($redis.get("cheap"))
-    @duration = JSON.parse($redis.get("duration"))  
-    render template: "flights/live_prices"
-  end
-
   def refresh
     @prices = HTTParty.get(cookies[:prices_url])
     if @prices["Legs"].present?
@@ -28,6 +20,51 @@ class FlightsController < ApplicationController
     end
     respond_to do |format|
       format.js 
+    end
+  end
+
+  def cities
+    @places = Scanner.city2country("#{cookies[:latitude]},#{cookies[:longitude]}-latlong",cookies[:country], cookies[:currency])
+    @country = "Top Locations in Your Country"
+    set_grid
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def usa
+    @places = Scanner.city2country("US","US", cookies[:currency])
+    @country = "Top Locations in USA"
+    set_grid
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def asia
+    @places = Scanner.city2country("AE","AE", cookies[:currency])
+    @country = "Top Locations in Asia & Middle East"
+    set_grid
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def africa
+    @places = Scanner.city2country("#{cookies[:latitude]},#{cookies[:longitude]}-latlong","CE", cookies[:currency])
+    @country = "Top Locations in Africa"
+    set_grid
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def europe
+    @places = Scanner.city2country("#{cookies[:latitude]},#{cookies[:longitude]}-latlong",cookies[:country], cookies[:currency])
+    @country = "Top Locations in Europe"
+    set_grid
+    respond_to do |format|
+      format.js
     end
   end
 
@@ -69,7 +106,6 @@ class FlightsController < ApplicationController
       end
       @cheap[index]["TotalPrice"] = price.round(2)
       @cheap[index]["CurrencyCode"] = currencies.find { |h| h['Code'] == cookies[:currency]}["Symbol"] 
-      
     end
     @cheap.delete_if{ |key, value| key["TotalPrice"]==0.0 }
     @cheap = @cheap.sort_by { |k| k["TotalPrice"]}
@@ -78,5 +114,21 @@ class FlightsController < ApplicationController
     # $redis.set("prices", @prices.to_json)
     # $redis.set("cheap", @cheap.to_json)
     # $redis.set("duration", @duration.to_json)
+  end
+
+  def set_grid
+    carriers = @places["Carriers"]
+    currencies = @places["Currencies"]
+    places = @places["Places"]
+    @locations = []
+    @locations = @places["Quotes"] if !@places["Quotes"].nil?
+    @locations.each do |q|
+      q["Destination"] = places.find{ |p| p["PlaceId"] == q["OutboundLeg"]["DestinationId"]}
+    end
+    if @locations.present?
+      @symbol = currencies.find { |h| h['Code'] == cookies[:currency]}["Symbol"]
+      @locations.delete_if{ |key, value| key["MinPrice"]==0.0 }
+      @locations = @locations.sort_by { |k| k["MinPrice"]}
+    end
   end
 end

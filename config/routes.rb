@@ -4,9 +4,15 @@ Rails.application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
+  post '/live_prices' => 'flights#live_prices'
   get '/refresh' => 'flights#refresh'
   get '/countries' => 'welcome#getCountries'
-  post '/live_prices' => 'flights#live_prices'
+  get '/cities' => 'flights#cities'
+  get '/europe' => 'flights#europe'
+  get '/africa' => 'flights#africa'
+  get '/asia' => 'flights#asia'
+  get '/usa' => 'flights#usa'
+  post '/grid' => 'flights#grid'
   root 'welcome#index'
 
   # Example of regular route:

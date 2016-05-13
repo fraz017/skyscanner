@@ -1,0 +1,7 @@
+$(".europe").html("<%= escape_javascript(render(:partial => 'location', :locals => { :@locations => @locations, :@country => @country, :@symbol => @symbol})) %>");
+$.ajax({
+  method: "GET",
+  url: "/usa.js",
+  success:function(data){
+  }
+});

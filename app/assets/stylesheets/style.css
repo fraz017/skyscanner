@@ -1,7 +1,91 @@
 .main-footer{
   margin: 0;
 }
+.content{
+  min-height: 225px;
+}
+.destination-wrapper{
+	width: 100%;
+  margin: 0 auto;
+  padding: 2.6em 0;
+  border-top: 1px solid white  !important;
+  background-color: #f6f8fa !important;
+}
+.destination-wrapper .destination{
+  max-width: 1048px;
+  margin: 0 auto;
+}
+.destination-wrapper h2 strong {
+  font-size: 2em;
+  display: block;
+  font-weight: normal;
+  text-align: center;
+}
+.destination-wrapper ul{
+	padding: 2%;
+	border: 0;
+	margin: 0;
+	width: 100%;
+	list-style-type: none;
+}
+.destination .destination_thumb img{
+  width: 219px;
+  height: 167px;
+  left: 32px;
+  top: 265px;
+  right: 251px;
+  bottom: 432px;
+  margin-top: 15px;
+}
+.price-desc{
+  box-sizing: border-box;
+  padding: 10px;
+  position: absolute;
+  bottom: 59px;
+  color: #fff;
+  background: rgba(0,109,199,0.77);
+}
+.price-tag{
+  top: 150px; 
+  left: 16px; 
+  width: 100%;
+  margin-right: 5px;
+  font-weight: 400; 
+  font-size: 12px;
+}
+.destination-wrapper .destination a .destination_cta h4{
+	font-size: 22px;
+	color: white;
+	margin-bottom: 0;
+	font-weight: 100;
+	color: #21c4d9;
+	margin-bottom: 0.21667em;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	line-height: 1.1;
+}
+.destination-wrapper .destination a .destination_cta p {
+  color: white;
+  font-size: 14px;
+  color: #21c4d9;
+  margin-bottom: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+@media screen and (min-width: 960px) 
+.destination-wrapper .destination:nth-child(odd) {
+  margin-right: 0;
+}
 
+@media screen and (min-width: 960px) 
+.destination-wrapper .destination {
+  width: 32%;
+  background-position: 50% 0;
+  margin-bottom: 2%;
+}
+  }
 .ui-widget-content {
     border: 1px solid #000;
     background: #fff !important;

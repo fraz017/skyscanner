@@ -14,8 +14,8 @@
             hrs = minutes/60
             minutes -= hrs*60
           %>
-          <li class="active"><a id ="t1" href="#tab_1" data-toggle="tab">Sort By Price </br>Cheapest <%= @cheap[0]["CurrencyCode"] %><%= @cheap[0]["TotalPrice"] %> (<%= "#{hours}hrs #{mins}"%>)  </a></li>
-          <li><a id ="t2" href="#tab_2" data-toggle="tab">Sort By Duration </br> Shortest <%= @duration[0]["CurrencyCode"] %><%= @duration[0]["TotalPrice"] %> (<%= "#{hrs}hrs #{minutes}"%>)</a></li>
+          <li class="active"><a id ="t1" href="#tab_1" data-toggle="tab">Sort By Price </br>Cheapest <%= @cheap[0]["CurrencyCode"] %> <%= @cheap[0]["TotalPrice"] %> (<%= "#{hours}hrs #{mins}"%>)  </a></li>
+          <li><a id ="t2" href="#tab_2" data-toggle="tab">Sort By Duration </br> Shortest <%= @duration[0]["CurrencyCode"] %> <%= @duration[0]["TotalPrice"] %> (<%= "#{hrs}hrs #{minutes}"%>)</a></li>
           <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
         </ul>
         <div class="tab-content">
@@ -58,7 +58,7 @@
                         </div>
                         <div class="col-md-3">
                           <h2>
-                            <%= leg["CurrencyCode"] %><%= leg["TotalPrice"] %>  
+                            <%= leg["CurrencyCode"] %> <%= leg["TotalPrice"] %>  
                           </h2>
                           <span> <%= leg["carrierDetail"][0]["Name"] %></span>
                           <br/>
@@ -115,7 +115,7 @@
                         </div>
                         <div class="col-md-3">
                           <h2>
-                            <%= leg["CurrencyCode"] %><%= leg["TotalPrice"] %>  
+                            <%= leg["CurrencyCode"] %> <%= leg["TotalPrice"] %>  
                           </h2>
                           <span> <%= leg["carrierDetail"][0]["Name"] %> </span>
                           <br/>
@@ -137,7 +137,6 @@
       </div><!-- nav-tabs-custom -->
     </div><!-- /.col -->
   </div>
-  <span class="hidden"><%= raw @prices["Status"].to_json %></span>
   <script type="text/javascript">
     var update = function(request){
       if (request == "UpdatesPending"){
@@ -160,57 +159,54 @@
 
     
     $('.cheap-prices').Paginationwithhashchange2({    
+      // default settings
+      nextSelector: '.next',
+      prevSelector: '.prev',
+      counterSelector: '.counter',
+      pagingSelector: '.cheap',
+      itemsPerPage: 5,
+      initialPage: 1
+    });
 
-    // default settings
-    nextSelector: '.next',
-    prevSelector: '.prev',
-    counterSelector: '.counter',
-    pagingSelector: '.cheap',
-    itemsPerPage: 5,
-    initialPage: 1
+    $('.duration-prices').Paginationwithhashchange2({    
+      // default settings
+      nextSelector: '.next',
+      prevSelector: '.prev',
+      counterSelector: '.counter',
+      pagingSelector: '.duration',
+      itemsPerPage: 5,
+      initialPage: 1
+    });
 
-  });
+    $(".cheap-pages").pagination({
+      items: <%= @cheap.present? ? @cheap.count : 0 %>,
+      itemsOnPage: 5,
+      cssStyle: 'light-theme',
+      hrefTextPrefix: '#',
+      onPageClick: function(pageNumber, event){
+        $(".cheap ."+pageNumber+" a").click();
+      }
+    });
 
-  $('.duration-prices').Paginationwithhashchange2({    
-
-    // default settings
-    nextSelector: '.next',
-    prevSelector: '.prev',
-    counterSelector: '.counter',
-    pagingSelector: '.duration',
-    itemsPerPage: 5,
-    initialPage: 1
-
-  });
-  $(".cheap-pages").pagination({
-    items: <%= @cheap.present? ? @cheap.count : 0 %>,
-    itemsOnPage: 5,
-    cssStyle: 'light-theme',
-    hrefTextPrefix: '#',
-    onPageClick: function(pageNumber, event){
-      $(".cheap ."+pageNumber+" a").click();
-    }
-  });
-
-  $(".duration-pages").pagination({
-    items: <%= @duration.present? ? @duration.count : 0 %>,
-    itemsOnPage: 5,
-    cssStyle: 'light-theme',
-    hrefTextPrefix: '#',
-    onPageClick: function(pageNumber, event){
-      $(".duration ."+pageNumber+" a").click();
-    }
-  });
-  $("h2").popover({
-    trigger: 'hover', 
-    placement: 'bottom',
-    html: true     
-  });
-  $("span").popover({
-    trigger: 'hover', 
-    placement: 'bottom',
-    html: true     
-  });
+    $(".duration-pages").pagination({
+      items: <%= @duration.present? ? @duration.count : 0 %>,
+      itemsOnPage: 5,
+      cssStyle: 'light-theme',
+      hrefTextPrefix: '#',
+      onPageClick: function(pageNumber, event){
+        $(".duration ."+pageNumber+" a").click();
+      }
+    })
+    $("h2").popover({
+      trigger: 'hover', 
+      placement: 'bottom',
+      html: true     
+    });
+    $("span").popover({
+      trigger: 'hover', 
+      placement: 'bottom',
+      html: true     
+    });
   </script>
 <%else%>
   <ul class="timeline timeline-inverse">
@@ -227,3 +223,4 @@
     </li>
   </ul>
 <%end%>
+

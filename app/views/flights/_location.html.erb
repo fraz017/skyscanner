@@ -1,0 +1,25 @@
+<%if @locations.present?%>
+<div class ="destination-wrapper">
+  <div class = "destination">
+    <h2><strong><%=@country.try(:titleize)%></strong></h2>
+    <ul class="clearfix">
+      <% @locations.first(10).each do |location| %>
+        <li class="destination col-md-3">
+          <a href="#">
+            <div class="destination_thumb">
+              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFKQ-a_Jt8MnYq_27TNzgKTjPMm5H7NWsYNS4lfFfXhvj6ZYN8YA">
+              <div class="price-desc"> 
+                <span class="price-tag">From: <%= @symbol %> <%=location["MinPrice"]%></span>
+              </div>
+            </div>
+            <div class="destination_cta" data-icon="forwardBlue after">
+              <h4><%=location["Destination"]["CityName"]%></h4>
+              <p><%=location["Destination"]["CountryName"]%></p>
+            </div>
+          </a>
+        </li>
+      <%end%>
+    </ul>
+  </div>
+</div>
+<%end%>
