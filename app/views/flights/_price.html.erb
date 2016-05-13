@@ -137,19 +137,28 @@
       </div><!-- nav-tabs-custom -->
     </div><!-- /.col -->
   </div>
+  <span class="hidden"><%= raw @prices["Status"].to_json %></span>
   <script type="text/javascript">
-    console.log("hello")
     var update = function(request){
       if (request == "UpdatesPending"){
-        $.get( "/refresh.js", function( data ) {}, "json" );
+        $.ajax({
+          type: 'GET',
+          url: '/refresh.js',
+          success: function () {
+
+          }
+        });
       }
     }
-    setInterval(function() {
+
+    setTimeout(function () {
       var request = <%= raw @prices["Status"].to_json %>
-      if(request)
-        update(request);
+      update(request)
     }, 15000);
 
+    update(<%= raw @prices["Status"].to_json %>)
+
+    
     $('.cheap-prices').Paginationwithhashchange2({    
 
     // default settings
