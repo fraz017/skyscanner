@@ -165,7 +165,7 @@
         $(".fake").show();
       }
     });
-    $.getScript('http://www.geoplugin.net/javascript.gp?ip=74.125.225.231', function() {
+    $.getScript('http://www.geoplugin.net/javascript.gp?ip=<%= request.remote_ip %>', function() {
       var country = geoplugin_countryName();
       var zone = geoplugin_region();
       var district = geoplugin_city();
@@ -203,7 +203,7 @@
         // alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
       }
     });
-    
+
     $('.input-daterange').datepicker({
       todayBtn: "linked",
       format: 'yyyy-mm-dd',
