@@ -74,18 +74,19 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 }
-@media screen and (min-width: 960px) 
-.destination-wrapper .destination:nth-child(odd) {
-  margin-right: 0;
-}
-
-@media screen and (min-width: 960px) 
-.destination-wrapper .destination {
-  width: 32%;
-  background-position: 50% 0;
-  margin-bottom: 2%;
-}
+@media screen and (min-width: 960px){
+  .destination-wrapper .destination:nth-child(odd) {
+    margin-right: 0;
   }
+} 
+
+@media screen and (min-width: 960px){ 
+  .destination-wrapper .destination {
+    width: 32%;
+    background-position: 50% 0;
+    margin-bottom: 2%;
+  }
+}
 .ui-widget-content {
     border: 1px solid #000;
     background: #fff !important;
