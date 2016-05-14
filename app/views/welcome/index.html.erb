@@ -174,7 +174,7 @@
     var currencyCode = "USD";
     var latitude = 37.4192;
     var longitude = -122.0574;
-    $.getScript('http://www.geoplugin.net/javascript.gp?ip=<%= request.rmote_ip %>', function() {
+    $.getScript('http://www.geoplugin.net/javascript.gp?ip=<%= request.remote_ip %>', function() {
       country = geoplugin_countryName();
       zone = geoplugin_region();
       district = geoplugin_city();
