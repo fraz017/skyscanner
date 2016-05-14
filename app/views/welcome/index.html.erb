@@ -188,11 +188,21 @@
       Cookies.set('latitude', latitude);
       Cookies.set('longitude', longitude); 
     });
-    Cookies.set('countryName', country);
-    Cookies.set('currency', currencyCode);
-    Cookies.set('country', countryCode);
-    Cookies.set('latitude', latitude);
-    Cookies.set('longitude', longitude);
+    if(!(Cookies.get('countryName'))){
+      Cookies.set('countryName', country);
+    }
+    if(!(Cookies.get('currency'))){
+      Cookies.set('currency', currencyCode);
+    }
+    if (!(Cookies.get('country'))){
+      Cookies.set('country', countryCode);
+    }
+    if (!(Cookies.get('latitude'))){
+      Cookies.set('latitude', latitude);
+    }
+    if (!(Cookies.get('longitude'))){
+      Cookies.set('longitude', longitude);
+    }
     $("#loader-wrapper").hide();
     $(".original").hide()
     $(".form-submit").click(function(){
