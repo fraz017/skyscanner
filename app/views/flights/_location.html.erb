@@ -1,25 +1,34 @@
+<% require "rest-client" %>
 <%if @locations.present?%>
-<div class ="destination-wrapper">
-  <div class = "destination">
-    <h2><strong><%=@country.try(:titleize)%></strong></h2>
-    <ul class="clearfix">
-      <% @locations.first(10).each do |location| %>
-        <li class="destination col-md-3">
-          <a data-params="destination=<%=location['Destination']['IataCode']%>" data-remote="true" data-method="post" href="/grid.js" rel="nofollow">
-            <div class="destination_thumb">
-              <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSFKQ-a_Jt8MnYq_27TNzgKTjPMm5H7NWsYNS4lfFfXhvj6ZYN8YA">
-              <div class="price-desc"> 
-                <span class="price-tag">From: <%= @symbol %> <%=location["MinPrice"]%></span>
+  <div class ="destination-wrapper">
+    <div class = "destination">
+      <h2><strong><%=@country.try(:titleize)%></strong></h2>
+      <ul class="clearfix">
+        <% @locations.first(10).each do |location| %>
+          <li class="destination col-md-3">
+            <a data-params="destination=<%=location['Destination']['IataCode']%>" data-remote="true" data-method="post" href="/grid.js" rel="nofollow">
+              <div class="destination_thumb">
+                <%
+                  url = "https://s3-eu-west-1.amazonaws.com/images.skypicker.com/photos/220x165/"+location['Destination']['CityName'].downcase.gsub(/[!@%&,.'-]/,'').gsub(' ','-')+"_"+@countryCode+".jpg"
+                  begin
+                    exists = RestClient.head(url).code == 200
+                  rescue RestClient::Exception => error
+                    url = "https://s3-eu-west-1.amazonaws.com/images.skypicker.com/photos/220x165/default3.jpg"
+                  end
+                %>
+                <img src="<%= url %>">
+                <div class="price-desc"> 
+                  <span class="price-tag">From: <%= @symbol %> <%=location["MinPrice"]%></span>
+                </div>
               </div>
-            </div>
-            <div class="destination_cta" data-icon="forwardBlue after">
-              <h4><%=location["Destination"]["CityName"]%></h4>
-              <p><%=location["Destination"]["CountryName"]%></p>
-            </div>
-          </a>
-        </li>
-      <%end%>
-    </ul>
+              <div class="destination_cta" data-icon="forwardBlue after">
+                <h4><%=location["Destination"]["CityName"]%></h4>
+                <p><%=location["Destination"]["CountryName"]%></p>
+              </div>
+            </a>
+          </li>
+        <%end%>
+      </ul>
+    </div>
   </div>
-</div>
 <%end%>

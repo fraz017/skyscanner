@@ -133,12 +133,14 @@
   </div>
 </section>
 <section class="flights-content content">
-  <div class ="cities" id="cities"></div>
-  <div class ="europe" id="europe"></div>
-  <div class ="usa" id="usa"></div>
-  <div class ="asia" id="asia"></div>
-  <div class ="africa" id="africa"></div>
+  <div class ="grid cities" id="cities"></div>
+  <div class ="grid europe" id="europe"></div>
+  <div class ="grid usa" id="usa"></div>
+  <div class ="grid asia" id="asia"></div>
+  <div class ="grid africa" id="africa"></div>
+  <div class="grids"></div>
 </section>
+
 <script type="text/javascript">
   $.ajax({
     method: "GET",
@@ -165,20 +167,32 @@
         $(".fake").show();
       }
     });
-    $.getScript('http://www.geoplugin.net/javascript.gp?ip=<%= request.remote_ip %>', function() {
-      var country = geoplugin_countryName();
-      var zone = geoplugin_region();
-      var district = geoplugin_city();
-      var countryCode = geoplugin_countryCode();
-      var currencyCode = geoplugin_currencyCode();
-      var latitude = geoplugin_latitude();
-      var longitude = geoplugin_longitude();
+    var country = "United States";
+    var zone = "";
+    var district = "";
+    var countryCode = "US";
+    var currencyCode = "USD";
+    var latitude = 37.4192;
+    var longitude = -122.0574;
+    $.getScript('http://www.geoplugin.net/javascript.gp?ip=<%= request.rmote_ip %>', function() {
+      country = geoplugin_countryName();
+      zone = geoplugin_region();
+      district = geoplugin_city();
+      countryCode = geoplugin_countryCode();
+      currencyCode = geoplugin_currencyCode();
+      latitude = geoplugin_latitude();
+      longitude = geoplugin_longitude();
       Cookies.set('countryName', country);
       Cookies.set('currency', currencyCode);
       Cookies.set('country', countryCode);
       Cookies.set('latitude', latitude);
       Cookies.set('longitude', longitude); 
     });
+    Cookies.set('countryName', country);
+    Cookies.set('currency', currencyCode);
+    Cookies.set('country', countryCode);
+    Cookies.set('latitude', latitude);
+    Cookies.set('longitude', longitude);
     $("#loader-wrapper").hide();
     $(".original").hide()
     $(".form-submit").click(function(){

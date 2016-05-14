@@ -26,6 +26,7 @@ class FlightsController < ApplicationController
   def cities
     @places = Scanner.city2country("#{cookies[:latitude]},#{cookies[:longitude]}-latlong",cookies[:country], cookies[:currency])
     @country = "Top Locations in Your Country"
+    @countryCode = cookies[:country].downcase
     set_grid
     respond_to do |format|
       format.js
@@ -35,6 +36,7 @@ class FlightsController < ApplicationController
   def usa
     @places = Scanner.city2country("US","US", cookies[:currency])
     @country = "Top Locations in USA"
+    @countryCode = "us"
     set_grid
     respond_to do |format|
       format.js
@@ -44,6 +46,7 @@ class FlightsController < ApplicationController
   def asia
     @places = Scanner.city2country("AE","AE", cookies[:currency])
     @country = "Top Locations in Asia & Middle East"
+    @countryCode = "ae"
     set_grid
     respond_to do |format|
       format.js
@@ -53,6 +56,7 @@ class FlightsController < ApplicationController
   def africa
     @places = Scanner.city2country("#{cookies[:latitude]},#{cookies[:longitude]}-latlong","CE", cookies[:currency])
     @country = "Top Locations in Africa"
+    @countryCode = "ce"
     set_grid
     respond_to do |format|
       format.js
@@ -62,6 +66,7 @@ class FlightsController < ApplicationController
   def europe
     @places = Scanner.city2country("#{cookies[:latitude]},#{cookies[:longitude]}-latlong",cookies[:country], cookies[:currency])
     @country = "Top Locations in Europe"
+    @countryCode = cookies[:country].downcase
     set_grid
     respond_to do |format|
       format.js

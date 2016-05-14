@@ -1,3 +1,8 @@
+<div class="row">
+  <div class="col-md-12">
+    <a href="javascript:void(0)" class="btn btn-primary back" style="margin-left: 60px;margin-bottom: 25px;"> <span class="glyphicon glyphicon-chevron-left"></span> Back</a>
+  </div>
+</div>
 <%if @grids["Places"].present?%>
   <div class="row">
     <div class="col-md-12">
@@ -66,3 +71,10 @@
     </li>
   </ul>
 <%end%>
+
+<script type="text/javascript">
+  $(".back").click(function(){
+    $(".grids").hide();
+    $(".grid").show();
+  })
+</script>

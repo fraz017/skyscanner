@@ -1,1 +1,3 @@
-$(".flights-content").html("<%= escape_javascript(render(:partial => 'grid', :locals => { :@grids => @grids })) %>");
+$(".grid").hide();
+$(".grids").html("<%= escape_javascript(render(:partial => 'grid', :locals => { :@grids => @grids })) %>");
+$(".grids").show();
