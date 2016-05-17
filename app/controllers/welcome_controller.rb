@@ -21,7 +21,6 @@ class WelcomeController < ApplicationController
     # render json: data
 
     cities = City.search_by_city(params[:term])
-    airports = Airport.search_by_airport(params[:term])
     data = Array.new
     cities.each do |z| 
       h = Hash.new
@@ -31,15 +30,16 @@ class WelcomeController < ApplicationController
       h["value"] = "#{z.name}"
       h["label"] = value
       data.push(h)
-    end
-    airports.each do |z| 
-      h = Hash.new
-      symbol = 'glyphicon glyphicon-plane'
-      value = "<span class=\"#{symbol}\"></span>   "+z.name+", "+z.city.name
-      h["id"] = z.c_id
-      h["value"] = "#{z.name}"
-      h["label"] = value
-      data.push(h)
+      airports = Airport.search_by_airport(params[:term], z.id)
+      airports.each do |z| 
+        h = Hash.new
+        symbol = 'glyphicon glyphicon-plane'
+        value = "<span class=\"#{symbol}\" style='margin-left:25px;'></span>   "+z.name
+        h["id"] = z.c_id
+        h["value"] = "#{z.name}"
+        h["label"] = value
+        data.push(h)
+      end
     end
     render :json => data 
   end
