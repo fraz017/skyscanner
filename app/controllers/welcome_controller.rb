@@ -3,22 +3,45 @@ class WelcomeController < ApplicationController
   end
 
   def getCountries
-    @countries = HTTParty.get("http://partners.api.skyscanner.net/apiservices/autosuggest/v1.0/#{cookies[:country]}/#{cookies[:currency]}/en-US?apiKey=prtl6749387986743898559646983194&query=#{params[:term]}", :headers => {'Accept' => 'application/json' })
+    # @countries = HTTParty.get("http://partners.api.skyscanner.net/apiservices/autosuggest/v1.0/#{cookies[:country]}/#{cookies[:currency]}/en-US?apiKey=prtl6749387986743898559646983194&query=#{params[:term]}", :headers => {'Accept' => 'application/json' })
+    # data = Array.new
+    # @countries["Places"].each do |country|
+    #   if country["CityId"].gsub("-sky","") != ""
+    #     symbol=''
+    #     if country['RegionId'] != '' 
+    #       symbol = 'glyphicon glyphicon-plane'
+    #     else
+    #       symbol = 'glyphicon glyphicon-flag' 
+    #     end
+    #     value = "<span class=\"#{symbol}\"></span>   "+country["PlaceName"]+", "+ country["CountryName"]
+    #     obj = {value: country["PlaceName"]+ ", "+ country["CountryName"], label: value, id: country["PlaceId"] }
+    #     data.push(obj)
+    #   end  
+    # end  
+    # render json: data
+
+    cities = City.search_by_city(params[:term])
     data = Array.new
-    @countries["Places"].each do |country|
-      if country["CityId"].gsub("-sky","") != ""
-        symbol=''
-        if country['RegionId'] != '' 
-          symbol = 'glyphicon glyphicon-plane'
-        else
-          symbol = 'glyphicon glyphicon-flag' 
-        end
-        value = "<span class=\"#{symbol}\"></span>   "+country["PlaceName"]+", "+ country["CountryName"]
-        obj = {value: country["PlaceName"]+ ", "+ country["CountryName"], label: value, id: country["PlaceId"] }
-        data.push(obj)
-      end  
-    end  
-    render json: data
+    cities.each do |z| 
+      h = Hash.new
+      symbol = 'glyphicon glyphicon-flag'
+      value = "<span class=\"#{symbol}\"></span>   "+z.name
+      h["id"] = z.c_id
+      h["value"] = "#{z.name}"
+      h["label"] = value
+      data.push(h)
+      airports = Airport.search_by_airport(params[:term], z.id)
+      airports.each do |z| 
+        h = Hash.new
+        symbol = 'glyphicon glyphicon-plane'
+        value = "<span class=\"#{symbol}\" style='margin-left:25px;'></span>   "+z.name
+        h["id"] = z.c_id
+        h["value"] = "#{z.name}"
+        h["label"] = value
+        data.push(h)
+      end
+    end
+    render :json => data 
   end
 
   # def europe
