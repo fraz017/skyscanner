@@ -36,18 +36,18 @@
                 <div class="form-group">
                   <label for="from" class="col-sm-2 control-label">From</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" id="from" placeholder="From">
+                    <input type="text" class="form-control" id="from" placeholder="From" data-validation="required" data-validation-error-msg="Please enter your from location!" tabindex="1">
                   </div>
                 </div>
                 <div class="form-group">
                   <div class="input-daterange" id="datepicker" >
                     <label for="depart" class="col-sm-2 control-label">Depart</label>
-                    <div class="col-sm-4">
-                      <input type="text" class="form-control" name="flight[outbounddate]" />
+                    <div class="col-sm-4 error-class">
+                      <input type="text" class="form-control" id="depart" name="flight[outbounddate]" placeholder="Depart" tabindex="3" />
                     </div>
                     <label for="return" class="col-sm-2 control-label">Return</label>
                     <div class="col-sm-4 original">
-                      <input type="text" class="form-control" name="flight[inbounddate]" />
+                      <input type="text" class="form-control" name="flight[inbounddate]" tabindex="4" />
                     </div>
                   </div>
                     <div class="col-sm-4 fake">
@@ -57,7 +57,7 @@
                 <div class="form-group">
                   <label for="children" class="col-sm-2 control-label">Children (under 12)</label>
                   <div class="col-sm-4">
-                    <select name="flight[children]" class="form-control">
+                    <select name="flight[children]" class="form-control" tabindex="7">
                       <option value="0">0</option>
                       <option value="1">1</option>
                       <option value="2">2</option>
@@ -71,7 +71,7 @@
                   </div>
                   <label for="infants" class="col-sm-2 control-label">Infants (under 2)</label>
                   <div class="col-sm-4">
-                    <select name="flight[infants]" class="form-control">
+                    <select name="flight[infants]" class="form-control" tabindex="8">
                       <option value="0">0</option>
                       <option value="1">1</option>
                       <option value="2">2</option>
@@ -91,13 +91,13 @@
                 <div class="form-group">
                   <label for="destination" class="col-sm-2 control-label">To</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" id="destination" placeholder="Destination">
+                    <input type="text" class="form-control" id="destination" placeholder="Destination" data-validation="required" data-validation-error-msg="Please enter your destination!" tabindex="2">
                   </div>
                 </div>
                 <div class="form-group">
                   <label for="cabin" class="col-sm-2 control-label">Cabin Class</label>
                   <div class="col-sm-4">
-                    <select name="flight[cabinclass]" class="form-control">
+                    <select name="flight[cabinclass]" class="form-control" tabindex="5">
                       <option value="Economy">Economy</option>
                       <option value="PremiumEconomy">Premium Economy</option>
                       <option value="Business">Business Class</option>
@@ -106,7 +106,7 @@
                   </div>
                   <label for="adults" class="col-sm-2 control-label">Adults (12+ years)</label>
                   <div class="col-sm-4">
-                    <select name="flight[adults]" class="form-control">
+                    <select name="flight[adults]" class="form-control" tabindex="6">
                       <option value="1">1</option>
                       <option value="2">2</option>
                       <option value="3">3</option>
@@ -122,7 +122,7 @@
             </div>
             <div class="col-sm-12">
               <div class="box-footer">
-                <button type="submit" class="form-submit btn btn-info pull-right">Search Flights</button>
+                <button type="submit" class="form-submit btn btn-info pull-right" tabindex="9">Search Flights</button>
               </div><!-- /.box-footer -->
             </div>
           </form>
@@ -133,6 +133,9 @@
   </div>
 </section>
 <section class="flights-content content">
+  <div id="loader-wrapper" style="background:none;">
+    <div id="loader"></div>
+  </div>
   <div class ="grid cities" id="cities"></div>
   <div class ="grid europe" id="europe"></div>
   <div class ="grid usa" id="usa"></div>
@@ -140,7 +143,16 @@
   <div class ="grid africa" id="africa"></div>
   <div class="grids"></div>
 </section>
-
+<style type="text/css">
+  .flights-content #loader-wrapper{
+    background: none !important;
+    position: static !important;
+  }
+  .flights-content #loader-wrapper #loader{
+    margin: 0 auto !important;
+    left: 0 !important;
+  }
+</style>
 <script type="text/javascript">
   $.ajax({
     method: "GET",
@@ -151,6 +163,7 @@
 </script>
 <script type="text/javascript">
   $(document).ready(function(){
+    $.validate();
     $('input').iCheck({
       checkboxClass: 'icheckbox_minimal-blue',
       radioClass: 'iradio_minimal-blue',
@@ -167,6 +180,7 @@
         $(".fake").show();
       }
     });
+
     var country = "United States";
     var zone = "";
     var district = "";
@@ -174,40 +188,81 @@
     var currencyCode = "USD";
     var latitude = 37.4192;
     var longitude = -122.0574;
-    $.getScript('http://www.geoplugin.net/javascript.gp?ip=<%= request.remote_ip %>', function() {
-      country = geoplugin_countryName();
-      zone = geoplugin_region();
-      district = geoplugin_city();
-      countryCode = geoplugin_countryCode();
-      currencyCode = geoplugin_currencyCode();
-      latitude = geoplugin_latitude();
-      longitude = geoplugin_longitude();
-      Cookies.set('countryName', country);
-      Cookies.set('currency', currencyCode);
-      Cookies.set('country', countryCode);
-      Cookies.set('latitude', latitude);
-      Cookies.set('longitude', longitude); 
-    });
-    if(!(Cookies.get('countryName'))){
-      Cookies.set('countryName', country);
+    function setCookies(){
+      $.getScript('http://www.geoplugin.net/javascript.gp?ip=203.128.31.127', function() {
+        country = geoplugin_countryName();
+        zone = geoplugin_region();
+        district = geoplugin_city();
+        countryCode = geoplugin_countryCode();
+        currencyCode = geoplugin_currencyCode();
+        latitude = geoplugin_latitude();
+        longitude = geoplugin_longitude();
+        Cookies.set('countryName', country);
+        Cookies.set('currency', currencyCode);
+        Cookies.set('country', countryCode);
+        Cookies.set('latitude', latitude);
+        Cookies.set('longitude', longitude); 
+        if(!(Cookies.get('countryName'))){
+          Cookies.set('countryName', country);
+        }
+        if(!(Cookies.get('currency'))){
+          Cookies.set('currency', currencyCode);
+        }
+        if (!(Cookies.get('country'))){
+          Cookies.set('country', countryCode);
+        }
+        if (!(Cookies.get('latitude'))){
+          Cookies.set('latitude', latitude);
+        }
+        if (!(Cookies.get('longitude'))){
+          Cookies.set('longitude', longitude);
+        }
+      });
+      if (Cookies.get('countryName') != "") {
+        return true
+      }  
+      else{
+        return false
+      }
     }
-    if(!(Cookies.get('currency'))){
-      Cookies.set('currency', currencyCode);
+    // setCookies();
+    function setTimeForCookie(){
+      setTimeout(function(){ 
+        if(setCookies() == false)
+        {
+          setTimeForCookie();
+        }
+      }, 1000);  
     }
-    if (!(Cookies.get('country'))){
-      Cookies.set('country', countryCode);
-    }
-    if (!(Cookies.get('latitude'))){
-      Cookies.set('latitude', latitude);
-    }
-    if (!(Cookies.get('longitude'))){
-      Cookies.set('longitude', longitude);
-    }
+    setTimeForCookie();
     $("#loader-wrapper").hide();
     $(".original").hide()
-    $(".form-submit").click(function(){
+    $(".form-horizontal").submit(function(e){
+      e.preventDefault();
       $("#loader-wrapper").show();
+      if ($("#from").val() != "" && $("#depart").val() != "" && $("#destination").val() != "" ){
+        $(".error-class").removeClass("has-error");
+        $(".error-class input").removeClass("error");
+        $(".error-class form-error").remove();
+        $(this).submit();
+      }
+      else{
+        $("#loader-wrapper").hide();
+        if ($("#depart").val() == "") {
+          $(".error-class").addClass("has-error");
+          $(".error-class input").addClass("error");
+          $(".error-class").append("<span class='help-block form-error'>Please enter your departure date!</span>");
+        }
+        // alert("please fill required information!");
+      }
     })
+
+    $("#depart").change(function(){
+      $(".error-class").removeClass("has-error");
+      $(".error-class input").removeClass("error");
+      $(".error-class span").remove();
+    });
+
     $('#from').autocomplete({
       source: '/countries',
       minChars: 2,

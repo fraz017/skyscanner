@@ -1,4 +1,5 @@
 $(".cities").html("<%= escape_javascript(render(:partial => 'location', :locals => { :@locations => @locations, :@country => @country, :@symbol => @symbol})) %>");
+$(".flights-content #loader-wrapper").hide();
 $.ajax({
   method: "GET",
   url: "/africa.js",

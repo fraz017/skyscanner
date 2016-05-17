@@ -3,7 +3,7 @@ class FlightsController < ApplicationController
   def live_prices
     response = Scanner.live_price(params[:flight])
     cookies[:prices_url] = response[:prices_url]
-    cookies[:prices] = response[:prices]
+    # cookies[:prices] = response[:prices]
     @prices = HTTParty.get(cookies[:prices_url])
     if @prices["Legs"].present?
       set_hash

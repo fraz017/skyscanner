@@ -20,3 +20,4 @@
 //= require icheck.min
 //= require list
 //= require pagination
+//= require jquery.form-validator.min
