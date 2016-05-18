@@ -22,55 +22,55 @@ class FlightsController < ApplicationController
     end
   end
 
-  # def cities
-  #   @places = Scanner.city2country("#{cookies[:latitude]},#{cookies[:longitude]}-latlong",cookies[:country], cookies[:currency])
-  #   @country = "Top Locations in Your Country"
-  #   @countryCode = cookies[:country].downcase
-  #   set_grid
-  #   respond_to do |format|
-  #     format.js
-  #   end
-  # end
+  def cities
+    @places = Scanner.city2country("#{cookies[:latitude]},#{cookies[:longitude]}-latlong",cookies[:country], cookies[:currency])
+    @country = "Top Locations in Your Country"
+    @countryCode = cookies[:country].downcase
+    set_grid
+    respond_to do |format|
+      format.js
+    end
+  end
 
-  # def usa
-  #   @places = Scanner.city2country("US","US", cookies[:currency])
-  #   @country = "Top Locations in USA"
-  #   @countryCode = "us"
-  #   set_grid
-  #   respond_to do |format|
-  #     format.js
-  #   end
-  # end
+  def usa
+    @places = Scanner.city2country("US","US", cookies[:currency])
+    @country = "Top Locations in USA"
+    @countryCode = "us"
+    set_grid
+    respond_to do |format|
+      format.js
+    end
+  end
 
-  # def asia
-  #   @places = Scanner.city2country("AE","AE", cookies[:currency])
-  #   @country = "Top Locations in Asia & Middle East"
-  #   @countryCode = "ae"
-  #   set_grid
-  #   respond_to do |format|
-  #     format.js
-  #   end
-  # end
+  def asia
+    @places = Scanner.city2country("AE","AE", cookies[:currency])
+    @country = "Top Locations in Asia & Middle East"
+    @countryCode = "ae"
+    set_grid
+    respond_to do |format|
+      format.js
+    end
+  end
 
-  # def africa
-  #   @places = Scanner.city2country("#{cookies[:latitude]},#{cookies[:longitude]}-latlong","CE", cookies[:currency])
-  #   @country = "Top Locations in Africa"
-  #   @countryCode = "ce"
-  #   set_grid
-  #   respond_to do |format|
-  #     format.js
-  #   end
-  # end
+  def africa
+    @places = Scanner.city2country("#{cookies[:latitude]},#{cookies[:longitude]}-latlong","CE", cookies[:currency])
+    @country = "Top Locations in Africa"
+    @countryCode = "ce"
+    set_grid
+    respond_to do |format|
+      format.js
+    end
+  end
 
-  # def europe
-  #   @places = Scanner.city2country("#{cookies[:latitude]},#{cookies[:longitude]}-latlong",cookies[:country], cookies[:currency])
-  #   @country = "Top Locations in Europe"
-  #   @countryCode = cookies[:country].downcase
-  #   set_grid
-  #   respond_to do |format|
-  #     format.js
-  #   end
-  # end
+  def europe
+    @places = Scanner.city2country("#{cookies[:latitude]},#{cookies[:longitude]}-latlong",cookies[:country], cookies[:currency])
+    @country = "Top Locations in Europe"
+    @countryCode = cookies[:country].downcase
+    set_grid
+    respond_to do |format|
+      format.js
+    end
+  end
 
   def grid
     @grids = Scanner.cityGrid("#{cookies[:latitude]},#{cookies[:longitude]}-latlong", params[:destination], cookies[:country], cookies[:currency])

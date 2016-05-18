@@ -102,6 +102,21 @@
 .ui-state-focus{
   background: transparent;
 }
+hr{
+  border-top: 1px solid #000000;
+}
+
+.borderd{
+  border-bottom: 1px solid;
+  width: 75%;
+  display: inline-block;
+  margin-bottom: 25px;
+}
+
+.middle{
+  position: relative;
+  top: 75px;
+}
 
 #loader-wrapper {
   position: fixed;

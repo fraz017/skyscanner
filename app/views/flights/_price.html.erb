@@ -46,7 +46,7 @@
                             (<%= "#{hours}hrs #{mins}"%>)
                           </h2>
                           <br/>
-                          <p><%= leg["Stops"].count > 0 ? "#{leg["Stops"].count} Stop(s)" : "" %>
+                          <p><%= leg["Stops"].count > 0 ? "#{leg["Stops"].count} Stop(s)" : "Direct" %>
                             <% leg["StopPlaces"].each do |s| %>
                               <span data-toggle="popover" title="" data-content="<p><%= s["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= s["Name"] %></p>"> <strong> <%=s["Code"] %> </strong></span>
                             <%end%>
@@ -57,7 +57,7 @@
                             <%= leg["Destination"]["Code"] %> (<%= DateTime.parse(leg["Arrival"]).strftime("%H:%M") %>)
                           </h2>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-3 text-center <%= l["inbound"].present? ? 'middle' : '' %>">
                           <p><%= l["PriceInfo"].count %> deal(s) from</p>
                           <h2>
                             <%= leg["CurrencyCode"] %> <%= l["TotalPrice"] %>  
@@ -67,17 +67,9 @@
                           <a href="<%= l["PriceInfo"][0]["DeeplinkUrl"] %>" class="btn btn-success" rel="nofollow">Select <span class="glyphicon glyphicon-chevron-right"></span></a>
                         </div>
                       </div>
-                    </div>
-                    <div class="timeline-footer">
-                      <p>Operated By <%= leg["Operators"][0]["Name"] %></p>
-                    </div>
-                  </div>
-                  <%if l["inbound"].present?%>
-                    <hr/>
-                    <% leg = l["inbound"] %>
-                    <div class="timeline-item">
-                      <h3 class="timeline-header"><%= leg["Stops"].count == 0 ? "Direct" : "Indirect" %></h3>
-                      <div class="timeline-body">
+                      <%if l["inbound"].present?%>
+                        <% leg = l["inbound"] %>
+                        <div class="borderd"></div>
                         <div class="row">
                           <div class="col-md-2">
                             <img src="<%= leg['carrierDetail'][0]['ImageUrl'] %>" />
@@ -97,7 +89,7 @@
                               (<%= "#{hours}hrs #{mins}"%>)
                             </h2>
                             <br/>
-                            <p><%= leg["Stops"].count > 0 ? "#{leg["Stops"].count} Stop(s)" : "" %>
+                            <p><%= leg["Stops"].count > 0 ? "#{leg["Stops"].count} Stop(s)" : "Direct" %>
                               <% leg["StopPlaces"].each do |s| %>
                                 <span data-toggle="popover" title="" data-content="<p><%= s["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= s["Name"] %></p>"> <strong> <%=s["Code"] %> </strong></span>
                               <%end%>
@@ -108,22 +100,13 @@
                               <%= leg["Destination"]["Code"] %> (<%= DateTime.parse(leg["Arrival"]).strftime("%H:%M") %>)
                             </h2>
                           </div>
-                          <div class="col-md-3">
-                            <p><%= l["PriceInfo"].count %> deal(s) from</p>
-                            <h2>
-                              <%= leg["CurrencyCode"] %> <%= l["TotalPrice"] %>  
-                            </h2>
-                            <span> <%= leg["carrierDetail"][0]["Name"] %></span>
-                            <br/>
-                            <a href="<%= l["PriceInfo"][0]["DeeplinkUrl"] %>" class="btn btn-success" rel="nofollow">Select <span class="glyphicon glyphicon-chevron-right"></span></a>
-                          </div>
                         </div>
-                      </div>
-                      <div class="timeline-footer">
-                        <p>Operated By <%= leg["Operators"][0]["Name"] %></p>
-                      </div>
+                      <%end%>
                     </div>
-                  <%end%>
+                    <div class="timeline-footer">
+                      <p>Operated By <%= leg["Operators"][0]["Name"] %></p>
+                    </div>
+                  </div>
                 </li>
               <%end%>
             </ul>
@@ -157,7 +140,7 @@
                             (<%= "#{hours}hrs #{mins}"%>)
                           </h2>
                           <br/>
-                          <p><%= leg["Stops"].count > 0 ? "#{leg["Stops"].count} Stop(s)" : "" %>
+                          <p><%= leg["Stops"].count > 0 ? "#{leg["Stops"].count} Stop(s)" : "Direct" %>
                             <% leg["StopPlaces"].each do |s| %>
                               <span data-toggle="popover" title="" data-content="<p><%= s["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= s["Name"] %></p>"> <strong> <%=s["Code"] %> </strong></span>
                             <%end%>
@@ -168,7 +151,7 @@
                             <%= leg["Destination"]["Code"] %> (<%= DateTime.parse(leg["Arrival"]).strftime("%H:%M") %>)
                           </h2>
                         </div>
-                        <div class="col-md-3">
+                        <div class="col-md-3 text-center middle">
                           <p><%= l["PriceInfo"].count %> deal(s) from</p>
                           <h2>
                             <%= leg["CurrencyCode"] %> <%= l["TotalPrice"] %>  
@@ -178,17 +161,9 @@
                           <a href="<%= l["PriceInfo"][0]["DeeplinkUrl"] %>" class="btn btn-success" rel="nofollow">Select <span class="glyphicon glyphicon-chevron-right"></span></a>
                         </div>
                       </div>
-                    </div>
-                    <div class="timeline-footer">
-                      <p>Operated By <%= leg["Operators"][0]["Name"] %></p>
-                    </div>
-                  </div>
-                  <%if l["inbound"].present?%>
-                    <hr/>
-                    <% leg = l["inbound"] %>
-                    <div class="timeline-item">
-                      <h3 class="timeline-header"><%= leg["Stops"].count == 0 ? "Direct" : "Indirect" %></h3>
-                      <div class="timeline-body">
+                      <%if l["inbound"].present?%>
+                        <% leg = l["inbound"] %>
+                        <div class="borderd"></div>
                         <div class="row">
                           <div class="col-md-2">
                             <img src="<%= leg['carrierDetail'][0]['ImageUrl'] %>" />
@@ -208,7 +183,7 @@
                               (<%= "#{hours}hrs #{mins}"%>)
                             </h2>
                             <br/>
-                            <p><%= leg["Stops"].count > 0 ? "#{leg["Stops"].count} Stop(s)" : "" %>
+                            <p><%= leg["Stops"].count > 0 ? "#{leg["Stops"].count} Stop(s)" : "Direct" %>
                               <% leg["StopPlaces"].each do |s| %>
                                 <span data-toggle="popover" title="" data-content="<p><%= s["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= s["Name"] %></p>"> <strong> <%=s["Code"] %> </strong></span>
                               <%end%>
@@ -219,22 +194,13 @@
                               <%= leg["Destination"]["Code"] %> (<%= DateTime.parse(leg["Arrival"]).strftime("%H:%M") %>)
                             </h2>
                           </div>
-                          <div class="col-md-3">
-                            <p><%= l["PriceInfo"].count %> deal(s) from</p>
-                            <h2>
-                              <%= leg["CurrencyCode"] %> <%= l["TotalPrice"] %>  
-                            </h2>
-                            <span> <%= leg["carrierDetail"][0]["Name"] %></span>
-                            <br/>
-                            <a href="<%= l["PriceInfo"][0]["DeeplinkUrl"] %>" class="btn btn-success" rel="nofollow">Select <span class="glyphicon glyphicon-chevron-right"></span></a>
-                          </div>
                         </div>
-                      </div>
-                      <div class="timeline-footer">
-                        <p>Operated By <%= leg["Operators"][0]["Name"] %></p>
-                      </div>
+                      <%end%>
                     </div>
-                  <%end%>  
+                    <div class="timeline-footer">
+                      <p>Operated By <%= leg["Operators"][0]["Name"] %></p>
+                    </div>
+                  </div>
                 </li>
               <%end%>
             </ul>
