@@ -1,4 +1,4 @@
-<div id="loader-wrapper">
+<div id="loader-wrapper" >
   <div id="loader"></div>
 </div>
 <section class="content">
@@ -8,7 +8,7 @@
       <div class="box box-info">
         <div class="box-header with-border">
           <h3 class="box-title">Flight Search</h3>
-          <form action="/live_prices.js" method="post" class="form-horizontal" data-remote = "true">
+          <form action="/live_prices.js" method="post" class="form-horizontal" data-remote = "true" id="parsley">
             <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %> 
             <input type="hidden" name="flight[country]" value="<%= cookies[:country] %>">
             <input type="hidden" name="flight[currency]" value="<%= cookies[:currency] %>">
@@ -36,14 +36,14 @@
                 <div class="form-group">
                   <label for="from" class="col-sm-2 control-label">From</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" id="from" placeholder="From" data-validation="required" data-validation-error-msg="Please enter your from location!" tabindex="1">
+                    <input type="text" class="form-control" id="from" data-parsley-error-message="Please insert from location!" placeholder="From" data-parsley-required="true" tabindex="1">
                   </div>
                 </div>
                 <div class="form-group">
                   <div class="input-daterange" id="datepicker" >
                     <label for="depart" class="col-sm-2 control-label">Depart</label>
-                    <div class="col-sm-4 error-class">
-                      <input type="text" class="form-control" id="depart" name="flight[outbounddate]" placeholder="Depart" tabindex="3" />
+                    <div class="col-sm-4 depart">
+                      <input type="text" class="form-control" id="depart" data-parsley-error-message="Please insert depart date!" data-parsley-required="true" name="flight[outbounddate]" placeholder="Depart" tabindex="3" />
                     </div>
                     <label for="return" class="col-sm-2 control-label">Return</label>
                     <div class="col-sm-4 original">
@@ -91,7 +91,7 @@
                 <div class="form-group">
                   <label for="destination" class="col-sm-2 control-label">To</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" id="destination" placeholder="Destination" data-validation="required" data-validation-error-msg="Please enter your destination!" tabindex="2">
+                    <input type="text" class="form-control" data-parsley-error-message="Please insert your destination!" id="destination" placeholder="Destination" data-parsley-required="true" tabindex="2">
                   </div>
                 </div>
                 <div class="form-group">
@@ -163,7 +163,6 @@
 </script>
 <script type="text/javascript">
   $(document).ready(function(){
-    $.validate();
     $('input').iCheck({
       checkboxClass: 'icheckbox_minimal-blue',
       radioClass: 'iradio_minimal-blue',
@@ -226,42 +225,28 @@
         return false
       }
     }
-    setCookies();
-    // function setTimeForCookie(){
-    //   setTimeout(function(){ 
-    //     if(setCookies() == false)
-    //     {
-    //       setTimeForCookie();
-    //     }
-    //   }, 1000);  
-    // }
-    // setTimeForCookie();
+    // setCookies();
+    function setTimeForCookie(){
+      setTimeout(function(){ 
+        if(setCookies() == false)
+        {
+          setTimeForCookie();
+        }
+      }, 1000);  
+    }
+    setTimeForCookie();
+
     $("#loader-wrapper").hide();
     $(".original").hide()
-    $(".form-horizontal").submit(function(e){
-      e.preventDefault();
+    
+    $('#parsley').parsley();
+
+    window.Parsley.on('form:success', function() {
       $("#loader-wrapper").show();
-      if ($("#from").val() != "" && $("#depart").val() != "" && $("#destination").val() != "" ){
-        $(".error-class").removeClass("has-error");
-        $(".error-class input").removeClass("error");
-        $(".error-class form-error").remove();
-        $(this).submit();
-      }
-      else{
-        $("#loader-wrapper").hide();
-        if ($("#depart").val() == "") {
-          $(".error-class").addClass("has-error");
-          $(".error-class input").addClass("error");
-          $(".error-class").append("<span class='help-block form-error'>Please enter your departure date!</span>");
-        }
-        // alert("please fill required information!");
-      }
-    })
+    });
 
     $("#depart").change(function(){
-      $(".error-class").removeClass("has-error");
-      $(".error-class input").removeClass("error");
-      $(".error-class span").remove();
+      $(".depart ul").remove();
     });
 
     $('#from').autocomplete({

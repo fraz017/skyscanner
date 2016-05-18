@@ -159,6 +159,10 @@
   animation: spin 1.5s linear infinite; /* Chrome, Firefox 16+, IE 10+, Opera */
 }
 
+.parsley-custom-error-message{
+  color: #a94442;
+}
+
 @-webkit-keyframes spin {
   0%   { 
     -webkit-transform: rotate(0deg);  /* Chrome, Opera 15+, Safari 3.1+ */
