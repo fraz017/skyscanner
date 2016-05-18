@@ -5,24 +5,25 @@
       <div class="nav-tabs-custom">
         <ul class="nav nav-tabs">
           <%
-            mins = @cheap[0]["Duration"]
+            mins = @cheap[0]["outbound"]["Duration"]
             hours = mins/60
             mins -= hours*60
           %>
           <%
-            minutes = @duration[0]["Duration"]
+            minutes = @duration[0]["outbound"]["Duration"]
             hrs = minutes/60
             minutes -= hrs*60
           %>
-          <li class="active"><a id ="t1" href="#tab_1" data-toggle="tab">Sort By Price </br>Cheapest <%= @cheap[0]["CurrencyCode"] %> <%= @cheap[0]["TotalPrice"] %> (<%= "#{hours}hrs #{mins}"%>)  </a></li>
-          <li><a id ="t2" href="#tab_2" data-toggle="tab">Sort By Duration </br> Shortest <%= @duration[0]["CurrencyCode"] %> <%= @duration[0]["TotalPrice"] %> (<%= "#{hrs}hrs #{minutes}"%>)</a></li>
+          <li class="active"><a id ="t1" href="#tab_1" data-toggle="tab">Sort By Price </br>Cheapest <%= @cheap[0]["outbound"]["CurrencyCode"] %> <%= @cheap[0]["TotalPrice"] %> (<%= "#{hours}hrs #{mins}"%>)  </a></li>
+          <li><a id ="t2" href="#tab_2" data-toggle="tab">Sort By Duration </br> Shortest <%= @duration[0]["outbound"]["CurrencyCode"] %> <%= @duration[0]["TotalPrice"] %> (<%= "#{hrs}hrs #{minutes}"%>)</a></li>
           <li class="pull-right"><a href="#" class="text-muted"><i class="fa fa-gear"></i></a></li>
         </ul>
         <div class="tab-content">
           <div class="tab-pane active" id="tab_1">
             <ul class="cheap-prices timeline timeline-inverse">
-              <% @cheap.each do |leg| %>
+              <% @cheap.each do |l| %>
                 <li>
+                  <% leg = l["outbound"] %>
                   <div class="timeline-item">
                     <h3 class="timeline-header"><%= leg["Stops"].count == 0 ? "Direct" : "Indirect" %></h3>
                     <div class="timeline-body">
@@ -57,12 +58,13 @@
                           </h2>
                         </div>
                         <div class="col-md-3">
+                          <p><%= l["PriceInfo"].count %> deal(s) from</p>
                           <h2>
-                            <%= leg["CurrencyCode"] %> <%= leg["TotalPrice"] %>  
+                            <%= leg["CurrencyCode"] %> <%= l["TotalPrice"] %>  
                           </h2>
                           <span> <%= leg["carrierDetail"][0]["Name"] %></span>
                           <br/>
-                          <a href="<%= leg["PriceInfo"][0]["DeeplinkUrl"] %>" class="btn btn-success" rel="nofollow">Select <span class="glyphicon glyphicon-chevron-right"></span></a>
+                          <a href="<%= l["PriceInfo"][0]["DeeplinkUrl"] %>" class="btn btn-success" rel="nofollow">Select <span class="glyphicon glyphicon-chevron-right"></span></a>
                         </div>
                       </div>
                     </div>
@@ -70,6 +72,58 @@
                       <p>Operated By <%= leg["Operators"][0]["Name"] %></p>
                     </div>
                   </div>
+                  <%if l["inbound"].present?%>
+                    <hr/>
+                    <% leg = l["inbound"] %>
+                    <div class="timeline-item">
+                      <h3 class="timeline-header"><%= leg["Stops"].count == 0 ? "Direct" : "Indirect" %></h3>
+                      <div class="timeline-body">
+                        <div class="row">
+                          <div class="col-md-2">
+                            <img src="<%= leg['carrierDetail'][0]['ImageUrl'] %>" />
+                          </div>
+                          <div class="col-md-2">
+                            <h2 data-toggle="popover" title="" data-content="<p><%= leg["Origin"]["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= leg["Origin"]["Name"] %></p>">
+                              <%= leg["Origin"]["Code"] %> (<%= DateTime.parse(leg["Departure"]).strftime("%H:%M") %>) 
+                            </h2>
+                          </div>
+                          <%
+                            mins = leg["Duration"]
+                            hours = mins/60
+                            mins -= hours*60
+                          %>
+                          <div class="col-md-3 text-center">
+                            <h2>
+                              (<%= "#{hours}hrs #{mins}"%>)
+                            </h2>
+                            <br/>
+                            <p><%= leg["Stops"].count > 0 ? "#{leg["Stops"].count} Stop(s)" : "" %>
+                              <% leg["StopPlaces"].each do |s| %>
+                                <span data-toggle="popover" title="" data-content="<p><%= s["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= s["Name"] %></p>"> <strong> <%=s["Code"] %> </strong></span>
+                              <%end%>
+                            </p>
+                          </div>
+                          <div class="col-md-2">
+                             <h2 data-content="<p><%= leg["Destination"]["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= leg["Destination"]["Name"] %></p>">
+                              <%= leg["Destination"]["Code"] %> (<%= DateTime.parse(leg["Arrival"]).strftime("%H:%M") %>)
+                            </h2>
+                          </div>
+                          <div class="col-md-3">
+                            <p><%= l["PriceInfo"].count %> deal(s) from</p>
+                            <h2>
+                              <%= leg["CurrencyCode"] %> <%= l["TotalPrice"] %>  
+                            </h2>
+                            <span> <%= leg["carrierDetail"][0]["Name"] %></span>
+                            <br/>
+                            <a href="<%= l["PriceInfo"][0]["DeeplinkUrl"] %>" class="btn btn-success" rel="nofollow">Select <span class="glyphicon glyphicon-chevron-right"></span></a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="timeline-footer">
+                        <p>Operated By <%= leg["Operators"][0]["Name"] %></p>
+                      </div>
+                    </div>
+                  <%end%>
                 </li>
               <%end%>
             </ul>
@@ -78,8 +132,9 @@
           </div><!-- /.tab-pane -->
           <div class="tab-pane" id="tab_2">
             <ul class="duration-prices timeline timeline-inverse">
-              <% @duration.each do |leg| %>
+              <% @duration.each do |l| %>
                 <li>
+                  <% leg = l["outbound"] %>
                   <div class="timeline-item">
                     <h3 class="timeline-header"><%= leg["Stops"].count == 0 ? "Direct" : "Indirect" %></h3>
                     <div class="timeline-body">
@@ -88,7 +143,7 @@
                           <img src="<%= leg['carrierDetail'][0]['ImageUrl'] %>" />
                         </div>
                         <div class="col-md-2">
-                          <h2 data-content="<p><%= leg["Origin"]["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= leg["Origin"]["Name"] %></p>">
+                          <h2 data-toggle="popover" title="" data-content="<p><%= leg["Origin"]["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= leg["Origin"]["Name"] %></p>">
                             <%= leg["Origin"]["Code"] %> (<%= DateTime.parse(leg["Departure"]).strftime("%H:%M") %>) 
                           </h2>
                         </div>
@@ -104,22 +159,23 @@
                           <br/>
                           <p><%= leg["Stops"].count > 0 ? "#{leg["Stops"].count} Stop(s)" : "" %>
                             <% leg["StopPlaces"].each do |s| %>
-                              <span data-toggle="popover" title="" data-content="<p><%= s["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= s["Name"] %></p>"> <strong> <%=s["Code"] %> </strong> </span>
+                              <span data-toggle="popover" title="" data-content="<p><%= s["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= s["Name"] %></p>"> <strong> <%=s["Code"] %> </strong></span>
                             <%end%>
                           </p>
                         </div>
                         <div class="col-md-2">
-                          <h2 data-content="<p><%= leg["Origin"]["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= leg["Destination"]["Name"] %></p>">
+                           <h2 data-content="<p><%= leg["Destination"]["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= leg["Destination"]["Name"] %></p>">
                             <%= leg["Destination"]["Code"] %> (<%= DateTime.parse(leg["Arrival"]).strftime("%H:%M") %>)
                           </h2>
                         </div>
                         <div class="col-md-3">
+                          <p><%= l["PriceInfo"].count %> deal(s) from</p>
                           <h2>
-                            <%= leg["CurrencyCode"] %> <%= leg["TotalPrice"] %>  
+                            <%= leg["CurrencyCode"] %> <%= l["TotalPrice"] %>  
                           </h2>
-                          <span> <%= leg["carrierDetail"][0]["Name"] %> </span>
+                          <span> <%= leg["carrierDetail"][0]["Name"] %></span>
                           <br/>
-                          <a href="<%= leg["PriceInfo"][0]["DeeplinkUrl"] %>" class="btn btn-success" rel="nofollow">Select <span class="glyphicon glyphicon-chevron-right"></span></a>
+                          <a href="<%= l["PriceInfo"][0]["DeeplinkUrl"] %>" class="btn btn-success" rel="nofollow">Select <span class="glyphicon glyphicon-chevron-right"></span></a>
                         </div>
                       </div>
                     </div>
@@ -127,6 +183,58 @@
                       <p>Operated By <%= leg["Operators"][0]["Name"] %></p>
                     </div>
                   </div>
+                  <%if l["inbound"].present?%>
+                    <hr/>
+                    <% leg = l["inbound"] %>
+                    <div class="timeline-item">
+                      <h3 class="timeline-header"><%= leg["Stops"].count == 0 ? "Direct" : "Indirect" %></h3>
+                      <div class="timeline-body">
+                        <div class="row">
+                          <div class="col-md-2">
+                            <img src="<%= leg['carrierDetail'][0]['ImageUrl'] %>" />
+                          </div>
+                          <div class="col-md-2">
+                            <h2 data-toggle="popover" title="" data-content="<p><%= leg["Origin"]["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= leg["Origin"]["Name"] %></p>">
+                              <%= leg["Origin"]["Code"] %> (<%= DateTime.parse(leg["Departure"]).strftime("%H:%M") %>) 
+                            </h2>
+                          </div>
+                          <%
+                            mins = leg["Duration"]
+                            hours = mins/60
+                            mins -= hours*60
+                          %>
+                          <div class="col-md-3 text-center">
+                            <h2>
+                              (<%= "#{hours}hrs #{mins}"%>)
+                            </h2>
+                            <br/>
+                            <p><%= leg["Stops"].count > 0 ? "#{leg["Stops"].count} Stop(s)" : "" %>
+                              <% leg["StopPlaces"].each do |s| %>
+                                <span data-toggle="popover" title="" data-content="<p><%= s["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= s["Name"] %></p>"> <strong> <%=s["Code"] %> </strong></span>
+                              <%end%>
+                            </p>
+                          </div>
+                          <div class="col-md-2">
+                             <h2 data-content="<p><%= leg["Destination"]["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= leg["Destination"]["Name"] %></p>">
+                              <%= leg["Destination"]["Code"] %> (<%= DateTime.parse(leg["Arrival"]).strftime("%H:%M") %>)
+                            </h2>
+                          </div>
+                          <div class="col-md-3">
+                            <p><%= l["PriceInfo"].count %> deal(s) from</p>
+                            <h2>
+                              <%= leg["CurrencyCode"] %> <%= l["TotalPrice"] %>  
+                            </h2>
+                            <span> <%= leg["carrierDetail"][0]["Name"] %></span>
+                            <br/>
+                            <a href="<%= l["PriceInfo"][0]["DeeplinkUrl"] %>" class="btn btn-success" rel="nofollow">Select <span class="glyphicon glyphicon-chevron-right"></span></a>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="timeline-footer">
+                        <p>Operated By <%= leg["Operators"][0]["Name"] %></p>
+                      </div>
+                    </div>
+                  <%end%>  
                 </li>
               <%end%>
             </ul>
@@ -138,6 +246,8 @@
     </div><!-- /.col -->
   </div>
   <script type="text/javascript">
+    console.log(<%= raw @prices.to_json %>);
+    console.log(<%= raw @cheap.to_json %>);
     var update = function(request){
       if (request == "UpdatesPending"){
         $.ajax({

@@ -51,7 +51,7 @@
                     </div>
                   </div>
                     <div class="col-sm-4 fake">
-                      <input type="text" class="form-control" name="flight[inbounddate]" readonly="readonly" />
+                      <input type="text" class="form-control" name="fake" readonly="readonly" />
                     </div>
                 </div>
                 <div class="form-group">
@@ -177,6 +177,7 @@
       }
       else{
         $(".original").hide();
+        $(".original input[type='text']").val("");
         $(".fake").show();
       }
     });
@@ -225,16 +226,16 @@
         return false
       }
     }
-    // setCookies();
-    function setTimeForCookie(){
-      setTimeout(function(){ 
-        if(setCookies() == false)
-        {
-          setTimeForCookie();
-        }
-      }, 1000);  
-    }
-    setTimeForCookie();
+    setCookies();
+    // function setTimeForCookie(){
+    //   setTimeout(function(){ 
+    //     if(setCookies() == false)
+    //     {
+    //       setTimeForCookie();
+    //     }
+    //   }, 1000);  
+    // }
+    // setTimeForCookie();
     $("#loader-wrapper").hide();
     $(".original").hide()
     $(".form-horizontal").submit(function(e){
