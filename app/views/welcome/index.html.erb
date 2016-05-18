@@ -189,7 +189,7 @@
     var latitude = 37.4192;
     var longitude = -122.0574;
     function setCookies(){
-      $.getScript('http://www.geoplugin.net/javascript.gp?ip=203.128.31.127', function() {
+      $.getScript('http://www.geoplugin.net/javascript.gp?ip=<%= request.remote_ip %>', function() {
         country = geoplugin_countryName();
         zone = geoplugin_region();
         district = geoplugin_city();

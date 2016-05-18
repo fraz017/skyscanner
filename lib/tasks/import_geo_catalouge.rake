@@ -1,5 +1,5 @@
 task :import_geo_catalouge => :environment do
-  @results = HTTParty.get("http://partners.api.skyscanner.net/apiservices/geo/v1.0?apikey=gu679068437910229598633046372465",
+  @results = HTTParty.get("http://partners.api.skyscanner.net/apiservices/geo/v1.0?apikey=#{ENV['API_KEY']}",
     :headers => { 'Content-Type' => 'application/json', 'Accept' => 'application/json' }
   )
   @results["Continents"].each do |c|
