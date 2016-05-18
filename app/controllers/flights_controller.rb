@@ -96,6 +96,9 @@ class FlightsController < ApplicationController
       empty["inbound"] = legs.find { |h| h['Id'] == it["InboundLegId"] } if it["InboundLegId"].present?
       empty["PriceInfo"] = it["PricingOptions"]
       empty["PriceInfo"] = empty["PriceInfo"].sort_by { |k| k["Price"] }
+      empty["PriceInfo"].each do |obj|
+        obj["AgentDetail"] = agents.find { |h| h['Id'] == obj["Agents"][0] } if obj["Agents"][0].present?  
+      end
       empty["TotalPrice"] = 0.0
       empty["TotalPrice"] = empty["PriceInfo"][0]["Price"] if empty["PriceInfo"].present? 
       empty["Duration"] = empty["outbound"]["Duration"]

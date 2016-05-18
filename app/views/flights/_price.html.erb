@@ -21,7 +21,7 @@
         <div class="tab-content">
           <div class="tab-pane active" id="tab_1">
             <ul class="cheap-prices timeline timeline-inverse">
-              <% @cheap.each do |l| %>
+              <% @cheap.each_with_index do |l, index| %>
                 <li>
                   <% leg = l["outbound"] %>
                   <div class="timeline-item">
@@ -58,13 +58,13 @@
                           </h2>
                         </div>
                         <div class="col-md-3 text-center <%= l["inbound"].present? ? 'middle' : '' %>">
-                          <p><%= l["PriceInfo"].count %> deal(s) from</p>
+                          <p><a data-toggle="collapse" data-parent="#accordion" href="#<%= index %>"> <%= l["PriceInfo"].count %> deal(s) from </a></p>
                           <h2>
                             <%= leg["CurrencyCode"] %> <%= l["TotalPrice"] %>  
                           </h2>
                           <span> <%= leg["carrierDetail"][0]["Name"] %></span>
                           <br/>
-                          <a href="<%= l["PriceInfo"][0]["DeeplinkUrl"] %>" class="btn btn-success" rel="nofollow">Select <span class="glyphicon glyphicon-chevron-right"></span></a>
+                          <a data-toggle="collapse" data-parent="#accordion" href="#<%= index %>" class="btn btn-primary">Select <span class="glyphicon glyphicon-chevron-right"></span></a>
                         </div>
                       </div>
                       <%if l["inbound"].present?%>
@@ -107,6 +107,24 @@
                       <p>Operated By <%= leg["Operators"][0]["Name"] %></p>
                     </div>
                   </div>
+                  <div class="timeline-item panel-collapse collapse" id="<%= index %>">
+                    <div class="timeline-body">
+                      <%l["PriceInfo"].each do |pi|%>
+                        <div class="row">
+                          <div class="col-md-3">
+                            <h2><%= pi["AgentDetail"]["Name"] %></h2>
+                          </div>
+                          <div class="col-md-3">
+                            <h2><%= pi["Price"] %></h2>
+                          </div>
+                          <div class="col-md-3">
+                            <h2><a href="<%= pi["DeeplinkUrl"] %>" class="btn btn-success" rel="nofollow">Select <span class="glyphicon glyphicon-chevron-right"></span></a></h2>
+                          </div>
+                        </div>
+                        <hr>
+                      <%end%>
+                    </div>
+                  </div>
                 </li>
               <%end%>
             </ul>
@@ -115,7 +133,7 @@
           </div><!-- /.tab-pane -->
           <div class="tab-pane" id="tab_2">
             <ul class="duration-prices timeline timeline-inverse">
-              <% @duration.each do |l| %>
+              <% @duration.each_with_index do |l, index| %>
                 <li>
                   <% leg = l["outbound"] %>
                   <div class="timeline-item">
@@ -151,14 +169,14 @@
                             <%= leg["Destination"]["Code"] %> (<%= DateTime.parse(leg["Arrival"]).strftime("%H:%M") %>)
                           </h2>
                         </div>
-                        <div class="col-md-3 text-center middle">
-                          <p><%= l["PriceInfo"].count %> deal(s) from</p>
+                        <div class="col-md-3 text-center <%= l["inbound"].present? ? 'middle' : '' %>">
+                          <p><a data-toggle="collapse" data-parent="#accordion" href="#<%= index %>-duration"> <%= l["PriceInfo"].count %> deal(s) from </a></p>
                           <h2>
                             <%= leg["CurrencyCode"] %> <%= l["TotalPrice"] %>  
                           </h2>
                           <span> <%= leg["carrierDetail"][0]["Name"] %></span>
                           <br/>
-                          <a href="<%= l["PriceInfo"][0]["DeeplinkUrl"] %>" class="btn btn-success" rel="nofollow">Select <span class="glyphicon glyphicon-chevron-right"></span></a>
+                          <a data-toggle="collapse" data-parent="#accordion" href="#<%= index %>-duration" class="btn btn-primary">Select <span class="glyphicon glyphicon-chevron-right"></span></a>
                         </div>
                       </div>
                       <%if l["inbound"].present?%>
@@ -201,6 +219,24 @@
                       <p>Operated By <%= leg["Operators"][0]["Name"] %></p>
                     </div>
                   </div>
+                  <div class="timeline-item panel-collapse collapse" id="<%= index %>-duration">
+                    <div class="timeline-body">
+                      <%l["PriceInfo"].each do |pi|%>
+                        <div class="row">
+                          <div class="col-md-3">
+                            <h2><%= pi["AgentDetail"]["Name"] %></h2>
+                          </div>
+                          <div class="col-md-3">
+                            <h2><%= pi["Price"] %></h2>
+                          </div>
+                          <div class="col-md-3">
+                            <h2><a href="<%= pi["DeeplinkUrl"] %>" class="btn btn-success" rel="nofollow">Select <span class="glyphicon glyphicon-chevron-right"></span></a></h2>
+                          </div>
+                        </div>
+                        <hr>
+                      <%end%>
+                    </div>
+                  </div>
                 </li>
               <%end%>
             </ul>
@@ -212,8 +248,6 @@
     </div><!-- /.col -->
   </div>
   <script type="text/javascript">
-    console.log(<%= raw @prices.to_json %>);
-    console.log(<%= raw @cheap.to_json %>);
     var update = function(request){
       if (request == "UpdatesPending"){
         $.ajax({
