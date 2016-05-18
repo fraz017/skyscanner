@@ -227,15 +227,6 @@
       }
     }
     setCookies();
-    // function setTimeForCookie(){
-    //   setTimeout(function(){ 
-    //     if(setCookies() == false)
-    //     {
-    //       setTimeForCookie();
-    //     }
-    //   }, 1000);  
-    // }
-    // setTimeForCookie();
     $("#loader-wrapper").hide();
     $(".original").hide()
     $(".form-horizontal").submit(function(e){
@@ -254,7 +245,6 @@
           $(".error-class input").addClass("error");
           $(".error-class").append("<span class='help-block form-error'>Please enter your departure date!</span>");
         }
-        // alert("please fill required information!");
       }
     })
 
