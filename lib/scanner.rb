@@ -30,8 +30,8 @@ class Scanner
     return @prices
   end
 
-  def self.city2country(city, country, currency)
-    @results = HTTParty.get("http://partners.api.skyscanner.net/apiservices/browsequotes/v1.0/#{country}/#{currency}/en-US/#{city}/#{country}/#{Date.today.strftime("%Y-%m-%d")}?apiKey=#{ENV['API_KEY']}",
+  def self.city2country(city, destination, country, currency)
+    @results = HTTParty.get("http://partners.api.skyscanner.net/apiservices/browsequotes/v1.0/#{country}/#{currency}/en-US/#{city}/#{destination}/#{Date.today.strftime("%Y-%m")}?apiKey=#{ENV['API_KEY']}",
       :headers => { 'Content-Type' => 'application/json', 'Accept' => 'application/json' }
     )
     return @results

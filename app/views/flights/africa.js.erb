@@ -1,4 +1,4 @@
-$(".africa").html("<%= escape_javascript(render(:partial => 'location', :locals => { :@locations => @locations, :@country => @country, :@symbol => @symbol})) %>");
+$(".africa").html("<%= escape_javascript(render(:partial => 'locations_city', :locals => { :@locations => @locations, :@country => @country, :@symbol => @symbol})) %>");
 $.ajax({
   method: "GET",
   url: "/asia.js",

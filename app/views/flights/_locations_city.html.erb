@@ -1,0 +1,36 @@
+<% require "rest-client" %>
+<%if @locations.present?%>
+  <div class ="destination-wrapper">
+    <div class = "destination">
+      <h2><strong><%=@country.try(:titleize)%></strong></h2>
+      <ul class="clearfix">
+        <%@locations.each do |locations|%>
+          <% locations.first(1).each do |location| %>
+            <li class="destination col-md-3">
+              <a data-params="destination=<%=location['Destination']['IataCode']%>" data-remote="true" data-method="post" href="/grid.js" rel="nofollow">
+                <div class="destination_thumb">
+                  <%
+                    url = "https://s3-eu-west-1.amazonaws.com/images.skypicker.com/photos/220x165/"+location['Destination']['CityName'].downcase.gsub(/[!@%&,.'-]/,'').gsub(' ','-')+"_"+@countryCode+".jpg"
+                    begin
+                      exists = RestClient.head(url).code == 200
+                    rescue RestClient::Exception => error
+                      url = "https://s3-eu-west-1.amazonaws.com/images.skypicker.com/photos/220x165/default3.jpg"
+                    end
+                  %>
+                  <img src="<%= url %>">
+                  <div class="price-desc"> 
+                    <span class="price-tag">From: <%= @symbol %> <%=location["MinPrice"]%></span>
+                  </div>
+                </div>
+                <div class="destination_cta" data-icon="forwardBlue after">
+                  <h4><%=location["Destination"]["CityName"]%></h4>
+                  <p><%=location["Destination"]["CountryName"]%></p>
+                </div>
+              </a>
+            </li>
+          <%end%>
+        <%end%>
+      </ul>
+    </div>
+  </div>
+<%end%>

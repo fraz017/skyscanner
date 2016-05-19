@@ -23,7 +23,7 @@ class FlightsController < ApplicationController
   end
 
   def cities
-    @places = Scanner.city2country("#{cookies[:latitude]},#{cookies[:longitude]}-latlong",cookies[:country], cookies[:currency])
+    @places = Scanner.city2country("#{cookies[:latitude]},#{cookies[:longitude]}-latlong",cookies[:country], cookies[:country], cookies[:currency])
     @country = "Top Locations in Your Country"
     @countryCode = cookies[:country].downcase
     set_grid
@@ -33,40 +33,60 @@ class FlightsController < ApplicationController
   end
 
   def usa
-    @places = Scanner.city2country("US","US", cookies[:currency])
+    cities = ["WASA", "NYCA", "RIOA", "SAOA", "HOUA", "LASA", "LAXA", "CHIA", "YVRA", "YTOA"]
+    @places = Array.new
+    cities.each do |city|
+      place = Scanner.city2country("#{cookies[:latitude]},#{cookies[:longitude]}-latlong",city, cookies[:country], cookies[:currency])
+      @places.push(place)
+    end
     @country = "Top Locations in USA"
     @countryCode = "us"
-    set_grid
+    set_grid2
     respond_to do |format|
       format.js
     end
   end
 
   def asia
-    @places = Scanner.city2country("AE","AE", cookies[:currency])
+    cities = ["DXBA", "SINS", "DOHA", "HKGA", "BKKT", "TYOA", "KULM", "AUHA", "TELA", "JEDA"]
+    @places = Array.new
+    cities.each do |city|
+      place = Scanner.city2country("#{cookies[:latitude]},#{cookies[:longitude]}-latlong",city, cookies[:country], cookies[:currency])
+      @places.push(place)
+    end
     @country = "Top Locations in Asia & Middle East"
     @countryCode = "ae"
-    set_grid
+    set_grid2
     respond_to do |format|
       format.js
     end
   end
 
   def africa
-    @places = Scanner.city2country("#{cookies[:latitude]},#{cookies[:longitude]}-latlong","CE", cookies[:currency])
+    cities = ["ZNZA", "HREA", "CPTA", "JNBA", "NBOA", "MRUA"]
+    @places = Array.new
+    cities.each do |city|
+      place = Scanner.city2country("#{cookies[:latitude]},#{cookies[:longitude]}-latlong",city, cookies[:country], cookies[:currency])
+      @places.push(place)
+    end
     @country = "Top Locations in Africa"
     @countryCode = "ce"
-    set_grid
+    set_grid2
     respond_to do |format|
       format.js
     end
   end
 
   def europe
-    @places = Scanner.city2country("#{cookies[:latitude]},#{cookies[:longitude]}-latlong",cookies[:country], cookies[:currency])
+    cities = ["LOND", "ISTA", "PARI", "ROME", "FLOR", "MILA", "VENI", "BARC", "MADR", "AMST", "DUBL", "VIEN"]
+    @places = Array.new
+    cities.each do |city|
+      place = Scanner.city2country("#{cookies[:latitude]},#{cookies[:longitude]}-latlong",city, cookies[:country], cookies[:currency])
+      @places.push(place)
+    end
     @country = "Top Locations in Europe"
     @countryCode = cookies[:country].downcase
-    set_grid
+    set_grid2
     respond_to do |format|
       format.js
     end
@@ -148,5 +168,25 @@ class FlightsController < ApplicationController
       @locations.delete_if{ |key, value| key["MinPrice"]==0.0 }
       @locations = @locations.sort_by { |k| k["MinPrice"]}
     end
+  end
+
+  def set_grid2
+    @locations = Array.new
+    @places.each do |place|
+      carriers = place["Carriers"]
+      currencies = place["Currencies"]
+      places = place["Places"]
+      location = []
+      location = place["Quotes"] if !place["Quotes"].nil?
+      location.each do |q|
+        q["Destination"] = places.find{ |p| p["PlaceId"] == q["OutboundLeg"]["DestinationId"]}
+      end
+      if location.present?
+        @symbol = currencies.find { |h| h['Code'] == cookies[:currency]}["Symbol"]
+        location.delete_if{ |key, value| key["MinPrice"]==0.0 }
+        location = location.sort_by { |k| k["MinPrice"]}
+        @locations.push(location)
+      end
+    end   
   end
 end

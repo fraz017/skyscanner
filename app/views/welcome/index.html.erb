@@ -154,14 +154,6 @@
   }
 </style>
 <script type="text/javascript">
-  $.ajax({
-    method: "GET",
-    url: "/cities.js",
-    success:function(data){
-    }
-  });
-</script>
-<script type="text/javascript">
   $(document).ready(function(){
     $('input').iCheck({
       checkboxClass: 'icheckbox_minimal-blue',
@@ -190,18 +182,20 @@
     var longitude = -122.0574;
     function setCookies(){
       $.getScript('http://www.geoplugin.net/javascript.gp?ip=<%= request.remote_ip %>', function() {
-        country = geoplugin_countryName();
+        country1 = geoplugin_countryName();
         zone = geoplugin_region();
         district = geoplugin_city();
-        countryCode = geoplugin_countryCode();
-        currencyCode = geoplugin_currencyCode();
-        latitude = geoplugin_latitude();
-        longitude = geoplugin_longitude();
-        Cookies.set('countryName', country);
-        Cookies.set('currency', currencyCode);
-        Cookies.set('country', countryCode);
-        Cookies.set('latitude', latitude);
-        Cookies.set('longitude', longitude); 
+        countryCode1 = geoplugin_countryCode();
+        currencyCode1 = geoplugin_currencyCode();
+        latitude1 = geoplugin_latitude();
+        longitude1 = geoplugin_longitude();
+        Cookies.set('countryName', country1);
+        Cookies.set('currency', currencyCode1);
+        Cookies.set('country', countryCode1);
+        if(latitude1 != 0)
+          Cookies.set('latitude', latitude1);
+        if(longitude1 != 0)
+          Cookies.set('longitude', longitude1); 
         if(!(Cookies.get('countryName'))){
           Cookies.set('countryName', country);
         }
@@ -225,16 +219,16 @@
         return false
       }
     }
-    // setCookies();
-    function setTimeForCookie(){
-      setTimeout(function(){ 
-        if(setCookies() == false)
-        {
-          setTimeForCookie();
-        }
-      }, 1000);  
-    }
-    setTimeForCookie();
+    setCookies();
+    // function setTimeForCookie(){
+    //   setTimeout(function(){ 
+    //     if(setCookies() == false)
+    //     {
+    //       setTimeForCookie();
+    //     }
+    //   }, 1000);  
+    // }
+    // setTimeForCookie();
     $("#loader-wrapper").hide();
     $(".original").hide()
     
@@ -275,4 +269,10 @@
       autoclose: true
     });
   })
+  $.ajax({
+    method: "GET",
+    url: "/cities.js",
+    success:function(data){
+    }
+  });
 </script>
