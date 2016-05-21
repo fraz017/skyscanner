@@ -168,11 +168,12 @@ class FlightsController < ApplicationController
       q["Destination"] = places.find{ |p| p["PlaceId"] == q["OutboundLeg"]["DestinationId"]}
       q["Origin"] = places.find{ |p| p["PlaceId"] == q["OutboundLeg"]["OriginId"]}
       q["Currencies"] = currencies
+      q["Departure"] = DateTime.parse(q["OutboundLeg"]["DepartureDate"])
     end
     if @locations.present?
       @symbol = currencies.find { |h| h['Code'] == cookies[:currency]}["Symbol"]
       @locations.delete_if{ |key, value| key["MinPrice"]==0.0 }
-      @locations = @locations.sort_by { |k| k["MinPrice"]}
+      @locations = @locations.sort_by { |k| k["Departure"]}
     end
   end
 

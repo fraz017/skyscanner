@@ -13,7 +13,7 @@
               <% @locations.each_with_index do |grid, index| %>
                 <li>
                   <div class="timeline-item">
-                    <h3 class="timeline-header"><%= DateTime.parse(grid["OutboundLeg"]["DepartureDate"]).strftime("%Y-%m-%d") %> </h3>
+                    <h3 class="timeline-header"><%= grid["Departure"].strftime("%Y-%m-%d") %> </h3>
                     <div class="timeline-body">
                       <div class="row">
                         <div class="col-md-2">
