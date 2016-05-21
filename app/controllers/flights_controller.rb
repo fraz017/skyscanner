@@ -103,6 +103,18 @@ class FlightsController < ApplicationController
     end
   end
 
+  def watchdog
+    @notification = UserNotification.new(notify_params)
+    @prices = Hash.new
+    @prices["Query"] = params[:user_notification][:query]
+    if @notification.save
+      @success = true
+    end
+    respond_to do |format|
+      format.js
+    end
+  end
+
   private
   def set_hash
     legs = @prices["Legs"]
@@ -195,5 +207,11 @@ class FlightsController < ApplicationController
         @locations.push(location)
       end
     end   
+  end
+
+  private
+
+  def notify_params
+    params.require(:user_notification).permit(:email, :name, :price, :query)
   end
 end

@@ -1,0 +1,35 @@
+<%if @success.present? && @success != false%>
+  <div class="alert alert-success alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    <h4><i class="icon fa fa-check"></i> Success!</h4>
+    Watchdog added
+  </div>
+<%end%>
+<div class="box box-info">
+  <div class="box-header with-border">
+    <h3 class="box-title">Enable WatchDog for This Search</h3>
+    <form action="/watchdog.js" method="post" class="form-horizontal" data-remote = "true" id="parsley-watchdog">
+      <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %> 
+      <div class="box-body">
+        <div class="col-sm-3">
+          <input type="text" class="form-control" name="user_notification[email]" data-parsley-error-message="Please enter valid email!" placeholder="Email" data-parsley-required="true" tabindex="9">
+        </div>
+        <div class="col-sm-3">
+          <input type="text" class="form-control" name="user_notification[name]" data-parsley-error-message="Please insert a name!" placeholder="Name" data-parsley-required="true" tabindex="10">
+        </div>
+        <div class="col-sm-3">   
+          <input type="text" class="form-control" name="user_notification[price]" data-parsley-error-message="Please a valid price!" placeholder="Price" data-parsley-required="true" tabindex="11">
+        </div>
+        <input type="hidden" name="user_notification[query]" value="<%= @prices['Query'] %>" />
+        <div class="col-sm-3">
+          <button type="submit" class="form-submit btn btn-info" tabindex="12">Add Watchdog</button>
+        </div>
+      </div><!-- /.box-body -->
+    </form>
+  </div><!-- /.box-header -->
+  <!-- form start -->
+</div><!-- /.box -->
+
+<script type="text/javascript">
+  $('#parsley-watchdog').parsley();
+</script>
