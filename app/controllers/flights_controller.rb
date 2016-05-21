@@ -16,10 +16,7 @@ class FlightsController < ApplicationController
   end
 
   def refresh
-    @prices = {}
-    begin
-      @prices = HTTParty.get(ENV['POLLING_URL']+cookies[:session_key]+"?apiKey=#{ENV['API_KEY']}")
-    end while !@prices.present?
+    @prices = HTTParty.get(ENV['POLLING_URL']+cookies[:session_key]+"?apiKey=#{ENV['API_KEY']}")
     if @prices["Legs"].present?
       set_hash
     end

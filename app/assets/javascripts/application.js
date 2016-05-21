@@ -21,3 +21,4 @@
 //= require list
 //= require pagination
 //= require parsley.min
+//= require nprogress

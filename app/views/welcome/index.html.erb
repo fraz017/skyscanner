@@ -43,11 +43,11 @@
                   <div class="input-daterange" id="datepicker" >
                     <label for="depart" class="col-sm-2 control-label">Depart</label>
                     <div class="col-sm-4 depart">
-                      <input type="text" class="form-control" id="depart" data-parsley-error-message="Please insert depart date!" data-parsley-required="true" name="flight[outbounddate]" placeholder="Depart" tabindex="3" />
+                      <input type="text" class="form-control" id="depart" data-parsley-error-message="Please insert depart date!" data-parsley-required="true" name="flight[outbounddate]" placeholder="Depart" tabindex="3" readonly />
                     </div>
                     <label for="return" class="col-sm-2 control-label">Return</label>
                     <div class="col-sm-4 original">
-                      <input type="text" class="form-control" name="flight[inbounddate]" tabindex="4" />
+                      <input type="text" class="form-control" readonly name="flight[inbounddate]" tabindex="4" />
                     </div>
                   </div>
                     <div class="col-sm-4 fake">
@@ -132,6 +132,7 @@
     </div><!--/.col (right) -->
   </div>
 </section>
+<div id="showProgress"></div>
 <section class="flights-content content">
   <div id="loader-wrapper" style="background:none;">
     <div id="loader"></div>
@@ -220,22 +221,20 @@
       }
     }
     setCookies();
-    // function setTimeForCookie(){
-    //   setTimeout(function(){ 
-    //     if(setCookies() == false)
-    //     {
-    //       setTimeForCookie();
-    //     }
-    //   }, 1000);  
-    // }
-    // setTimeForCookie();
     $("#loader-wrapper").hide();
     $(".original").hide()
     
     $('#parsley').parsley();
-
-    window.Parsley.on('form:success', function() {
-      $("#loader-wrapper").show();
+    NProgress.configure({ 
+      // showSpinner: false,
+      parent: "#showProgress"
+       });
+    $(".form-horizontal").bind("ajax:send", function(){
+      NProgress.inc();
+    }).bind("ajax:success", function(){
+      NProgress.done();
+    }).bind("ajax:error", function(){
+      NProgress.done();
     });
 
     $("#depart").change(function(){

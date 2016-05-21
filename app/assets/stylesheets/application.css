@@ -17,5 +17,6 @@
  *= require datepicker
  *= require pagination
  *= require blue
+ *= require nprogress
  *= require style
  */

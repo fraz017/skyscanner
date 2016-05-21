@@ -87,18 +87,30 @@
     margin-bottom: 2%;
   }
 }*/
+
+input[name='fake']{
+  background: #eee!important;
+}
 .ui-widget-content {
     border: 1px solid #000;
     background: #fff !important;
     color: #333;
 }
-
-
+.datepicker table tr td.disabled,
+.datepicker table tr td.disabled:hover{
+  color: #ccc;
+}
 .ui-widget {
   font-family: 'Source Sans Pro','Helvetica Neue',Helvetica,Arial,sans-serif;
   font-size: 1.1em;
 }
-
+#showProgress{
+  width: 100%;
+  height: 30px;
+}
+.form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control{
+  background-color: #fff;
+}
 .ui-state-focus{
   background: transparent;
 }

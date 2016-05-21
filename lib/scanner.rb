@@ -28,9 +28,9 @@ class Scanner
         @prices[:session_key] = key  
         @prices[:prices] = price
       else
-        @prices = nil
+        @prices = nil 
       end
-    end while !price.present?
+    end while !price.present? || price["Legs"].count == 0
     return @prices
   end
 
@@ -42,14 +42,14 @@ class Scanner
   end
 
   def self.city2abroad(city, destination, country, currency)
-    @results = HTTParty.get("http://partners.api.skyscanner.net/apiservices/browsequotes/v1.0/#{country}/#{currency}/en-US/#{city}/#{destination}/2017?apiKey=#{ENV['API_KEY']}",
+    @results = HTTParty.get("http://partners.api.skyscanner.net/apiservices/browsequotes/v1.0/#{country}/#{currency}/en-US/#{city}/#{destination}/2016/2017?apiKey=#{ENV['API_KEY']}",
       :headers => { 'Content-Type' => 'application/json', 'Accept' => 'application/json' }
     )
     return @results
   end
 
   def self.cityGrid(city, destination, country, currency)
-    @results = HTTParty.get("http://partners.api.skyscanner.net/apiservices/browsequotes/v1.0/#{country}/#{currency}/en-US/#{city}/#{destination}/2016?apiKey=#{ENV['API_KEY']}",
+    @results = HTTParty.get("http://partners.api.skyscanner.net/apiservices/browsequotes/v1.0/#{country}/#{currency}/en-US/#{city}/#{destination}/2016/2017?apiKey=#{ENV['API_KEY']}",
       :headers => { 'Content-Type' => 'application/json', 'Accept' => 'application/json' }
     )
     return @results
