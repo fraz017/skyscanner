@@ -17,19 +17,19 @@
                     <div class="timeline-body">
                       <div class="row">
                         <div class="col-md-2">
-                          <h2><%= grid["Currencies"].present? ? grid["Currencies"][0].find{|k| k["Code"] == cookies["currencyCode"]}["Symbol"] : "" %> <%= grid["MinPrice"] %>
+                          <h2 class="text-center"><%= grid["Currencies"].present? ? grid["Currencies"]["Symbol"] : "$" %> <%= grid["MinPrice"] %>
                           </h2>
                         </div>
                         <div class="col-md-2">
-                          <h2 data-toggle="popover" title="" data-content="<p><%= grid["Origin"]["Type"] == 'Station' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= grid["Origin"]["Name"] %></p>">
+                          <h2 class="text-center" data-toggle="popover" title="" data-content="<p><%= grid["Origin"]["Type"] == 'Station' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= grid["Origin"]["Name"] %></p>">
                             <%= grid["Origin"]["IataCode"] %>
                           </h2>
                         </div>
                         <div class="col-md-3 text-center">
-                          <h2>(<%= grid['Direct'] == true ? 'Direct' : 'Indirect' %>)</h2>
+                          <h2 class="text-center">(<%= grid['Direct'] == true ? 'Direct' : 'Indirect' %>)</h2>
                         </div>
                         <div class="col-md-2">
-                           <h2 data-toggle="popover" title="" data-content="<p><%= grid["Destination"]["Type"] == 'Station' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= grid["Destination"]["Name"] %></p>">
+                           <h2 class="text-center" data-toggle="popover" title="" data-content="<p><%= grid["Destination"]["Type"] == 'Station' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= grid["Destination"]["Name"] %></p>">
                             <%= grid["Destination"]["IataCode"] %>
                           </h2>
                         </div>
