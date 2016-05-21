@@ -12,6 +12,8 @@ set :scm, :git
 set :format, :pretty
 set :log_level, :debug
 set :pty, true
+
+set :passenger_restart_with_touch, true
 # set :rvm_custom_path, '/usr/local/rvm'
 # Default value for :linked_files is []
 set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/secrets.yml')
