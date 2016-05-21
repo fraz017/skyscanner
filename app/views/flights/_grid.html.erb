@@ -3,47 +3,45 @@
     <a href="javascript:void(0)" class="btn btn-primary back" style="margin-left: 60px;margin-bottom: 25px;"> <span class="glyphicon glyphicon-chevron-left"></span> Back</a>
   </div>
 </div>
-<%if @grids["Places"].present?%>
+<%if @locations.present?%>
   <div class="row">
     <div class="col-md-12">
       <!-- Custom Tabs -->
         <div class="tab-content">
           <div class="tab-pane active" id="tab_1">
             <ul class="cheap-prices timeline timeline-inverse">
-              <% @grids["Dates"][0].each_with_index do |grid, index| %>
-                <%if @grids["Dates"][1][index].present? %>
-                  <li>
-                    <div class="timeline-item">
-                      <h3 class="timeline-header"><%= grid["DateString"] %></h3>
-                      <div class="timeline-body">
-                        <div class="row">
-                          <div class="col-md-2">
-                            <h2><%= @grids["Currencies"][0]["Symbol"] %> <%= @grids["Dates"][1][index]["MinPrice"] %>
-                            </h2>
-                          </div>
-                          <div class="col-md-2">
-                            <h2 data-toggle="popover" title="" data-content="<p><%= @grids["Places"][1]["Type"] == 'Station' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= @grids["Places"][1]["Name"] %></p>">
-                              <%= @grids["Places"][1]["IataCode"] %>
-                            </h2>
-                          </div>
-                          <div class="col-md-3 text-center">
-                            
-                          </div>
-                          <div class="col-md-2">
-                             <h2 data-toggle="popover" title="" data-content="<p><%= @grids["Places"][0]["Type"] == 'Station' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= @grids["Places"][0]["Name"] %></p>">
-                              <%= @grids["Places"][0]["IataCode"] %>
-                            </h2>
-                          </div>
-                          <div class="col-md-3">
-                            
-                          </div>
+              <% @locations.each_with_index do |grid, index| %>
+                <li>
+                  <div class="timeline-item">
+                    <h3 class="timeline-header"><%= DateTime.parse(grid["OutboundLeg"]["DepartureDate"]).strftime("%Y-%m-%d") %> </h3>
+                    <div class="timeline-body">
+                      <div class="row">
+                        <div class="col-md-2">
+                          <h2><%= grid["Currencies"].present? ? grid["Currencies"].find{|k| k["Code"] == cookies["currencyCode"]}["Symbol"] : "" %> <%= grid["MinPrice"] %>
+                          </h2>
+                        </div>
+                        <div class="col-md-2">
+                          <h2 data-toggle="popover" title="" data-content="<p><%= grid["Origin"]["Type"] == 'Station' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= grid["Origin"]["Name"] %></p>">
+                            <%= grid["Origin"]["IataCode"] %>
+                          </h2>
+                        </div>
+                        <div class="col-md-3 text-center">
+                          <h2>(<%= grid['Direct'] == true ? 'Direct' : 'Indirect' %>)</h2>
+                        </div>
+                        <div class="col-md-2">
+                           <h2 data-toggle="popover" title="" data-content="<p><%= grid["Destination"]["Type"] == 'Station' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= grid["Destination"]["Name"] %></p>">
+                            <%= grid["Destination"]["IataCode"] %>
+                          </h2>
+                        </div>
+                        <div class="col-md-3">
+                          
                         </div>
                       </div>
-                      <div class="timeline-footer">
-                      </div>
                     </div>
-                  </li>
-                <%end%>
+                    <div class="timeline-footer">
+                    </div>
+                  </div>
+                </li>
               <%end%>
             </ul>
             <div class="cheap text-center hidden"></div>
@@ -53,9 +51,6 @@
       </div><!-- nav-tabs-custom -->
     </div><!-- /.col -->
   </div>
-  <script type="text/javascript">
-    console.log(<%= raw @grids.to_json %>)
-  </script>
 <%else%>
   <ul class="timeline timeline-inverse">
     <li>
@@ -73,6 +68,7 @@
 <%end%>
 
 <script type="text/javascript">
+  console.log(<%= raw @places.to_json %>)
   $(".back").click(function(){
     $(".grids").hide();
     $(".grid").show();

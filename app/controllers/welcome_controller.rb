@@ -14,7 +14,7 @@ class WelcomeController < ApplicationController
       symbol = 'glyphicon glyphicon-flag'
       value = "<span class=\"#{symbol}\"></span>   "+z.name + " (#{z.iatacode})"
       h["id"] = z.c_id
-      h["value"] = "#{z.name}"
+      h["value"] = "#{z.name} (#{z.iatacode})"
       h["label"] = value
       data.push(h)
       airports = Airport.search_by_airport(params[:term], z.id)
@@ -23,7 +23,7 @@ class WelcomeController < ApplicationController
         symbol = 'glyphicon glyphicon-plane'
         value = "<span class=\"#{symbol}\" style='margin-left:25px;'></span>   "+z.name + " (#{z.c_id})"
         h["id"] = z.c_id
-        h["value"] = "#{z.name}"
+        h["value"] = "#{z.name} (#{z.c_id})"
         h["label"] = value
         data.push(h)
       end
@@ -34,7 +34,7 @@ class WelcomeController < ApplicationController
       symbol = 'glyphicon glyphicon-plane'
       value = "<span class=\"#{symbol}\"></span>   "+z.name + " (#{z.c_id})"
       h["id"] = z.c_id
-      h["value"] = "#{z.name}"
+      h["value"] = "#{z.name} (#{z.c_id})"
       h["label"] = value
       data.push(h)
     end

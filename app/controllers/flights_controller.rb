@@ -2,8 +2,11 @@ require "scanner"
 class FlightsController < ApplicationController
   def live_prices
     response = Scanner.live_price(params[:flight])
-    cookies[:prices_url] = response[:prices_url]
-    @prices = HTTParty.get(cookies[:prices_url])
+    cookies[:session_key] = response[:session_key]
+    @prices = {}
+    begin
+      @prices = HTTParty.get(ENV['POLLING_URL']+cookies[:session_key]+"?apiKey=#{ENV['API_KEY']}")
+    end while !@prices.present? 
     if @prices["Legs"].present?
       set_hash
     end
@@ -13,7 +16,10 @@ class FlightsController < ApplicationController
   end
 
   def refresh
-    @prices = HTTParty.get(cookies[:prices_url])
+    @prices = {}
+    begin
+      @prices = HTTParty.get(ENV['POLLING_URL']+cookies[:session_key]+"?apiKey=#{ENV['API_KEY']}")
+    end while !@prices.present?
     if @prices["Legs"].present?
       set_hash
     end
@@ -25,7 +31,7 @@ class FlightsController < ApplicationController
   def cities
     @places = Scanner.city2country("#{cookies[:latitude]},#{cookies[:longitude]}-latlong",cookies[:country], cookies[:country], cookies[:currency])
     @country = "Top Locations in Your Country"
-    @countryCode = cookies[:country].downcase
+    @countryCode = cookies[:countryCode].downcase
     set_grid
     respond_to do |format|
       format.js
@@ -36,7 +42,7 @@ class FlightsController < ApplicationController
     cities = ["WASA", "NYCA", "RIOA", "SAOA", "HOUA", "LASA", "LAXA", "CHIA", "YVRA", "YTOA"]
     @places = Array.new
     cities.each do |city|
-      place = Scanner.city2country("#{cookies[:latitude]},#{cookies[:longitude]}-latlong",city, cookies[:country], cookies[:currency])
+      place = Scanner.city2abroad("#{cookies[:latitude]},#{cookies[:longitude]}-latlong",city, cookies[:country], cookies[:currency])
       @places.push(place)
     end
     @country = "Top Locations in USA"
@@ -51,7 +57,7 @@ class FlightsController < ApplicationController
     cities = ["DXBA", "SINS", "DOHA", "HKGA", "BKKT", "TYOA", "KULM", "AUHA", "TELA", "JEDA"]
     @places = Array.new
     cities.each do |city|
-      place = Scanner.city2country("#{cookies[:latitude]},#{cookies[:longitude]}-latlong",city, cookies[:country], cookies[:currency])
+      place = Scanner.city2abroad("#{cookies[:latitude]},#{cookies[:longitude]}-latlong",city, cookies[:country], cookies[:currency])
       @places.push(place)
     end
     @country = "Top Locations in Asia & Middle East"
@@ -66,7 +72,7 @@ class FlightsController < ApplicationController
     cities = ["ZNZA", "HREA", "CPTA", "JNBA", "NBOA", "MRUA"]
     @places = Array.new
     cities.each do |city|
-      place = Scanner.city2country("#{cookies[:latitude]},#{cookies[:longitude]}-latlong",city, cookies[:country], cookies[:currency])
+      place = Scanner.city2abroad("#{cookies[:latitude]},#{cookies[:longitude]}-latlong",city, cookies[:country], cookies[:currency])
       @places.push(place)
     end
     @country = "Top Locations in Africa"
@@ -81,7 +87,7 @@ class FlightsController < ApplicationController
     cities = ["LOND", "ISTA", "PARI", "ROME", "FLOR", "MILA", "VENI", "BARC", "MADR", "AMST", "DUBL", "VIEN"]
     @places = Array.new
     cities.each do |city|
-      place = Scanner.city2country("#{cookies[:latitude]},#{cookies[:longitude]}-latlong",city, cookies[:country], cookies[:currency])
+      place = Scanner.city2abroad("#{cookies[:latitude]},#{cookies[:longitude]}-latlong",city, cookies[:country], cookies[:currency])
       @places.push(place)
     end
     @country = "Top Locations in Europe"
@@ -93,7 +99,8 @@ class FlightsController < ApplicationController
   end
 
   def grid
-    @grids = Scanner.cityGrid("#{cookies[:latitude]},#{cookies[:longitude]}-latlong", params[:destination], cookies[:country], cookies[:currency])
+    @places = Scanner.cityGrid("#{cookies[:latitude]},#{cookies[:longitude]}-latlong", params[:destination], cookies[:country], cookies[:currency])
+    set_grid
     respond_to do |format|
       format.js
     end
@@ -162,6 +169,8 @@ class FlightsController < ApplicationController
     @locations = @places["Quotes"] if !@places["Quotes"].nil?
     @locations.each do |q|
       q["Destination"] = places.find{ |p| p["PlaceId"] == q["OutboundLeg"]["DestinationId"]}
+      q["Origin"] = places.find{ |p| p["PlaceId"] == q["OutboundLeg"]["OriginId"]}
+      q["Currencies"] = currencies
     end
     if @locations.present?
       @symbol = currencies.find { |h| h['Code'] == cookies[:currency]}["Symbol"]
