@@ -17,7 +17,7 @@
                     <div class="timeline-body">
                       <div class="row">
                         <div class="col-md-2">
-                          <h2 class="text-center"><%= grid["Currencies"].present? ? grid["Currencies"]["Symbol"] : "$" %> <%= grid["MinPrice"] %>
+                          <h2 class="text-center"><%= grid["Currencies"].present? ? grid["Currencies"][0]["Symbol"] : "$" %> <%= grid["MinPrice"] %>
                           </h2>
                         </div>
                         <div class="col-md-2">
