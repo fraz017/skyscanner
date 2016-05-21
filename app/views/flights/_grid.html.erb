@@ -17,7 +17,7 @@
                     <div class="timeline-body">
                       <div class="row">
                         <div class="col-md-2">
-                          <h2><%= grid["Currencies"].present? ? grid["Currencies"].find{|k| k["Code"] == cookies["currencyCode"]}["Symbol"] : "" %> <%= grid["MinPrice"] %>
+                          <h2><%= grid["Currencies"].present? ? grid["Currencies"][0].find{|k| k["Code"] == cookies["currencyCode"]}["Symbol"] : "" %> <%= grid["MinPrice"] %>
                           </h2>
                         </div>
                         <div class="col-md-2">
