@@ -30,7 +30,7 @@ class Scanner
       else
         @prices = nil 
       end
-    end while !price.present? || price["Legs"].count == 0
+    end while !price.present?
     return @prices
   end
 
