@@ -30,6 +30,7 @@ gem 'rest-client'
 gem 'sidekiq'
 gem 'sidetiq'
 gem 'sinatra', :require => nil
+gem 'redis-namespace'
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
