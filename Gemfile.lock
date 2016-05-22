@@ -232,6 +232,7 @@ DEPENDENCIES
   capistrano-rvm
   capistrano-sidekiq
   coffee-rails (~> 4.1.0)
+  execjs
   httparty
   jbuilder (~> 2.0)
   jquery-rails
