@@ -11,7 +11,7 @@ set :scm, :git
 
 set :format, :pretty
 set :log_level, :debug
-set :pty, true
+set :pty, false
 
 set :passenger_restart_with_touch, true
 # set :rvm_custom_path, '/usr/local/rvm'
