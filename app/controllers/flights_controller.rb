@@ -40,6 +40,7 @@ class FlightsController < ApplicationController
     @places = Array.new
     cities.each do |city|
       place = Scanner.city2abroad("#{cookies[:latitude]},#{cookies[:longitude]}-latlong",city, cookies[:country], cookies[:currency])
+      place['code'] = city.downcase
       @places.push(place)
     end
     @country = "Top Locations in USA"
@@ -55,6 +56,7 @@ class FlightsController < ApplicationController
     @places = Array.new
     cities.each do |city|
       place = Scanner.city2abroad("#{cookies[:latitude]},#{cookies[:longitude]}-latlong",city, cookies[:country], cookies[:currency])
+      place['code'] = city.downcase
       @places.push(place)
     end
     @country = "Top Locations in Asia & Middle East"
@@ -70,6 +72,7 @@ class FlightsController < ApplicationController
     @places = Array.new
     cities.each do |city|
       place = Scanner.city2abroad("#{cookies[:latitude]},#{cookies[:longitude]}-latlong",city, cookies[:country], cookies[:currency])
+      place['code'] = city.downcase
       @places.push(place)
     end
     @country = "Top Locations in Africa"
@@ -85,6 +88,7 @@ class FlightsController < ApplicationController
     @places = Array.new
     cities.each do |city|
       place = Scanner.city2abroad("#{cookies[:latitude]},#{cookies[:longitude]}-latlong",city, cookies[:country], cookies[:currency])
+      place['code'] = city.downcase
       @places.push(place)
     end
     @country = "Top Locations in Europe"
