@@ -1,8 +1,8 @@
 <% require "rest-client" %>
-<%if @locations.present?%>
-  <div class ="destination-wrapper">
-    <div class = "destination">
-      <h2><strong><%=@country.try(:titleize)%></strong></h2>
+<div class ="destination-wrapper">
+  <div class = "destination">
+    <h2><strong><%=@country.try(:titleize)%></strong></h2>
+    <%if @locations.present?%>
       <ul class="clearfix">
         <% @locations.first(10).each do |location| %>
           <li class="destination col-md-3">
@@ -29,6 +29,6 @@
           </li>
         <%end%>
       </ul>
-    </div>
+    <%end%>
   </div>
-<%end%>
+</div>
