@@ -6,7 +6,12 @@
   <body>
     <h1>Hi <%= @user.name %>,</h1>
     <p>
-      Price reduction has been detected in your searched route. 
+      Price reduction has been detected in your searched route. <b><%= @object["outbound"]["Origin"]["Name"] %> (<%= @object["outbound"]["Origin"]["Code"]  %>)</b> to <b><%= @object["outbound"]["Destination"]["Name"] %> (<%= @object["outbound"]["Destination"]["Code"]  %>)</b>
     </p>
+    <p>Date: <%= Date.today.strftime("%Y-%m-%d") %>  <br/>
+       Price: <b> <%= @object["outbound"]["CurrencyCode"] %><%= @object["TotalPrice"] %></b>
+    </p>
+
+    <p>For more info please visit <a href="http://www.example.com"> www.example.com </a></p>
   </body>
 </html>

@@ -5,7 +5,6 @@ class Notifier < ApplicationMailer
   def notify_user(user, object)
     @user = user
     @object = object
-    binding.pry
     mail(to: @user.email, subject: 'Reduction in prices')
   end
 end
