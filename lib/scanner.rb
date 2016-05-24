@@ -1,6 +1,7 @@
 class Scanner
   def self.live_price(object)
     price = {}
+    index = 0 
     begin
       @results = HTTParty.post("http://partners.api.skyscanner.net/apiservices/pricing/v1.0",
         :body => URI.encode_www_form(
@@ -30,7 +31,8 @@ class Scanner
       else
         @prices = nil 
       end
-    end while !price.present?
+      index += 1
+    end while !price.present? && index <= 5
     return @prices
   end
 

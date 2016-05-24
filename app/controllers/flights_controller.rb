@@ -4,9 +4,11 @@ class FlightsController < ApplicationController
     response = Scanner.live_price(params[:flight])
     cookies[:session_key] = response[:session_key]
     @prices = {}
+    index = 0
     begin
       @prices = HTTParty.get(ENV['POLLING_URL']+cookies[:session_key]+"?apiKey=#{ENV['API_KEY']}")
-    end while !@prices.present? 
+      index += 1
+    end while !@prices.present? && index <= 5 
     if @prices["Legs"].present?
       set_hash
     end
