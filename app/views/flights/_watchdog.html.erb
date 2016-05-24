@@ -14,15 +14,12 @@
         <div class="col-sm-3">
           <input type="text" class="form-control" name="user_notification[email]" data-parsley-error-message="Please enter valid email!" placeholder="Email" data-parsley-required="true" tabindex="9">
         </div>
-        <div class="col-sm-3">
-          <input type="text" class="form-control" name="user_notification[name]" data-parsley-error-message="Please insert a name!" placeholder="Name" data-parsley-required="true" tabindex="10">
-        </div>
         <div class="col-sm-3">   
-          <input type="text" class="form-control" name="user_notification[price]" data-parsley-error-message="Please a valid price!" placeholder="Price" data-parsley-required="true" tabindex="11">
+          <input type="text" class="form-control" name="user_notification[price]" data-parsley-error-message="Please a valid price!" placeholder="Price" data-parsley-required="true" tabindex="10">
         </div>
         <input type="hidden" name="user_notification[query]" value="<%= @prices['Query'] %>" />
         <div class="col-sm-3">
-          <button type="submit" class="form-submit btn btn-info" tabindex="12">Add Watchdog</button>
+          <button type="submit" class="form-submit btn btn-info" tabindex="11">Add Watchdog</button>
         </div>
       </div><!-- /.box-body -->
     </form>
