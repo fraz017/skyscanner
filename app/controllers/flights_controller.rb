@@ -37,6 +37,22 @@ class FlightsController < ApplicationController
     end
   end
 
+  def nigeria
+    cities = ["CBQA", "LOSA", "ABVA", "PHCA", "ENUA", "OWEB", "KANA", "KADA", "IBAA", "UYOA", "SKOA", "JOSA"]
+    @places = Array.new
+    cities.each do |city|
+      place = Scanner.city2abroad("#{cookies[:latitude]},#{cookies[:longitude]}-latlong",city, cookies[:country], cookies[:currency])
+      place['code'] = city.downcase
+      @places.push(place)
+    end
+    @country = "Top Locations in Nigeria"
+    @countryCode = "ce"
+    set_grid2
+    respond_to do |format|
+      format.js
+    end
+  end
+
   def usa
     cities = ["WASA", "NYCA", "RIOA", "SAOA", "HOUA", "LASA", "LAXA", "CHIA", "YVRA", "YTOA"]
     @places = Array.new

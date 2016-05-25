@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   get '/refresh' => 'flights#refresh'
   get '/countries' => 'welcome#getCountries'
   get '/cities' => 'flights#cities'
+  get '/nigeria' => 'flights#nigeria'
   get '/europe' => 'flights#europe'
   get '/africa' => 'flights#africa'
   get '/asia' => 'flights#asia'
