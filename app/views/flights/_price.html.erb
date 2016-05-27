@@ -64,7 +64,11 @@
                           </h2>
                           <span> <%= leg["carrierDetail"][0]["Name"] %></span>
                           <br/>
-                          <a data-toggle="collapse" data-parent="#accordion" href="#<%= index %>" class="btn btn-primary">Select <span class="glyphicon glyphicon-chevron-right"></span></a>
+                          <%if l["PriceInfo"].count > 1%>
+                            <a data-toggle="collapse" data-parent="#accordion" href="#<%= index %>" class="btn btn-primary">Select <span class="glyphicon glyphicon-chevron-right"></span></a>
+                          <%else%>
+                            <h2><a href="<%= l["PriceInfo"][0]["DeeplinkUrl"] %>" class="btn btn-success" target="_blank" rel="nofollow">Select <span class="glyphicon glyphicon-chevron-right"></span></a></h2>
+                          <%end%>  
                         </div>
                       </div>
                       <%if l["inbound"].present?%>
@@ -176,7 +180,11 @@
                           </h2>
                           <span> <%= leg["carrierDetail"][0]["Name"] %></span>
                           <br/>
-                          <a data-toggle="collapse" data-parent="#accordion" href="#<%= index %>-duration" class="btn btn-primary">Select <span class="glyphicon glyphicon-chevron-right"></span></a>
+                          <%if l["PriceInfo"].count > 1%>
+                            <a data-toggle="collapse" data-parent="#accordion" href="#<%= index %>-duration" class="btn btn-primary">Select <span class="glyphicon glyphicon-chevron-right"></span></a>
+                          <%else%>
+                             <h2><a href="<%= l["PriceInfo"][0]["DeeplinkUrl"] %>" class="btn btn-success" target="_blank" rel="nofollow">Select <span class="glyphicon glyphicon-chevron-right"></span></a></h2>
+                          <%end%>  
                         </div>
                       </div>
                       <%if l["inbound"].present?%>
