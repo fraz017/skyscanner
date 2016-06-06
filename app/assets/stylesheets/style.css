@@ -106,7 +106,7 @@ input[name='fake']{
 }
 #showProgress{
   width: 100%;
-  height: 30px;
+  height: 40px;
 }
 .form-control[disabled], .form-control[readonly], fieldset[disabled] .form-control{
   background-color: #fff;
@@ -188,6 +188,37 @@ hr{
 
 .parsley-custom-error-message{
   color: #a94442;
+}
+.rating {
+  unicode-bidi: bidi-override;
+  direction: rtl;
+}
+.rating > span {
+  display: inline-block;
+  position: relative;
+  width: 1.1em;
+  content: '★ ';
+  color: gold;
+  font-size: 32px;
+}
+.popular{
+  font-size: 30px;
+  color: blue;
+}
+.agents{
+  position: relative;
+  height: 190px;
+  text-align: center;
+}
+.agents h3{
+  color: blue;
+}
+.agents .price{
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  font-size: 30px; 
+  color:blue;
 }
 
 @-webkit-keyframes spin {

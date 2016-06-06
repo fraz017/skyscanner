@@ -1,0 +1,39 @@
+<div class="row">
+  <div class="col-md-12">
+  	<ul class="timeline timeline-inverse">
+  		<% @hotels.each do |hotel| %>
+	  		<li>
+	  			<div class="timeline-item">
+	          <h3 class="timeline-header"><%= hotel["hotel"]["name"] %></h3>
+	          <div class="timeline-body">
+	            <div class="row">
+	              <div class="col-md-3">
+	              	<img src="<%= hotel["images"].first %>">
+	              </div>
+	              <div class="col-md-3">
+	              	<div class="rating">
+		              	<% hotel["hotel"]["star_rating"].times do %>
+											<span>☆</span>
+										<% end %>
+									</div>									
+	              </div>
+	              <div class="col-md-3">
+	              	<div class="agents">
+	              		<h3><%= hotel["agents"].first["name"] %></h3>
+	              		<img src="<%= hotel["agents"].first["image_url"] %>">
+	              		<span class="price">$<%= hotel["agents"].first["price_total"] %></span>
+	              	</div>
+	              </div>
+	              <div class="col-md-3">
+	              	<div class="popular pull-right">
+	              		<%= hotel["hotel"]["popularity_desc"] %> &nbsp; <%= hotel["hotel"]["popularity"].present? ? (hotel["hotel"]["popularity"]/100.0)*100 : 0 %>%
+	              	</div>
+	              </div>
+	            </div>
+	          </div>
+	        </div>      
+	  		</li>
+  		<% end %>
+  	</ul>
+  </div>
+</div>  

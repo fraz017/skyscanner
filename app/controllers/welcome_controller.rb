@@ -4,6 +4,7 @@ class WelcomeController < ApplicationController
      cookies[:currencyCode] = "USD";
      cookies[:latitude] = 37.4192;
      cookies[:longitude] = -122.0574;
+     cookies[:locale] = "en-US";
   end
 
   def getCountries
@@ -35,6 +36,27 @@ class WelcomeController < ApplicationController
       value = "<span class=\"#{symbol}\"></span>   "+z.name + " (#{z.c_id})"
       h["id"] = z.c_id
       h["value"] = "#{z.name} (#{z.c_id})"
+      h["label"] = value
+      data.push(h)
+    end
+    render :json => data 
+  end
+
+  def getCountriesHotel
+    market = cookies["countryCode"]
+    currency = cookies["currency"]
+    locale = "en-US"
+    query = params["term"]
+    @results = HTTParty.get("http://partners.api.skyscanner.net/apiservices/hotels/autosuggest/v2/#{market}/#{currency}/#{locale}/#{query}?apiKey=#{ENV['API_KEY']}",
+      :headers => { 'Content-Type' => 'application/json', 'Accept' => 'application/json' }
+    )
+    data = Array.new
+    @results["results"].each do |r|
+      h = Hash.new
+      symbol = 'glyphicon glyphicon-plane'
+      value = "<span class=\"#{symbol}\"></span>   "+r["display_name"] + " "
+      h["id"] = r["individual_id"]
+      h["value"] = "#{r["display_name"]}"
       h["label"] = value
       data.push(h)
     end

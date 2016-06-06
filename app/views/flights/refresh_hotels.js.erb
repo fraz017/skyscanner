@@ -1,0 +1,2 @@
+$(".hotels-content").html("<%= escape_javascript(render(:partial => 'hotel_prices', :locals => { :@hotels => @hotels })) %>");
+$("#loader-wrapper").hide();

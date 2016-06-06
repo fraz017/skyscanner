@@ -27,6 +27,34 @@ class FlightsController < ApplicationController
     end
   end
 
+  def live_prices_hotels
+    response = Scanner.live_price_hotel(params[:hotel])
+    cookies[:session_key] = response[:session_key]
+    @prices = response[:hotels]
+    # index = 0
+    # begin
+    #   @prices = HTTParty.get(ENV['HOTEL_POLLING_URL']+cookies[:session_key]+"?apiKey=#{ENV['API_KEY']}")
+    #   index += 1
+    # end while !@prices.present? && index <= 5 
+    if @prices.present?
+      set_hotel_hash
+    end
+    respond_to do |format|
+      format.js { render "refresh_hotels"}
+    end
+  end
+
+  def refresh_hotels
+    response = HTTParty.get(ENV['HOTEL_POLLING_URL']+cookies[:session_key]+"?apiKey=#{ENV['API_KEY']}")
+    @prices = response[:hotels]
+    if @prices.present?
+      set_hotel_hash
+    end
+    respond_to do |format|
+      format.js 
+    end
+  end
+
   def cities
     @places = Scanner.city2country("#{cookies[:latitude]},#{cookies[:longitude]}-latlong",cookies[:country], cookies[:country], cookies[:currency])
     @country = "Top Locations in Your Country"
@@ -190,6 +218,37 @@ class FlightsController < ApplicationController
     @cheap = @cheap.sort_by { |k| k["TotalPrice"]}
     @duration  = @cheap.deep_dup
     @duration = @duration.sort_by { |k| k["Duration"]}
+  end
+
+  def set_hotel_hash
+    @hotels = Array.new 
+    hotel_prices = @prices["hotels_prices"]
+    hotels = @prices["hotels"]
+    agents = @prices["agents"]
+    amenities = @prices["amenities"]
+    hotel_prices.each do |hotel|
+      amen = Array.new
+      agnts = Array.new
+      hotel_images = Array.new
+      hot = Hash.new
+      hot["hotel"] = hotels.select { |s| s["hotel_id"] == hotel["id"] }.first
+      hotel["agent_prices"].each_with_index do |ag, index|
+        agnts[index] = agents.select { |s| s["id"] == ag["id"] }.first.merge(ag) 
+      end
+      hot["hotel"]["amenities"].each_with_index do |am,index|
+        amen[index] = amenities.select { |s| s["id"] == am }.first 
+      end
+      key = hot["hotel"]["images"].keys[0]
+      if key.present?
+        hot["hotel"]["images"][key].keys.each_with_index do |img,index|
+          hotel_images[index] = "http://"+@prices["image_host_url"]+key+""+img
+        end
+      end
+      hot["images"] = hotel_images
+      hot["amenities"] = amen
+      hot["agents"] = agnts
+      @hotels.push(hot)
+    end 
   end
 
   def set_grid
