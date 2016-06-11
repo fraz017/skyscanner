@@ -29,11 +29,12 @@ class FlightsController < ApplicationController
 
   def live_prices_hotels
     response = Scanner.live_price_hotel(params[:hotel])
-    cookies[:session_key] = response[:session_key]
     @prices = response[:hotels]
+    cookies[:session_key] = @prices["urls"]["hotel_details"]
+    cookies[:hotel_ids] = @hotel_ids
     # index = 0
     # begin
-    #   @prices = HTTParty.get(ENV['HOTEL_POLLING_URL']+cookies[:session_key]+"?apiKey=#{ENV['API_KEY']}")
+    #   @prices = HTTParty.get(ENV['HOTEL_POLLING_URL']+response[:session_key]+"?apiKey=#{ENV['API_KEY']}")
     #   index += 1
     # end while !@prices.present? && index <= 5 
     if @prices.present?
@@ -45,11 +46,12 @@ class FlightsController < ApplicationController
   end
 
   def refresh_hotels
-    response = HTTParty.get(ENV['HOTEL_POLLING_URL']+cookies[:session_key]+"?apiKey=#{ENV['API_KEY']}")
-    @prices = response[:hotels]
+    response = HTTParty.get(ENV['HOTEL_POLLING_URL']+URI.decode(cookies[:session_key])+"&hotelIds="+cookies[:hotel_ids])
+    @prices = JSON.parse(response)
     if @prices.present?
       set_hotel_hash
     end
+    @status = @prices["status"]
     respond_to do |format|
       format.js 
     end
@@ -226,27 +228,38 @@ class FlightsController < ApplicationController
     hotels = @prices["hotels"]
     agents = @prices["agents"]
     amenities = @prices["amenities"]
+    @hotel_ids = hotels.map{|s| s["hotel_id"]}.map{|s| s}.join(',')
+    cookies[:hotel_ids] = @hotel_ids
+    @status = "First"
     hotel_prices.each do |hotel|
       amen = Array.new
       agnts = Array.new
       hotel_images = Array.new
       hot = Hash.new
+      count = 0
       hot["hotel"] = hotels.select { |s| s["hotel_id"] == hotel["id"] }.first
       hotel["agent_prices"].each_with_index do |ag, index|
         agnts[index] = agents.select { |s| s["id"] == ag["id"] }.first.merge(ag) 
       end
+      hot["hotel"]["images"].each do |k,v|
+        if k.present? 
+          hot["hotel"]["images"][k].keys.each do |img|
+            if img != "order" && img != "provider"
+              hotel_images[count] = "http://"+@prices["image_host_url"]+k+img
+              count += 1
+            end
+          end
+        end
+      end
+      hot["agents"] = agnts
+      hot["images"] = hotel_images
+      hot["ratings"] = hotel["ratings"]
+      hot["guests"] = hotel["guests"]
+      hot["reviews_count"] = hotel["reviews_count"]
       hot["hotel"]["amenities"].each_with_index do |am,index|
         amen[index] = amenities.select { |s| s["id"] == am }.first 
       end
-      key = hot["hotel"]["images"].keys[0]
-      if key.present?
-        hot["hotel"]["images"][key].keys.each_with_index do |img,index|
-          hotel_images[index] = "http://"+@prices["image_host_url"]+key+""+img
-        end
-      end
-      hot["images"] = hotel_images
       hot["amenities"] = amen
-      hot["agents"] = agnts
       @hotels.push(hot)
     end 
   end

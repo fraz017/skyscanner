@@ -44,8 +44,7 @@ class Scanner
       )
       if @results["hotels"].present?
         key = @results.headers["location"].split("/").last
-        @prices = Hash.new 
-        @prices[:session_key] = key  
+        @prices = Hash.new  
         @prices[:hotels] = @results
       else
         @prices = nil 

@@ -18,5 +18,6 @@
  *= require pagination
  *= require blue
  *= require nprogress
+ *= require jquery.fancybox
  *= require style
  */

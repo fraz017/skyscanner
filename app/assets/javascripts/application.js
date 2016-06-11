@@ -22,3 +22,4 @@
 //= require pagination
 //= require parsley.min
 //= require nprogress
+//= require jquery.fancybox
