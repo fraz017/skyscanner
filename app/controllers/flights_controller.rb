@@ -278,6 +278,7 @@ class FlightsController < ApplicationController
       q["Origin"] = places.find{ |p| p["PlaceId"] == q["OutboundLeg"]["OriginId"]}
       q["Currencies"] = currencies
       q["Departure"] = DateTime.parse(q["OutboundLeg"]["DepartureDate"])
+      q["CName"] = carriers.find{ |p| p["CarrierId"] == q["OutboundLeg"]["CarrierIds"][0]}
     end
     if @locations.present?
       @symbol = currencies.find { |h| h['Code'] == cookies[:currency]}["Symbol"]

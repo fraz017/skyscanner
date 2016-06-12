@@ -13,7 +13,13 @@
               <% @locations.each_with_index do |grid, index| %>
                 <li>
                   <div class="timeline-item">
-                    <h3 class="timeline-header"><%= grid["Departure"].strftime("%Y-%m-%d") %> </h3>
+                    <h3 class="timeline-header" style="height: 35px;">
+                      <span class="col-md-4" style="float:left;"><strong>Departure: </strong><%= Date.parse(grid["OutboundLeg"]["DepartureDate"]).strftime("%Y-%m-%d") %></span> 
+                      <span class="col-md-4" ><strong>Airline: </strong><%= grid["CName"].present? ? grid["CName"]["Name"] : "N/A" %></span>
+                      <% if grid["InboundLeg"].present? %>
+                        <span class="col-md-4" style="float:right;"><strong>Return: </strong><%= Date.parse(grid["InboundLeg"]["DepartureDate"]).strftime("%Y-%m-%d") %></span>
+                      <%end%> 
+                    </h3>
                     <div class="timeline-body">
                       <div class="row">
                         <div class="col-md-2">
