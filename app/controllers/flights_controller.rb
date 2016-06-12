@@ -151,10 +151,10 @@ class FlightsController < ApplicationController
   end
 
   def grid
-    @places = Scanner.cityGrid("#{cookies[:latitude]},#{cookies[:longitude]}-latlong", params[:destination], cookies[:country], cookies[:currency])
+    @places = Scanner.cityGrid("#{cookies[:latitude]},#{cookies[:longitude]}-latlong", params[:iata].upcase, cookies[:country], cookies[:currency])
     set_grid
     respond_to do |format|
-      format.js
+      format.html
     end
   end
 

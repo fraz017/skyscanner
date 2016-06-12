@@ -7,7 +7,7 @@
         <%@locations.each do |locations|%>
           <% locations.first(1).each do |location| %>
             <li class="destination col-md-3">
-              <a data-params="destination=<%=location['Destination']['IataCode']%>" data-remote="true" data-method="post" href="/grid.js" rel="nofollow">
+              <a href="/<%=location["Destination"]["CityName"].downcase.gsub(' ','-')%>/<%=location['Destination']['IataCode'].downcase%>" rel="nofollow" target="_blank">
                 <div class="destination_thumb">
                   <% if Rails.application.assets.find_asset(location['Destination']['CityId'].downcase).nil? %>
                     <img src="https://s3-eu-west-1.amazonaws.com/images.skypicker.com/photos/220x165/default3.jpg">    
