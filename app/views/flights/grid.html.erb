@@ -353,13 +353,17 @@
       $(".depart ul").remove();
     });
 
-    $('#from').autocomplete({
+     $('#from').autocomplete({
       source: '/countries',
       minChars: 2,
       html: true,
       select: function (e, ui) {
         $(".flight_origin").val(ui.item.id)
         // alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
+      },
+      change: function(event,ui){
+        $(this).val((ui.item ? ui.item.value : ""));
+        $(".flight_origin").val((ui.item ? ui.item.id : ""))
       }
     });
 
@@ -370,6 +374,10 @@
       select: function (e, ui) {
         $(".flight_dest").val(ui.item.id)
         // alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
+      },
+      change: function(event,ui){
+        $(this).val((ui.item ? ui.item.value : ""));
+        $(".flight_dest").val((ui.item ? ui.item.id : ""))
       }
     });
 
@@ -380,6 +388,10 @@
       select: function (e, ui) {
         $(".hotel_dest").val(ui.item.id)
         // alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
+      },
+      change: function(event,ui){
+        $(this).val((ui.item ? ui.item.value : ""));
+        $(".hotel_dest").val((ui.item ? ui.item.id : ""))
       }
     });
 
