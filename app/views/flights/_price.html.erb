@@ -269,12 +269,7 @@
         });
       }
     }
-
-    setTimeout(function () {
-      var request = <%= raw @prices["Status"].to_json %>
-      update(request)
-    }, 20000);
-
+    
     update(<%= raw @prices["Status"].to_json %>)
 
     

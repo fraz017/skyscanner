@@ -1,6 +1,3 @@
-<div id="loader-wrapper" >
-  <div id="loader"></div>
-</div>
 <section class="content">
   <div class="row">
     <div class="col-md-12">
@@ -218,16 +215,7 @@
 </section>
 <div id="showProgress"></div>
 <section class="flights-content content hotels-content">
-  <div id="loader-wrapper" style="background:none;">
-    <div id="loader"></div>
-  </div>
-  <div class ="grid cities" id="cities"></div>
-  <div class ="grid nigeria" id="nigeria"></div>
-  <div class ="grid africa" id="africa"></div>
-  <div class ="grid asia" id="asia"></div>
-  <div class ="grid europe" id="europe"></div>
-  <div class ="grid usa" id="usa"></div>
-  <div class="grids"></div>
+  <%= render partial: "hotel_prices", :locals => { :@hotels => @hotels, :@status => @status } %>
 </section>
 <style type="text/css">
   .flights-content #loader-wrapper{
@@ -259,53 +247,6 @@
       }
     });
 
-    var country = "United States";
-    var zone = "";
-    var district = "";
-    var countryCode = "US";
-    var currencyCode = "USD";
-    var latitude = 37.4192;
-    var longitude = -122.0574;
-    function setCookies(){
-      $.getScript('http://www.geoplugin.net/javascript.gp?ip=<%= request.remote_ip %>', function() {
-        country1 = geoplugin_countryName();
-        zone = geoplugin_region();
-        district = geoplugin_city();
-        countryCode1 = geoplugin_countryCode();
-        currencyCode1 = geoplugin_currencyCode();
-        latitude1 = geoplugin_latitude();
-        longitude1 = geoplugin_longitude();
-        Cookies.set('countryName', country1);
-        Cookies.set('currency', currencyCode1);
-        Cookies.set('country', countryCode1);
-        if(latitude1 != 0)
-          Cookies.set('latitude', latitude1);
-        if(longitude1 != 0)
-          Cookies.set('longitude', longitude1); 
-        if(!(Cookies.get('countryName'))){
-          Cookies.set('countryName', country);
-        }
-        if(!(Cookies.get('currency'))){
-          Cookies.set('currency', currencyCode);
-        }
-        if (!(Cookies.get('country'))){
-          Cookies.set('country', countryCode);
-        }
-        if (!(Cookies.get('latitude'))){
-          Cookies.set('latitude', latitude);
-        }
-        if (!(Cookies.get('longitude'))){
-          Cookies.set('longitude', longitude);
-        }
-      });
-      if (Cookies.get('countryName') != "") {
-        return true
-      }  
-      else{
-        return false
-      }
-    }
-    setCookies();
     $("#loader-wrapper").hide();
     $(".original").hide()
     
@@ -364,10 +305,4 @@
       autoclose: true
     });
   })
-  $.ajax({
-    method: "GET",
-    url: "/cities.js",
-    success:function(data){
-    }
-  });
 </script>

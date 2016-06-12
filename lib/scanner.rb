@@ -24,10 +24,8 @@ class Scanner
       )
       if @results.headers["location"].present?
         key = @results.headers["location"].split("/").last
-        price = HTTParty.get(ENV['POLLING_URL']+key+"?apiKey=#{ENV['API_KEY']}")
         @prices = Hash.new 
-        @prices[:session_key] = key  
-        @prices[:prices] = price
+        @prices[:session_key] = key 
       else
         @prices = nil 
       end
@@ -39,7 +37,7 @@ class Scanner
   def self.live_price_hotel(object)
     index = 0 
     begin
-      @results = HTTParty.get("http://partners.api.skyscanner.net/apiservices/hotels/liveprices/v2/#{object["market"]}/#{object["currency"]}/#{object["locale"]}/#{object["entityId"]}/#{object["checkindate"]}/#{object["checkoutdate"]}/#{object["guests"]}/#{object["rooms"]}?apiKey=#{ENV['API_KEY']}",
+      @results = HTTParty.get("http://partners.api.skyscanner.net/apiservices/hotels/liveprices/v2/#{object["market"]}/#{object["currency"]}/#{object["locale"]}/#{object["entityId"]}/#{object["checkindate"]}/#{object["checkoutdate"]}/#{object["guests"]}/#{object["rooms"]}?apiKey=#{ENV['API_KEY']}&pageSize=50",
         :headers => { 'Content-Type' => 'application/x-www-form-urlencoded', 'Accept' => 'application/json' }
       )
       if @results["hotels"].present?

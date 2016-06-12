@@ -5,8 +5,8 @@ Rails.application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  post '/live_prices' => 'flights#live_prices'
-  post '/live_prices_hotels' => 'flights#live_prices_hotels'
+  get '/:market/flights/results' => 'flights#live_prices'
+  get '/:lang/hotels/results' => 'flights#live_prices_hotels'
   get '/refresh' => 'flights#refresh'
   get '/refresh_hotels' => 'flights#refresh_hotels'
   get '/countries' => 'welcome#getCountries'

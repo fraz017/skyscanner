@@ -1,7 +1,8 @@
 require "scanner"
 class FlightsController < ApplicationController
+  skip_before_filter :verify_authenticity_token, :only => [:live_prices, :live_prices_hotels]
   def live_prices
-    response = Scanner.live_price(params[:flight])
+    response = Scanner.live_price(params)
     cookies[:session_key] = response[:session_key]
     @prices = {}
     index = 0
@@ -13,7 +14,8 @@ class FlightsController < ApplicationController
       set_hash
     end
     respond_to do |format|
-      format.js { render "refresh"}
+      # format.js { render "refresh"}
+      format.html
     end
   end
 
@@ -28,7 +30,7 @@ class FlightsController < ApplicationController
   end
 
   def live_prices_hotels
-    response = Scanner.live_price_hotel(params[:hotel])
+    response = Scanner.live_price_hotel(params)
     @prices = response[:hotels]
     cookies[:session_key] = @prices["urls"]["hotel_details"]
     cookies[:hotel_ids] = @hotel_ids
@@ -41,7 +43,8 @@ class FlightsController < ApplicationController
       set_hotel_hash
     end
     respond_to do |format|
-      format.js { render "refresh_hotels"}
+      # format.js { render "refresh_hotels"}
+      format.html
     end
   end
 

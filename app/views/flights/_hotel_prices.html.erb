@@ -1,13 +1,13 @@
 <div class="row">
   <div class="col-md-12">
-  	<ul class="timeline timeline-inverse hotels-details">
-  		<% @hotels.each do |hotel| %>
+  	<ul class="timeline hotel_details timeline-inverse hotels-details">
+  		<% @hotels.each_with_index do |hotel, index| %>
 	  		<li>
 	  			<div class="timeline-item">
 	          <div class="timeline-body">
 	            <div class="row">
 	              <div class="col-md-3 fancyBox">
-                  <img src="<%= hotel["images"].first %>" class="hotel-img fancy-launch">
+                  <img src="<%= hotel["images"].first %>" class="hotel-img fancy-launch" style="height: 199px;width: 265px;">
                   <!-- <ul id="fancy-images-<%= hotel["hotel"]["hotel_id"] %>">
                     <% hotel["images"].each do |img| %>
                       <li>
@@ -25,12 +25,14 @@
                       </span>
                     </div>
                     <div class="col-md-4">
-                      <span class="popularity">
-                        <%= ((hotel["hotel"]["popularity"]/100.0)*10).round(1) if hotel["hotel"]["popularity"].present? %> 
-                      </span> 
-                      <span class="pull-right popularity-desc">
-                        <%= hotel["hotel"]["popularity_desc"] %> &nbsp; 
-                      </span>
+                      <a data-toggle="collapse" data-parent="#accordion" href="#<%= index %>">
+                        <span class="popularity">
+                          <%= ((hotel["hotel"]["popularity"]/100.0)*10).round(1) if hotel["hotel"]["popularity"].present? %> 
+                        </span> 
+                        <span class="pull-right popularity-desc">
+                          <%= hotel["hotel"]["popularity_desc"] %> &nbsp; 
+                        </span>
+                      </a>
                     </div>
                   </div>
                   <% hotel["agents"].first(2).each do |agent| %>
@@ -58,9 +60,15 @@
                       </div>
                     </div>
                   <% end %>
+                  <%if hotel["agents"].length > 2%>
+                    <a data-toggle="collapse" data-parent="#accordion" href="#<%= index %>" class="btn btn-primary" style="float: right;">Show more prices <span class="glyphicon glyphicon-chevron-right"></span></a>
+                  <%end%>
                 </div>
               </div>
-              <hr/>
+	          </div>
+	        </div>
+          <div class="timeline-item panel-collapse collapse" id="<%= index %>">
+            <div class="timeline-body">
               <div class="row">
                 <div class="container">
                   <ul class="nav nav-tabs">
@@ -97,6 +105,7 @@
                               </span>
                             </div>
                           </div>
+                          <hr>
                         <% end %>
                       </p>
                     </div>
@@ -108,18 +117,23 @@
                     </div>
                     <div id="facilities_<%=hotel["hotel"]["hotel_id"]%>" class="tab-pane fade">
                       <h3>Facilities</h3>
-                      <p>
-                        <%= hotel["amenities"].map{ |s| s["name"]}.join(", ") %>
-                      </p>
+                      <%hotel["amenities"].each do |am|%>
+                        <div class="col-md-3">
+                          <p>
+                            <%= am["name"] %>
+                            <%#= hotel["amenities"].map{ |s| s["name"]}.join(", ") %>
+                          </p>  
+                        </div>
+                      <%end%>  
                     </div>
                     <div id="reviews_<%=hotel["hotel"]["hotel_id"]%>" class="tab-pane fade">
                       <h3>Reviews</h3>
                       <div class="row">
-                        <div class="col-md-6">
+                        <h2 style="margin: 10px 0px 25px 15px;">Types of Guests</h2>
+                        <div class="col-md-5 col-md-offset-1">
                           <% if hotel["guests"].present? %>
-                            <h2>Types of Guests</h2>
                             <% hotel["guests"].sort_by {|s| s["ratio"]}.each do |guest| %>
-                              <div class="row text-center">
+                              <div class="row">
                                 <div class="rating">
                                   <%= guest["ratio"] %> %
                                 </div>
@@ -151,9 +165,9 @@
                     </div>
                   </div>
                 </div>
-              </div>
-	          </div>
-	        </div>      
+              </div> 
+            </div>
+          </div>     
 	  		</li>
   		<% end %>
   	</ul>
@@ -180,21 +194,19 @@
     // }, 20000);
 
   update("<%= @status %>");  
-  console.log("<%= @status %>");
-
-  $('.hotels_details').Paginationwithhashchange2({    
+  $('.hotel_details').Paginationwithhashchange2({    
     // default settings
     nextSelector: '.next',
     prevSelector: '.prev',
     counterSelector: '.counter',
     pagingSelector: '.hotels-p',
-    itemsPerPage: 2,
+    itemsPerPage: 5,
     initialPage: 1
   });
 
   $(".hotels-pages").pagination({
     items: <%= @hotels.present? ? @hotels.count : 0 %>,
-    itemsOnPage: 2,
+    itemsOnPage: 5,
     cssStyle: 'light-theme',
     hrefTextPrefix: '#',
     onPageClick: function(pageNumber, event){
