@@ -33,12 +33,7 @@ class FlightsController < ApplicationController
     response = Scanner.live_price_hotel(params)
     @prices = response[:hotels]
     cookies[:session_key] = @prices["urls"]["hotel_details"]
-    cookies[:hotel_ids] = @hotel_ids
-    # index = 0
-    # begin
-    #   @prices = HTTParty.get(ENV['HOTEL_POLLING_URL']+response[:session_key]+"?apiKey=#{ENV['API_KEY']}")
-    #   index += 1
-    # end while !@prices.present? && index <= 5 
+    cookies[:hotel_ids] = @hotel_ids 
     if @prices.present?
       set_hotel_hash
     end
@@ -247,7 +242,7 @@ class FlightsController < ApplicationController
       hot["hotel"]["images"].each do |k,v|
         if k.present? 
           hot["hotel"]["images"][k].keys.each do |img|
-            if img != "order" && img != "provider"
+            if img == "morig.jpg"
               hotel_images[count] = "http://"+@prices["image_host_url"]+k+img
               count += 1
             end

@@ -7,15 +7,16 @@
 	          <div class="timeline-body">
 	            <div class="row">
 	              <div class="col-md-3 fancyBox">
-                  <img src="<%= hotel["images"].first %>" class="hotel-img fancy-launch" style="height: 199px;width: 265px;">
-                  <!-- <ul id="fancy-images-<%= hotel["hotel"]["hotel_id"] %>">
+                  <% if hotel["images"].count == 1 %>
+                    <img src="<%= hotel["images"].first %>" class="hotel-img fancy-launch" style="height: 199px;width: 265px;">
+                  <% else %>  
                     <% hotel["images"].each do |img| %>
-                      <li>
-                        <img src="<%=img%>" alt=""  width= "40"/>
-                      </li>
-                    <% end %>  
-                  </ul> -->
-                </div>
+                      <a href="<%=img%>" class="fancy-images-<%= index %>" rel="fancy-images-<%= index %>">
+                        <img src="<%=img%>" class="fancy-images" alt="" style="height: 199px;width: 265px;" >
+                      </a>
+                    <% end %>
+                  <% end %>
+                </div>      
                 <div class="col-md-9">
                   <div class="row">
                     <div class="col-md-8">
@@ -174,26 +175,48 @@
     <div class="hotels-p text-center hidden"></div>
     <div class="hotels-pages text-center"></div>
   </div>
+  <div class="watchdog-area">
+  </div>
 </div>  
-
+<div id="myModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title">Out of date results</h4>
+      </div>
+      <div class="modal-body">
+        <p>The availability of hotels may have changed during this time, would you like to refresh the prices?</p>
+      </div>
+      <div class="modal-footer">
+        <div class="row">
+          <div class="col-md-6">
+            <a class="btn btn-primary" href="/" style="width: 100%">New search</a>
+          </div>
+          <div class="col-md-6">
+            <a class="btn btn-primary refresh-cp" href="javascript:void(0)" style="width: 100%">Refresh</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <script type="text/javascript">
+<% if params[:hotel].present? %>
+  setTimeout(function(){ $("#myModal").modal(); }, 600000 );
+<% end %>
 	var update = function(request){
-      if (request == "PENDING" || request == "First"){
-        $.ajax({
-          type: 'GET',
-          url: '/refresh_hotels.js',
-          success: function () {
-          }
-        });
-      }
+    if (request == "PENDING" || request == "First"){
+      $.ajax({
+        type: 'GET',
+        url: '/refresh_hotels.js',
+        success: function () {
+        }
+      });
     }
-
-    // setTimeout(function () {
-    //   var request = "<%= @status %>";
-    //   update(request)
-    // }, 20000);
+  }
 
   update("<%= @status %>");  
+
   $('.hotel_details').Paginationwithhashchange2({    
     // default settings
     nextSelector: '.next',
@@ -214,15 +237,16 @@
     }
   });
 
-  // $(document).ready(function($) {
-  //   $(".fancy-launch").click(function(){
-  //     var get_id = $(this).parent().find("ul").attr("id");
-  //     var fancyGallery = $("#"+get_id).find("img");
-  //     fancyGallery.attr("rel","gallery").fancybox({
-  //         type: "image"
-  //     });
-  //     fancyGallery.eq(0).click(); 
-  //   });
-  // });
+  $(document).ready(function($) {
+    $(".fancy-images").click(function(){
+      var get_id = $(this).parent().attr("class");
+      console.log(get_id);
+      $("a."+get_id).fancybox();
+    });
+    $(".refresh-cp").click(function(){
+      $("#myModal").modal("hide");
+      location.reload();
+    });
+  });
 
 </script>

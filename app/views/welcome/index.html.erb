@@ -8,19 +8,20 @@
       <div class="container">
         <ul class="nav nav-tabs">
           <li class="active"><a data-toggle="tab" href="#flights-tab">Flights</a></li>
-          <li><a data-toggle="tab" href="#hotels-tab">Hotels</a></li>
+          <li class="hotel-li"><a data-toggle="tab" href="#hotels-tab">Hotels</a></li>
         </ul>
         <div class="tab-content">
           <div id="flights-tab" class="tab-pane fade in active">
             <div class="box box-info">
               <div class="box-header with-border">
                 <h3 class="box-title">Flight Search</h3>
-                <form action="/en-US/flights/results" method="get" class="form-horizontal" id="parsley">
-                  <input type="hidden" name="country" value="<%= cookies[:country] %>">
-                  <input type="hidden" name="currency" value="<%= cookies[:currency] %>">
-                  <input type="hidden" name="locale" value="en-US">
-                  <input type="hidden" name="originplace" class="flight_origin">
-                  <input type="hidden" name="destinationplace" class="flight_dest">
+                <form action="/live_prices.js" method="post" class="form-horizontal" data-remote = "true" id="parsley">
+                  <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %> 
+                  <input type="hidden" name="flight[country]" value="<%= cookies[:country] %>">
+                  <input type="hidden" name="flight[currency]" value="<%= cookies[:currency] %>">
+                  <input type="hidden" name="flight[locale]" value="en-US">
+                  <input type="hidden" name="flight[originplace]" class="flight_origin">
+                  <input type="hidden" name="flight[destinationplace]" class="flight_dest">
                   <div class="col-md-12">
                     <div class="box-body">
                       <div class="form-group" style="width:10%;float: left;">
@@ -49,11 +50,11 @@
                         <div class="input-daterange" id="datepicker" >
                           <label for="depart" class="col-sm-2 control-label">Depart</label>
                           <div class="col-sm-4 depart">
-                            <input type="text" class="form-control" id="depart" data-parsley-error-message="Please insert depart date!" data-parsley-required="true" name="outbounddate" placeholder="Depart" tabindex="3" readonly />
+                            <input type="text" class="form-control" id="depart" data-parsley-error-message="Please insert depart date!" data-parsley-required="true" name="flight[outbounddate]" placeholder="Depart" tabindex="3" readonly />
                           </div>
                           <label for="return" class="col-sm-2 control-label">Return</label>
                           <div class="col-sm-4 original">
-                            <input type="text" class="form-control" readonly name="inbounddate" tabindex="4" />
+                            <input type="text" class="form-control" readonly name="flight[inbounddate]" tabindex="4" />
                           </div>
                         </div>
                           <div class="col-sm-4 fake">
@@ -63,7 +64,7 @@
                       <div class="form-group">
                         <label for="children" class="col-sm-2 control-label">Children (under 12)</label>
                         <div class="col-sm-4">
-                          <select name="children" class="form-control" tabindex="7">
+                          <select name="flight[children]" class="form-control" tabindex="7">
                             <option value="0">0</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -77,7 +78,7 @@
                         </div>
                         <label for="infants" class="col-sm-2 control-label">Infants (under 2)</label>
                         <div class="col-sm-4">
-                          <select name="infants" class="form-control" tabindex="8">
+                          <select name="flight[infants]" class="form-control" tabindex="8">
                             <option value="0">0</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -103,7 +104,7 @@
                       <div class="form-group">
                         <label for="cabin" class="col-sm-2 control-label">Cabin Class</label>
                         <div class="col-sm-4">
-                          <select name="cabinclass" class="form-control" tabindex="5">
+                          <select name="flight[cabinclass]" class="form-control" tabindex="5">
                             <option value="Economy">Economy</option>
                             <option value="PremiumEconomy">Premium Economy</option>
                             <option value="Business">Business Class</option>
@@ -112,7 +113,7 @@
                         </div>
                         <label for="adults" class="col-sm-2 control-label">Adults (12+ years)</label>
                         <div class="col-sm-4">
-                          <select name="adults" class="form-control" tabindex="6">
+                          <select name="flight[adults]" class="form-control" tabindex="6">
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
@@ -140,7 +141,7 @@
             <div class="box box-info">
               <div class="box-header with-border">
                 <h3 class="box-title">Hotel Search</h3>
-                <form action="/en-US/hotels/results" method="get" class="form-horizontal" id="parsley_hotel"> 
+                <form action="/en-US/hotels/results" method="get" class="form-horizontal" id="parsley_hotel">
                   <input type="hidden" name="market" value="<%= cookies[:countryCode] %>">
                   <input type="hidden" name="currency" value="<%= cookies[:currency] %>">
                   <input type="hidden" name="locale" value="en-US">
@@ -202,6 +203,7 @@
                       </div>
                     </div>
                   </div>
+                  <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %>
                   <div class="col-sm-12">
                     <div class="box-footer">
                       <button type="submit" class="form-submit btn btn-info pull-right" tabindex="9">Search Hotels</button>
@@ -375,10 +377,10 @@
       autoclose: true
     });
   })
-  $.ajax({
-    method: "GET",
-    url: "/cities.js",
-    success:function(data){
-    }
-  });
+  // $.ajax({
+  //   method: "GET",
+  //   url: "/cities.js",
+  //   success:function(data){
+  //   }
+  // });
 </script>
