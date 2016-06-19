@@ -272,7 +272,7 @@
     
     update(<%= raw @prices["Status"].to_json %>)
 
-    
+    NProgress.done();
     $('.cheap-prices').Paginationwithhashchange2({    
       // default settings
       nextSelector: '.next',

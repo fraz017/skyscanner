@@ -30,10 +30,13 @@ class FlightsController < ApplicationController
   end
 
   def live_prices_hotels
-    response = Scanner.live_price_hotel(params)
-    @prices = response[:hotels]
-    cookies[:session_key] = @prices["urls"]["hotel_details"]
-    cookies[:hotel_ids] = @hotel_ids 
+    begin 
+      response = Scanner.live_price_hotel(params)
+      @prices = response[:hotels]
+      cookies[:session_key] = @prices["urls"]["hotel_details"]
+      cookies[:hotel_ids] = @hotel_ids 
+    rescue
+    end  
     if @prices.present?
       set_hotel_hash
     end
@@ -44,8 +47,11 @@ class FlightsController < ApplicationController
   end
 
   def refresh_hotels
-    response = HTTParty.get(ENV['HOTEL_POLLING_URL']+URI.decode(cookies[:session_key])+"&hotelIds="+cookies[:hotel_ids])
-    @prices = JSON.parse(response)
+    begin
+      response = HTTParty.get(ENV['HOTEL_POLLING_URL']+URI.decode(cookies[:session_key])+"&hotelIds="+cookies[:hotel_ids])
+      @prices = JSON.parse(response)
+    rescue
+    end  
     if @prices.present?
       set_hotel_hash
     end
@@ -260,6 +266,12 @@ class FlightsController < ApplicationController
       hot["amenities"] = amen
       @hotels.push(hot)
     end 
+    @star_rating_asc = @hotels.sort_by {|a| a["hotel"]["star_rating"] } if @hotels[0]["hotel"]["star_rating"].present?
+    @star_rating_desc = @hotels.sort_by {|a| a["hotel"]["star_rating"] }.reverse if @hotels[0]["hotel"]["star_rating"].present?
+    @hotels.map{|s| s["hotel"]["popularity"] = 0 if s["hotel"]["popularity"].nil? }
+    @guests_ratings = @hotels.sort_by {|a| a["hotel"]["popularity"]}
+    @p_low_to_high = @hotels.sort_by {|a| a["agents"].map{|s| s["price_total"]} }
+    @p_high_to_low = @hotels.sort_by {|a| a["agents"].map{|s| s["price_total"]} }.reverse
   end
 
   def set_grid

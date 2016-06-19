@@ -1,6 +1,23 @@
+<% if @hotels.present? %>
 <div class="row">
   <div class="col-md-12">
-  	<ul class="timeline hotel_details timeline-inverse hotels-details">
+    <div class="container">
+      <label>Sort By</label>
+      <select class="form-control sort-by">
+        <option value="most-popular">Most Popular</option>
+        <option value="star-rating-asc">Star Rating (1 to 5)</option>
+        <option value="star-rating-desc">Star Rating (5 to 1)</option>
+        <option value="guests-ratings">Guests Ratings</option>
+        <option value="p-low-to-high">Prices (low to high)</option>
+        <option value="p-high-to-low">Prices (high to low)</option>
+      </select>
+    </div>
+  </div>
+</div>
+<hr style="border-top: 1px solid #eee;">
+<div class="row">
+  <div class="col-md-12">
+  	<ul class="timeline timeline-inverse hotels-details" id="most-popular">
   		<% @hotels.each_with_index do |hotel, index| %>
 	  		<li>
 	  			<div class="timeline-item">
@@ -62,13 +79,13 @@
                     </div>
                   <% end %>
                   <%if hotel["agents"].length > 2%>
-                    <a data-toggle="collapse" data-parent="#accordion" href="#<%= index %>" class="btn btn-primary" style="float: right;">Show more prices <span class="glyphicon glyphicon-chevron-right"></span></a>
+                    <a data-toggle="collapse" data-parent="#accordion" href="#popular<%= index %>" class="btn btn-primary" style="float: right;">Show more prices <span class="glyphicon glyphicon-chevron-right"></span></a>
                   <%end%>
                 </div>
               </div>
 	          </div>
 	        </div>
-          <div class="timeline-item panel-collapse collapse" id="<%= index %>">
+          <div class="timeline-item panel-collapse collapse" id="popular<%= index %>">
             <div class="timeline-body">
               <div class="row">
                 <div class="container">
@@ -172,12 +189,897 @@
 	  		</li>
   		<% end %>
   	</ul>
+    <% if @star_rating_asc.present? %>
+      <ul class="timeline timeline-inverse hotels-details" id="star-rating-asc">
+        <% @star_rating_asc.each_with_index do |hotel, index| %>
+          <li>
+            <div class="timeline-item">
+              <div class="timeline-body">
+                <div class="row">
+                  <div class="col-md-3 fancyBox">
+                    <% if hotel["images"].count == 1 %>
+                      <img src="<%= hotel["images"].first %>" class="hotel-img fancy-launch" style="height: 199px;width: 265px;">
+                    <% else %>  
+                      <% hotel["images"].each do |img| %>
+                        <a href="<%=img%>" class="fancy-images-<%= index %>" rel="fancy-images-<%= index %>">
+                          <img src="<%=img%>" class="fancy-images" alt="" style="height: 199px;width: 265px;" >
+                        </a>
+                      <% end %>
+                    <% end %>
+                  </div>      
+                  <div class="col-md-9">
+                    <div class="row">
+                      <div class="col-md-8">
+                        <span class="hotel-name"> <%= hotel["hotel"]["name"] %> &nbsp; <%= createStars(hotel["hotel"]["star_rating"]).html_safe %> </span>
+                        <span class="display-block"><i class="fa fa-map-marker fa-lg" aria-hidden="true"></i>
+                          <a href="http://google.com/q=<%= hotel["hotel"]["address"] %>" target="_blank"><%= hotel["hotel"]["address"] %></a> 
+                        </span>
+                      </div>
+                      <div class="col-md-4">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#<%= index %>">
+                          <span class="popularity">
+                            <%= ((hotel["hotel"]["popularity"]/100.0)*10).round(1) if hotel["hotel"]["popularity"].present? %> 
+                          </span> 
+                          <span class="pull-right popularity-desc">
+                            <%= hotel["hotel"]["popularity_desc"] %> &nbsp; 
+                          </span>
+                        </a>
+                      </div>
+                    </div>
+                    <% hotel["agents"].first(2).each do |agent| %>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <img src="<%= agent["image_url"] %>" class="agent-img">
+                        </div>
+                        <div class="col-md-4">
+                          <% if agent["room_offers"].present? %>
+                            <span class="room">
+                              <%= agent["room_offers"].map{|s| s["rooms"]}.map{ |a| a[0]["type"]}[0] %>
+                            </span>
+                            <span class="meal-plan">
+                              <%= agent["room_offers"].map{|s| s["meal_plan"]}[0] %> - <%= agent["room_offers"].map{|s| s["policy_dto"]}.map{ |a| a["cancellation"]}[0]  %>
+                            </span>
+                          <% end %>  
+                        </div>
+                        <div class="col-md-4">
+                          <span class="pull-right">
+                            <span class="price"><%= cookies["currency"] %> <%= agent["price_total"] %></span> &nbsp; 
+                            <% if agent["deeplink"] %>  
+                              <a href="<%= ENV["HOTEL_POLLING_URL"]+agent["deeplink"].to_s %>" target="_blank" class="btn btn-success">View Detail</a>
+                            <% end %>  
+                          </span>
+                        </div>
+                      </div>
+                    <% end %>
+                    <%if hotel["agents"].length > 2%>
+                      <a data-toggle="collapse" data-parent="#accordion" href="#star-asc<%= index %>" class="btn btn-primary" style="float: right;">Show more prices <span class="glyphicon glyphicon-chevron-right"></span></a>
+                    <%end%>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="timeline-item panel-collapse collapse" id="star-asc<%= index %>">
+              <div class="timeline-body">
+                <div class="row">
+                  <div class="container">
+                    <ul class="nav nav-tabs">
+                      <li class="active"><a data-toggle="tab" href="#prices_<%=hotel["hotel"]["hotel_id"]%>">Prices</a></li>
+                      <li><a data-toggle="tab" href="#description_<%=hotel["hotel"]["hotel_id"]%>">Description</a></li>
+                      <li><a data-toggle="tab" href="#facilities_<%=hotel["hotel"]["hotel_id"]%>">Facilities</a></li>
+                      <li><a data-toggle="tab" href="#reviews_<%=hotel["hotel"]["hotel_id"]%>">Reviews</a></li>
+                    </ul>
+                    <div class="tab-content">
+                      <div id="prices_<%=hotel["hotel"]["hotel_id"]%>" class="tab-pane fade in active">
+                        <h3>Prices</h3>
+                        <p>
+                          <% hotel["agents"].each do |agent| %>
+                            <div class="row">
+                              <div class="col-md-4">
+                                <img src="<%= agent["image_url"] %>" class="agent-img">
+                              </div>
+                              <div class="col-md-4">
+                                <% if agent["room_offers"].present? %>
+                                  <span class="room">
+                                    <%= agent["room_offers"].map{|s| s["rooms"]}.map{ |a| a[0]["type"]}[0] %>
+                                  </span>
+                                  <span class="meal-plan">
+                                    <%= agent["room_offers"].map{|s| s["meal_plan"]}[0] %> - <%= agent["room_offers"].map{|s| s["policy_dto"]}.map{ |a| a["cancellation"]}[0]  %>
+                                  </span>
+                                <% end %>  
+                              </div>
+                              <div class="col-md-4">
+                                <span class="pull-right">
+                                  <span class="price"><%= cookies["currency"] %> <%= agent["price_total"] %></span> &nbsp; 
+                                  <% if agent["deeplink"] %>  
+                                    <a href="<%= ENV["HOTEL_POLLING_URL"]+agent["deeplink"].to_s %>" target="_blank" class="btn btn-success">View Detail</a>
+                                  <% end %>  
+                                </span>
+                              </div>
+                            </div>
+                            <hr>
+                          <% end %>
+                        </p>
+                      </div>
+                      <div id="description_<%=hotel["hotel"]["hotel_id"]%>" class="tab-pane fade">
+                        <h3>Description</h3>
+                        <p>
+                          <%= hotel["hotel"]["description"] %>
+                        </p>
+                      </div>
+                      <div id="facilities_<%=hotel["hotel"]["hotel_id"]%>" class="tab-pane fade">
+                        <h3>Facilities</h3>
+                        <%hotel["amenities"].each do |am|%>
+                          <div class="col-md-3">
+                            <p>
+                              <%= am["name"] %>
+                              <%#= hotel["amenities"].map{ |s| s["name"]}.join(", ") %>
+                            </p>  
+                          </div>
+                        <%end%>  
+                      </div>
+                      <div id="reviews_<%=hotel["hotel"]["hotel_id"]%>" class="tab-pane fade">
+                        <h3>Reviews</h3>
+                        <div class="row">
+                          <h2 style="margin: 10px 0px 25px 15px;">Types of Guests</h2>
+                          <div class="col-md-5 col-md-offset-1">
+                            <% if hotel["guests"].present? %>
+                              <% hotel["guests"].sort_by {|s| s["ratio"]}.each do |guest| %>
+                                <div class="row">
+                                  <div class="rating">
+                                    <%= guest["ratio"] %> %
+                                  </div>
+                                  <span class="rating-desc"><%= guest["description"] %></span>
+                                </div>
+                              <% end %>
+                            <% end %>
+                          </div>
+                          <div class="col-md-6">
+                            <% if hotel["ratings"].present? %>
+                              <% hotel["ratings"].each do |review| %>
+                                <div class="row">
+                                  <div class="col-md-2">
+                                    <div class="rating"><%= ((review["score"]/100.0)*10).round(1) %></div>
+                                  </div>
+                                  <div class="col-md-10">
+                                    <div class="rating-desc">
+                                      <%= review["name"] %>
+                                    </div>
+                                    <div class="review-examples">
+                                      <p><%= review["examples"].join(", ") %></p>
+                                    </div>
+                                  </div>
+                                </div>  
+                              <% end %>  
+                            <% end %>  
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div> 
+              </div>
+            </div>     
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+    <% if @star_rating_desc.present? %>
+      <ul class="timeline timeline-inverse hotels-details" id="star-rating-desc">
+        <% @star_rating_desc.each_with_index do |hotel, index| %>
+          <li>
+            <div class="timeline-item">
+              <div class="timeline-body">
+                <div class="row">
+                  <div class="col-md-3 fancyBox">
+                    <% if hotel["images"].count == 1 %>
+                      <img src="<%= hotel["images"].first %>" class="hotel-img fancy-launch" style="height: 199px;width: 265px;">
+                    <% else %>  
+                      <% hotel["images"].each do |img| %>
+                        <a href="<%=img%>" class="fancy-images-<%= index %>" rel="fancy-images-<%= index %>">
+                          <img src="<%=img%>" class="fancy-images" alt="" style="height: 199px;width: 265px;" >
+                        </a>
+                      <% end %>
+                    <% end %>
+                  </div>      
+                  <div class="col-md-9">
+                    <div class="row">
+                      <div class="col-md-8">
+                        <span class="hotel-name"> <%= hotel["hotel"]["name"] %> &nbsp; <%= createStars(hotel["hotel"]["star_rating"]).html_safe %> </span>
+                        <span class="display-block"><i class="fa fa-map-marker fa-lg" aria-hidden="true"></i>
+                          <a href="http://google.com/q=<%= hotel["hotel"]["address"] %>" target="_blank"><%= hotel["hotel"]["address"] %></a> 
+                        </span>
+                      </div>
+                      <div class="col-md-4">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#<%= index %>">
+                          <span class="popularity">
+                            <%= ((hotel["hotel"]["popularity"]/100.0)*10).round(1) if hotel["hotel"]["popularity"].present? %> 
+                          </span> 
+                          <span class="pull-right popularity-desc">
+                            <%= hotel["hotel"]["popularity_desc"] %> &nbsp; 
+                          </span>
+                        </a>
+                      </div>
+                    </div>
+                    <% hotel["agents"].first(2).each do |agent| %>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <img src="<%= agent["image_url"] %>" class="agent-img">
+                        </div>
+                        <div class="col-md-4">
+                          <% if agent["room_offers"].present? %>
+                            <span class="room">
+                              <%= agent["room_offers"].map{|s| s["rooms"]}.map{ |a| a[0]["type"]}[0] %>
+                            </span>
+                            <span class="meal-plan">
+                              <%= agent["room_offers"].map{|s| s["meal_plan"]}[0] %> - <%= agent["room_offers"].map{|s| s["policy_dto"]}.map{ |a| a["cancellation"]}[0]  %>
+                            </span>
+                          <% end %>  
+                        </div>
+                        <div class="col-md-4">
+                          <span class="pull-right">
+                            <span class="price"><%= cookies["currency"] %> <%= agent["price_total"] %></span> &nbsp; 
+                            <% if agent["deeplink"] %>  
+                              <a href="<%= ENV["HOTEL_POLLING_URL"]+agent["deeplink"].to_s %>" target="_blank" class="btn btn-success">View Detail</a>
+                            <% end %>  
+                          </span>
+                        </div>
+                      </div>
+                    <% end %>
+                    <%if hotel["agents"].length > 2%>
+                      <a data-toggle="collapse" data-parent="#accordion" href="#star-desc<%= index %>" class="btn btn-primary" style="float: right;">Show more prices <span class="glyphicon glyphicon-chevron-right"></span></a>
+                    <%end%>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="timeline-item panel-collapse collapse" id="star-desc<%= index %>">
+              <div class="timeline-body">
+                <div class="row">
+                  <div class="container">
+                    <ul class="nav nav-tabs">
+                      <li class="active"><a data-toggle="tab" href="#prices_<%=hotel["hotel"]["hotel_id"]%>">Prices</a></li>
+                      <li><a data-toggle="tab" href="#description_<%=hotel["hotel"]["hotel_id"]%>">Description</a></li>
+                      <li><a data-toggle="tab" href="#facilities_<%=hotel["hotel"]["hotel_id"]%>">Facilities</a></li>
+                      <li><a data-toggle="tab" href="#reviews_<%=hotel["hotel"]["hotel_id"]%>">Reviews</a></li>
+                    </ul>
+                    <div class="tab-content">
+                      <div id="prices_<%=hotel["hotel"]["hotel_id"]%>" class="tab-pane fade in active">
+                        <h3>Prices</h3>
+                        <p>
+                          <% hotel["agents"].each do |agent| %>
+                            <div class="row">
+                              <div class="col-md-4">
+                                <img src="<%= agent["image_url"] %>" class="agent-img">
+                              </div>
+                              <div class="col-md-4">
+                                <% if agent["room_offers"].present? %>
+                                  <span class="room">
+                                    <%= agent["room_offers"].map{|s| s["rooms"]}.map{ |a| a[0]["type"]}[0] %>
+                                  </span>
+                                  <span class="meal-plan">
+                                    <%= agent["room_offers"].map{|s| s["meal_plan"]}[0] %> - <%= agent["room_offers"].map{|s| s["policy_dto"]}.map{ |a| a["cancellation"]}[0]  %>
+                                  </span>
+                                <% end %>  
+                              </div>
+                              <div class="col-md-4">
+                                <span class="pull-right">
+                                  <span class="price"><%= cookies["currency"] %> <%= agent["price_total"] %></span> &nbsp; 
+                                  <% if agent["deeplink"] %>  
+                                    <a href="<%= ENV["HOTEL_POLLING_URL"]+agent["deeplink"].to_s %>" target="_blank" class="btn btn-success">View Detail</a>
+                                  <% end %>  
+                                </span>
+                              </div>
+                            </div>
+                            <hr>
+                          <% end %>
+                        </p>
+                      </div>
+                      <div id="description_<%=hotel["hotel"]["hotel_id"]%>" class="tab-pane fade">
+                        <h3>Description</h3>
+                        <p>
+                          <%= hotel["hotel"]["description"] %>
+                        </p>
+                      </div>
+                      <div id="facilities_<%=hotel["hotel"]["hotel_id"]%>" class="tab-pane fade">
+                        <h3>Facilities</h3>
+                        <%hotel["amenities"].each do |am|%>
+                          <div class="col-md-3">
+                            <p>
+                              <%= am["name"] %>
+                              <%#= hotel["amenities"].map{ |s| s["name"]}.join(", ") %>
+                            </p>  
+                          </div>
+                        <%end%>  
+                      </div>
+                      <div id="reviews_<%=hotel["hotel"]["hotel_id"]%>" class="tab-pane fade">
+                        <h3>Reviews</h3>
+                        <div class="row">
+                          <h2 style="margin: 10px 0px 25px 15px;">Types of Guests</h2>
+                          <div class="col-md-5 col-md-offset-1">
+                            <% if hotel["guests"].present? %>
+                              <% hotel["guests"].sort_by {|s| s["ratio"]}.each do |guest| %>
+                                <div class="row">
+                                  <div class="rating">
+                                    <%= guest["ratio"] %> %
+                                  </div>
+                                  <span class="rating-desc"><%= guest["description"] %></span>
+                                </div>
+                              <% end %>
+                            <% end %>
+                          </div>
+                          <div class="col-md-6">
+                            <% if hotel["ratings"].present? %>
+                              <% hotel["ratings"].each do |review| %>
+                                <div class="row">
+                                  <div class="col-md-2">
+                                    <div class="rating"><%= ((review["score"]/100.0)*10).round(1) %></div>
+                                  </div>
+                                  <div class="col-md-10">
+                                    <div class="rating-desc">
+                                      <%= review["name"] %>
+                                    </div>
+                                    <div class="review-examples">
+                                      <p><%= review["examples"].join(", ") %></p>
+                                    </div>
+                                  </div>
+                                </div>  
+                              <% end %>  
+                            <% end %>  
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div> 
+              </div>
+            </div>     
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+    <% if @guests_ratings.present? %>
+      <ul class="timeline timeline-inverse hotels-details" id="guests-ratings">
+        <% @guests_ratings.each_with_index do |hotel, index| %>
+          <li>
+            <div class="timeline-item">
+              <div class="timeline-body">
+                <div class="row">
+                  <div class="col-md-3 fancyBox">
+                    <% if hotel["images"].count == 1 %>
+                      <img src="<%= hotel["images"].first %>" class="hotel-img fancy-launch" style="height: 199px;width: 265px;">
+                    <% else %>  
+                      <% hotel["images"].each do |img| %>
+                        <a href="<%=img%>" class="fancy-images-<%= index %>" rel="fancy-images-<%= index %>">
+                          <img src="<%=img%>" class="fancy-images" alt="" style="height: 199px;width: 265px;" >
+                        </a>
+                      <% end %>
+                    <% end %>
+                  </div>      
+                  <div class="col-md-9">
+                    <div class="row">
+                      <div class="col-md-8">
+                        <span class="hotel-name"> <%= hotel["hotel"]["name"] %> &nbsp; <%= createStars(hotel["hotel"]["star_rating"]).html_safe %> </span>
+                        <span class="display-block"><i class="fa fa-map-marker fa-lg" aria-hidden="true"></i>
+                          <a href="http://google.com/q=<%= hotel["hotel"]["address"] %>" target="_blank"><%= hotel["hotel"]["address"] %></a> 
+                        </span>
+                      </div>
+                      <div class="col-md-4">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#<%= index %>">
+                          <span class="popularity">
+                            <%= ((hotel["hotel"]["popularity"]/100.0)*10).round(1) if hotel["hotel"]["popularity"].present? %> 
+                          </span> 
+                          <span class="pull-right popularity-desc">
+                            <%= hotel["hotel"]["popularity_desc"] %> &nbsp; 
+                          </span>
+                        </a>
+                      </div>
+                    </div>
+                    <% hotel["agents"].first(2).each do |agent| %>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <img src="<%= agent["image_url"] %>" class="agent-img">
+                        </div>
+                        <div class="col-md-4">
+                          <% if agent["room_offers"].present? %>
+                            <span class="room">
+                              <%= agent["room_offers"].map{|s| s["rooms"]}.map{ |a| a[0]["type"]}[0] %>
+                            </span>
+                            <span class="meal-plan">
+                              <%= agent["room_offers"].map{|s| s["meal_plan"]}[0] %> - <%= agent["room_offers"].map{|s| s["policy_dto"]}.map{ |a| a["cancellation"]}[0]  %>
+                            </span>
+                          <% end %>  
+                        </div>
+                        <div class="col-md-4">
+                          <span class="pull-right">
+                            <span class="price"><%= cookies["currency"] %> <%= agent["price_total"] %></span> &nbsp; 
+                            <% if agent["deeplink"] %>  
+                              <a href="<%= ENV["HOTEL_POLLING_URL"]+agent["deeplink"].to_s %>" target="_blank" class="btn btn-success">View Detail</a>
+                            <% end %>  
+                          </span>
+                        </div>
+                      </div>
+                    <% end %>
+                    <%if hotel["agents"].length > 2%>
+                      <a data-toggle="collapse" data-parent="#accordion" href="#guest<%= index %>" class="btn btn-primary" style="float: right;">Show more prices <span class="glyphicon glyphicon-chevron-right"></span></a>
+                    <%end%>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="timeline-item panel-collapse collapse" id="guest<%= index %>">
+              <div class="timeline-body">
+                <div class="row">
+                  <div class="container">
+                    <ul class="nav nav-tabs">
+                      <li class="active"><a data-toggle="tab" href="#prices_<%=hotel["hotel"]["hotel_id"]%>">Prices</a></li>
+                      <li><a data-toggle="tab" href="#description_<%=hotel["hotel"]["hotel_id"]%>">Description</a></li>
+                      <li><a data-toggle="tab" href="#facilities_<%=hotel["hotel"]["hotel_id"]%>">Facilities</a></li>
+                      <li><a data-toggle="tab" href="#reviews_<%=hotel["hotel"]["hotel_id"]%>">Reviews</a></li>
+                    </ul>
+                    <div class="tab-content">
+                      <div id="prices_<%=hotel["hotel"]["hotel_id"]%>" class="tab-pane fade in active">
+                        <h3>Prices</h3>
+                        <p>
+                          <% hotel["agents"].each do |agent| %>
+                            <div class="row">
+                              <div class="col-md-4">
+                                <img src="<%= agent["image_url"] %>" class="agent-img">
+                              </div>
+                              <div class="col-md-4">
+                                <% if agent["room_offers"].present? %>
+                                  <span class="room">
+                                    <%= agent["room_offers"].map{|s| s["rooms"]}.map{ |a| a[0]["type"]}[0] %>
+                                  </span>
+                                  <span class="meal-plan">
+                                    <%= agent["room_offers"].map{|s| s["meal_plan"]}[0] %> - <%= agent["room_offers"].map{|s| s["policy_dto"]}.map{ |a| a["cancellation"]}[0]  %>
+                                  </span>
+                                <% end %>  
+                              </div>
+                              <div class="col-md-4">
+                                <span class="pull-right">
+                                  <span class="price"><%= cookies["currency"] %> <%= agent["price_total"] %></span> &nbsp; 
+                                  <% if agent["deeplink"] %>  
+                                    <a href="<%= ENV["HOTEL_POLLING_URL"]+agent["deeplink"].to_s %>" target="_blank" class="btn btn-success">View Detail</a>
+                                  <% end %>  
+                                </span>
+                              </div>
+                            </div>
+                            <hr>
+                          <% end %>
+                        </p>
+                      </div>
+                      <div id="description_<%=hotel["hotel"]["hotel_id"]%>" class="tab-pane fade">
+                        <h3>Description</h3>
+                        <p>
+                          <%= hotel["hotel"]["description"] %>
+                        </p>
+                      </div>
+                      <div id="facilities_<%=hotel["hotel"]["hotel_id"]%>" class="tab-pane fade">
+                        <h3>Facilities</h3>
+                        <%hotel["amenities"].each do |am|%>
+                          <div class="col-md-3">
+                            <p>
+                              <%= am["name"] %>
+                              <%#= hotel["amenities"].map{ |s| s["name"]}.join(", ") %>
+                            </p>  
+                          </div>
+                        <%end%>  
+                      </div>
+                      <div id="reviews_<%=hotel["hotel"]["hotel_id"]%>" class="tab-pane fade">
+                        <h3>Reviews</h3>
+                        <div class="row">
+                          <h2 style="margin: 10px 0px 25px 15px;">Types of Guests</h2>
+                          <div class="col-md-5 col-md-offset-1">
+                            <% if hotel["guests"].present? %>
+                              <% hotel["guests"].sort_by {|s| s["ratio"]}.each do |guest| %>
+                                <div class="row">
+                                  <div class="rating">
+                                    <%= guest["ratio"] %> %
+                                  </div>
+                                  <span class="rating-desc"><%= guest["description"] %></span>
+                                </div>
+                              <% end %>
+                            <% end %>
+                          </div>
+                          <div class="col-md-6">
+                            <% if hotel["ratings"].present? %>
+                              <% hotel["ratings"].each do |review| %>
+                                <div class="row">
+                                  <div class="col-md-2">
+                                    <div class="rating"><%= ((review["score"]/100.0)*10).round(1) %></div>
+                                  </div>
+                                  <div class="col-md-10">
+                                    <div class="rating-desc">
+                                      <%= review["name"] %>
+                                    </div>
+                                    <div class="review-examples">
+                                      <p><%= review["examples"].join(", ") %></p>
+                                    </div>
+                                  </div>
+                                </div>  
+                              <% end %>  
+                            <% end %>  
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div> 
+              </div>
+            </div>     
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+    <% if @p_low_to_high.present? %>
+      <ul class="timeline timeline-inverse hotels-details" id="p-low-to-high">
+        <% @p_low_to_high.each_with_index do |hotel, index| %>
+          <li>
+            <div class="timeline-item">
+              <div class="timeline-body">
+                <div class="row">
+                  <div class="col-md-3 fancyBox">
+                    <% if hotel["images"].count == 1 %>
+                      <img src="<%= hotel["images"].first %>" class="hotel-img fancy-launch" style="height: 199px;width: 265px;">
+                    <% else %>  
+                      <% hotel["images"].each do |img| %>
+                        <a href="<%=img%>" class="fancy-images-<%= index %>" rel="fancy-images-<%= index %>">
+                          <img src="<%=img%>" class="fancy-images" alt="" style="height: 199px;width: 265px;" >
+                        </a>
+                      <% end %>
+                    <% end %>
+                  </div>      
+                  <div class="col-md-9">
+                    <div class="row">
+                      <div class="col-md-8">
+                        <span class="hotel-name"> <%= hotel["hotel"]["name"] %> &nbsp; <%= createStars(hotel["hotel"]["star_rating"]).html_safe %> </span>
+                        <span class="display-block"><i class="fa fa-map-marker fa-lg" aria-hidden="true"></i>
+                          <a href="http://google.com/q=<%= hotel["hotel"]["address"] %>" target="_blank"><%= hotel["hotel"]["address"] %></a> 
+                        </span>
+                      </div>
+                      <div class="col-md-4">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#<%= index %>">
+                          <span class="popularity">
+                            <%= ((hotel["hotel"]["popularity"]/100.0)*10).round(1) if hotel["hotel"]["popularity"].present? %> 
+                          </span> 
+                          <span class="pull-right popularity-desc">
+                            <%= hotel["hotel"]["popularity_desc"] %> &nbsp; 
+                          </span>
+                        </a>
+                      </div>
+                    </div>
+                    <% hotel["agents"].first(2).each do |agent| %>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <img src="<%= agent["image_url"] %>" class="agent-img">
+                        </div>
+                        <div class="col-md-4">
+                          <% if agent["room_offers"].present? %>
+                            <span class="room">
+                              <%= agent["room_offers"].map{|s| s["rooms"]}.map{ |a| a[0]["type"]}[0] %>
+                            </span>
+                            <span class="meal-plan">
+                              <%= agent["room_offers"].map{|s| s["meal_plan"]}[0] %> - <%= agent["room_offers"].map{|s| s["policy_dto"]}.map{ |a| a["cancellation"]}[0]  %>
+                            </span>
+                          <% end %>  
+                        </div>
+                        <div class="col-md-4">
+                          <span class="pull-right">
+                            <span class="price"><%= cookies["currency"] %> <%= agent["price_total"] %></span> &nbsp; 
+                            <% if agent["deeplink"] %>  
+                              <a href="<%= ENV["HOTEL_POLLING_URL"]+agent["deeplink"].to_s %>" target="_blank" class="btn btn-success">View Detail</a>
+                            <% end %>  
+                          </span>
+                        </div>
+                      </div>
+                    <% end %>
+                    <%if hotel["agents"].length > 2%>
+                      <a data-toggle="collapse" data-parent="#accordion" href="#low<%= index %>" class="btn btn-primary" style="float: right;">Show more prices <span class="glyphicon glyphicon-chevron-right"></span></a>
+                    <%end%>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="timeline-item panel-collapse collapse" id="low<%= index %>">
+              <div class="timeline-body">
+                <div class="row">
+                  <div class="container">
+                    <ul class="nav nav-tabs">
+                      <li class="active"><a data-toggle="tab" href="#prices_<%=hotel["hotel"]["hotel_id"]%>">Prices</a></li>
+                      <li><a data-toggle="tab" href="#description_<%=hotel["hotel"]["hotel_id"]%>">Description</a></li>
+                      <li><a data-toggle="tab" href="#facilities_<%=hotel["hotel"]["hotel_id"]%>">Facilities</a></li>
+                      <li><a data-toggle="tab" href="#reviews_<%=hotel["hotel"]["hotel_id"]%>">Reviews</a></li>
+                    </ul>
+                    <div class="tab-content">
+                      <div id="prices_<%=hotel["hotel"]["hotel_id"]%>" class="tab-pane fade in active">
+                        <h3>Prices</h3>
+                        <p>
+                          <% hotel["agents"].each do |agent| %>
+                            <div class="row">
+                              <div class="col-md-4">
+                                <img src="<%= agent["image_url"] %>" class="agent-img">
+                              </div>
+                              <div class="col-md-4">
+                                <% if agent["room_offers"].present? %>
+                                  <span class="room">
+                                    <%= agent["room_offers"].map{|s| s["rooms"]}.map{ |a| a[0]["type"]}[0] %>
+                                  </span>
+                                  <span class="meal-plan">
+                                    <%= agent["room_offers"].map{|s| s["meal_plan"]}[0] %> - <%= agent["room_offers"].map{|s| s["policy_dto"]}.map{ |a| a["cancellation"]}[0]  %>
+                                  </span>
+                                <% end %>  
+                              </div>
+                              <div class="col-md-4">
+                                <span class="pull-right">
+                                  <span class="price"><%= cookies["currency"] %> <%= agent["price_total"] %></span> &nbsp; 
+                                  <% if agent["deeplink"] %>  
+                                    <a href="<%= ENV["HOTEL_POLLING_URL"]+agent["deeplink"].to_s %>" target="_blank" class="btn btn-success">View Detail</a>
+                                  <% end %>  
+                                </span>
+                              </div>
+                            </div>
+                            <hr>
+                          <% end %>
+                        </p>
+                      </div>
+                      <div id="description_<%=hotel["hotel"]["hotel_id"]%>" class="tab-pane fade">
+                        <h3>Description</h3>
+                        <p>
+                          <%= hotel["hotel"]["description"] %>
+                        </p>
+                      </div>
+                      <div id="facilities_<%=hotel["hotel"]["hotel_id"]%>" class="tab-pane fade">
+                        <h3>Facilities</h3>
+                        <%hotel["amenities"].each do |am|%>
+                          <div class="col-md-3">
+                            <p>
+                              <%= am["name"] %>
+                              <%#= hotel["amenities"].map{ |s| s["name"]}.join(", ") %>
+                            </p>  
+                          </div>
+                        <%end%>  
+                      </div>
+                      <div id="reviews_<%=hotel["hotel"]["hotel_id"]%>" class="tab-pane fade">
+                        <h3>Reviews</h3>
+                        <div class="row">
+                          <h2 style="margin: 10px 0px 25px 15px;">Types of Guests</h2>
+                          <div class="col-md-5 col-md-offset-1">
+                            <% if hotel["guests"].present? %>
+                              <% hotel["guests"].sort_by {|s| s["ratio"]}.each do |guest| %>
+                                <div class="row">
+                                  <div class="rating">
+                                    <%= guest["ratio"] %> %
+                                  </div>
+                                  <span class="rating-desc"><%= guest["description"] %></span>
+                                </div>
+                              <% end %>
+                            <% end %>
+                          </div>
+                          <div class="col-md-6">
+                            <% if hotel["ratings"].present? %>
+                              <% hotel["ratings"].each do |review| %>
+                                <div class="row">
+                                  <div class="col-md-2">
+                                    <div class="rating"><%= ((review["score"]/100.0)*10).round(1) %></div>
+                                  </div>
+                                  <div class="col-md-10">
+                                    <div class="rating-desc">
+                                      <%= review["name"] %>
+                                    </div>
+                                    <div class="review-examples">
+                                      <p><%= review["examples"].join(", ") %></p>
+                                    </div>
+                                  </div>
+                                </div>  
+                              <% end %>  
+                            <% end %>  
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div> 
+              </div>
+            </div>     
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+    <% if @p_high_to_low.present? %>
+      <ul class="timeline timeline-inverse hotels-details" id="p-high-to-low">
+        <% @p_high_to_low.each_with_index do |hotel, index| %>
+          <li>
+            <div class="timeline-item">
+              <div class="timeline-body">
+                <div class="row">
+                  <div class="col-md-3 fancyBox">
+                    <% if hotel["images"].count == 1 %>
+                      <img src="<%= hotel["images"].first %>" class="hotel-img fancy-launch" style="height: 199px;width: 265px;">
+                    <% else %>  
+                      <% hotel["images"].each do |img| %>
+                        <a href="<%=img%>" class="fancy-images-<%= index %>" rel="fancy-images-<%= index %>">
+                          <img src="<%=img%>" class="fancy-images" alt="" style="height: 199px;width: 265px;" >
+                        </a>
+                      <% end %>
+                    <% end %>
+                  </div>      
+                  <div class="col-md-9">
+                    <div class="row">
+                      <div class="col-md-8">
+                        <span class="hotel-name"> <%= hotel["hotel"]["name"] %> &nbsp; <%= createStars(hotel["hotel"]["star_rating"]).html_safe %> </span>
+                        <span class="display-block"><i class="fa fa-map-marker fa-lg" aria-hidden="true"></i>
+                          <a href="http://google.com/q=<%= hotel["hotel"]["address"] %>" target="_blank"><%= hotel["hotel"]["address"] %></a> 
+                        </span>
+                      </div>
+                      <div class="col-md-4">
+                        <a data-toggle="collapse" data-parent="#accordion" href="#<%= index %>">
+                          <span class="popularity">
+                            <%= ((hotel["hotel"]["popularity"]/100.0)*10).round(1) if hotel["hotel"]["popularity"].present? %> 
+                          </span> 
+                          <span class="pull-right popularity-desc">
+                            <%= hotel["hotel"]["popularity_desc"] %> &nbsp; 
+                          </span>
+                        </a>
+                      </div>
+                    </div>
+                    <% hotel["agents"].first(2).each do |agent| %>
+                      <div class="row">
+                        <div class="col-md-4">
+                          <img src="<%= agent["image_url"] %>" class="agent-img">
+                        </div>
+                        <div class="col-md-4">
+                          <% if agent["room_offers"].present? %>
+                            <span class="room">
+                              <%= agent["room_offers"].map{|s| s["rooms"]}.map{ |a| a[0]["type"]}[0] %>
+                            </span>
+                            <span class="meal-plan">
+                              <%= agent["room_offers"].map{|s| s["meal_plan"]}[0] %> - <%= agent["room_offers"].map{|s| s["policy_dto"]}.map{ |a| a["cancellation"]}[0]  %>
+                            </span>
+                          <% end %>  
+                        </div>
+                        <div class="col-md-4">
+                          <span class="pull-right">
+                            <span class="price"><%= cookies["currency"] %> <%= agent["price_total"] %></span> &nbsp; 
+                            <% if agent["deeplink"] %>  
+                              <a href="<%= ENV["HOTEL_POLLING_URL"]+agent["deeplink"].to_s %>" target="_blank" class="btn btn-success">View Detail</a>
+                            <% end %>  
+                          </span>
+                        </div>
+                      </div>
+                    <% end %>
+                    <%if hotel["agents"].length > 2%>
+                      <a data-toggle="collapse" data-parent="#accordion" href="#high<%= index %>" class="btn btn-primary" style="float: right;">Show more prices <span class="glyphicon glyphicon-chevron-right"></span></a>
+                    <%end%>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="timeline-item panel-collapse collapse" id="high<%= index %>">
+              <div class="timeline-body">
+                <div class="row">
+                  <div class="container">
+                    <ul class="nav nav-tabs">
+                      <li class="active"><a data-toggle="tab" href="#prices_<%=hotel["hotel"]["hotel_id"]%>">Prices</a></li>
+                      <li><a data-toggle="tab" href="#description_<%=hotel["hotel"]["hotel_id"]%>">Description</a></li>
+                      <li><a data-toggle="tab" href="#facilities_<%=hotel["hotel"]["hotel_id"]%>">Facilities</a></li>
+                      <li><a data-toggle="tab" href="#reviews_<%=hotel["hotel"]["hotel_id"]%>">Reviews</a></li>
+                    </ul>
+                    <div class="tab-content">
+                      <div id="prices_<%=hotel["hotel"]["hotel_id"]%>" class="tab-pane fade in active">
+                        <h3>Prices</h3>
+                        <p>
+                          <% hotel["agents"].each do |agent| %>
+                            <div class="row">
+                              <div class="col-md-4">
+                                <img src="<%= agent["image_url"] %>" class="agent-img">
+                              </div>
+                              <div class="col-md-4">
+                                <% if agent["room_offers"].present? %>
+                                  <span class="room">
+                                    <%= agent["room_offers"].map{|s| s["rooms"]}.map{ |a| a[0]["type"]}[0] %>
+                                  </span>
+                                  <span class="meal-plan">
+                                    <%= agent["room_offers"].map{|s| s["meal_plan"]}[0] %> - <%= agent["room_offers"].map{|s| s["policy_dto"]}.map{ |a| a["cancellation"]}[0]  %>
+                                  </span>
+                                <% end %>  
+                              </div>
+                              <div class="col-md-4">
+                                <span class="pull-right">
+                                  <span class="price"><%= cookies["currency"] %> <%= agent["price_total"] %></span> &nbsp; 
+                                  <% if agent["deeplink"] %>  
+                                    <a href="<%= ENV["HOTEL_POLLING_URL"]+agent["deeplink"].to_s %>" target="_blank" class="btn btn-success">View Detail</a>
+                                  <% end %>  
+                                </span>
+                              </div>
+                            </div>
+                            <hr>
+                          <% end %>
+                        </p>
+                      </div>
+                      <div id="description_<%=hotel["hotel"]["hotel_id"]%>" class="tab-pane fade">
+                        <h3>Description</h3>
+                        <p>
+                          <%= hotel["hotel"]["description"] %>
+                        </p>
+                      </div>
+                      <div id="facilities_<%=hotel["hotel"]["hotel_id"]%>" class="tab-pane fade">
+                        <h3>Facilities</h3>
+                        <%hotel["amenities"].each do |am|%>
+                          <div class="col-md-3">
+                            <p>
+                              <%= am["name"] %>
+                              <%#= hotel["amenities"].map{ |s| s["name"]}.join(", ") %>
+                            </p>  
+                          </div>
+                        <%end%>  
+                      </div>
+                      <div id="reviews_<%=hotel["hotel"]["hotel_id"]%>" class="tab-pane fade">
+                        <h3>Reviews</h3>
+                        <div class="row">
+                          <h2 style="margin: 10px 0px 25px 15px;">Types of Guests</h2>
+                          <div class="col-md-5 col-md-offset-1">
+                            <% if hotel["guests"].present? %>
+                              <% hotel["guests"].sort_by {|s| s["ratio"]}.each do |guest| %>
+                                <div class="row">
+                                  <div class="rating">
+                                    <%= guest["ratio"] %> %
+                                  </div>
+                                  <span class="rating-desc"><%= guest["description"] %></span>
+                                </div>
+                              <% end %>
+                            <% end %>
+                          </div>
+                          <div class="col-md-6">
+                            <% if hotel["ratings"].present? %>
+                              <% hotel["ratings"].each do |review| %>
+                                <div class="row">
+                                  <div class="col-md-2">
+                                    <div class="rating"><%= ((review["score"]/100.0)*10).round(1) %></div>
+                                  </div>
+                                  <div class="col-md-10">
+                                    <div class="rating-desc">
+                                      <%= review["name"] %>
+                                    </div>
+                                    <div class="review-examples">
+                                      <p><%= review["examples"].join(", ") %></p>
+                                    </div>
+                                  </div>
+                                </div>  
+                              <% end %>  
+                            <% end %>  
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div> 
+              </div>
+            </div>     
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
     <div class="hotels-p text-center hidden"></div>
     <div class="hotels-pages text-center"></div>
   </div>
   <div class="watchdog-area">
   </div>
 </div>  
+<% else %>
+  <ul class="timeline timeline-inverse">
+    <li>
+      <div class="timeline-item">
+        <h3 class="timeline-header">Sorry, No results found</h3>
+        <div class="timeline-body">
+          Please try again with different locations
+        </div>
+        <div class="timeline-footer">
+          <p></p>
+        </div>
+      </div>
+    </li>
+  </ul>
+<% end %>
 <div id="myModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -216,8 +1118,9 @@
   }
 
   update("<%= @status %>");  
-
-  $('.hotel_details').Paginationwithhashchange2({    
+  $(".hotels-details").hide();
+  $("#most-popular").show();
+  $('.hotels_details').Paginationwithhashchange2({    
     // default settings
     nextSelector: '.next',
     prevSelector: '.prev',
@@ -237,6 +1140,8 @@
     }
   });
 
+  NProgress.done();
+
   $(document).ready(function($) {
     $(".fancy-images").click(function(){
       var get_id = $(this).parent().attr("class");
@@ -246,6 +1151,11 @@
     $(".refresh-cp").click(function(){
       $("#myModal").modal("hide");
       location.reload();
+    });
+    $(".sort-by").click(function(){
+      $(".hotels-details").hide();
+      var selected = $(this).val();
+      $("#"+selected).show();
     });
   });
 

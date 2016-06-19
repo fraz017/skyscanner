@@ -317,12 +317,8 @@
       // showSpinner: false,
       parent: "#showProgress"
        });
-    $(".form-horizontal").bind("ajax:send", function(){
+    $(".form-horizontal").bind("submit", function(){
       NProgress.inc();
-    }).bind("ajax:success", function(){
-      NProgress.done();
-    }).bind("ajax:error", function(){
-      NProgress.done();
     });
 
     $("#depart").change(function(){
@@ -377,10 +373,10 @@
       autoclose: true
     });
   })
-  // $.ajax({
-  //   method: "GET",
-  //   url: "/cities.js",
-  //   success:function(data){
-  //   }
-  // });
+  $.ajax({
+    method: "GET",
+    url: "/cities.js",
+    success:function(data){
+    }
+  });
 </script>
