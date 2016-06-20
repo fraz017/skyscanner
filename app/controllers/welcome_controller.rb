@@ -12,7 +12,7 @@ class WelcomeController < ApplicationController
     data = Array.new
     cities.each do |z| 
       h = Hash.new
-      symbol = 'glyphicon glyphicon-flag'
+      symbol = 'fa fa-flag'
       value = "<span class=\"#{symbol}\"></span>   "+z.name + " (#{z.iatacode})"
       h["id"] = z.c_id
       h["value"] = "#{z.name} (#{z.iatacode})"
@@ -21,7 +21,7 @@ class WelcomeController < ApplicationController
       airports = Airport.search_by_airport(params[:term], z.id)
       airports.each do |z| 
         h = Hash.new
-        symbol = 'glyphicon glyphicon-plane'
+        symbol = 'fa fa-plane'
         value = "<span class=\"#{symbol}\" style='margin-left:25px;'></span>   "+z.name + " (#{z.c_id})"
         h["id"] = z.c_id
         h["value"] = "#{z.name} (#{z.c_id})"
@@ -32,7 +32,7 @@ class WelcomeController < ApplicationController
     airports = Airport.search_by_iatacode(params[:term])
     airports.each do |z| 
       h = Hash.new
-      symbol = 'glyphicon glyphicon-plane'
+      symbol = 'fa fa-plane'
       value = "<span class=\"#{symbol}\"></span>   "+z.name + " (#{z.c_id})"
       h["id"] = z.c_id
       h["value"] = "#{z.name} (#{z.c_id})"
@@ -53,8 +53,8 @@ class WelcomeController < ApplicationController
     data = Array.new
     @results["results"].each do |r|
       h = Hash.new
-      symbol = 'glyphicon glyphicon-plane'
-      value = "<span class=\"#{symbol}\"></span>   "+r["display_name"] + " "
+      symbol = 'fa fa-building-o'
+      value = "<span class=\"#{symbol}\"></span>    "+r["display_name"] + " "
       h["id"] = r["individual_id"]
       h["value"] = "#{r["display_name"]}"
       h["label"] = value
