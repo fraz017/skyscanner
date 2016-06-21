@@ -69,7 +69,29 @@ class NotifyUser
 			    Notifier.notify_user(user, @cheap[0]).deliver_now
 			  end
 			else
-				# Hotel search code goes here
+				begin
+					date = Date.today
+					checkindate = date.strftime("%F")
+					checkoutdate = (date + 1.week).strftime("%F")
+					object = JSON.parse(user.query)
+					index = 0 
+			    begin
+			      @results = HTTParty.get("http://partners.api.skyscanner.net/apiservices/hotels/liveprices/v2/#{object["market"]}/#{object["currency"]}/#{object["locale"]}/#{object["entityId"]}/#{checkindate}/#{checkoutdate}/#{object["guests"]}/#{object["rooms"]}?apiKey=#{ENV['API_KEY']}",
+			        :headers => { 'Content-Type' => 'application/x-www-form-urlencoded', 'Accept' => 'application/json' }
+			      )
+			    end while !@results["hotels_prices"].present? && index <= 5
+			    if @results["hotels_prices"].present?
+			    	results =  @results["hotels_prices"].select{|s| s["agent_prices"].map{|d| d["price_total"]}.first < user.price }
+			    	ids = results.map{|s| s["id"]}
+			    	@hotels = Array.new
+			    	ids.each_with_index do |i,index|
+			    		@hotels[index] = @results["hotels"].select{|s| s["hotel_id"] == i }.first
+			    	end
+			    	Notifier.notify_user_hotels(user, @hotels, results).deliver_now
+			    end
+			  rescue
+			  	''
+			  end
 			end  
   	end
   end

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta content='text/html; charset=UTF-8' http-equiv='Content-Type' />
+  </head>
+  <body>
+    <h1>Hi, <%=@user.email%></h1>
+    <p>
+      Price reduction has been detected in your searched hotel.
+      <ul>
+        <% @object.each_with_index do |ob,index| %>
+          <li><b><%= ob["name"] %></b> - $<%= @results[index]["agent_prices"][0]["price_total"] %></li>
+        <% end %>
+      </ul>
+    </p>
+    <p>Date: <%= Date.today.strftime("%Y-%m-%d") %>  <br/>
+    </p>
+
+    <p>For more info please visit <a href="http://www.example.com"> www.example.com </a></p>
+  </body>
+</html>

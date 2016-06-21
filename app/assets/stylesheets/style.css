@@ -291,9 +291,8 @@ hr{
   color: #626262;
 }
 .fancyBox{
-  height: 210px;
-  overflow-y: auto;
-  overflow-x: hidden;
+  height: 195px;
+  overflow: hidden;
 }
 
 @-webkit-keyframes spin {

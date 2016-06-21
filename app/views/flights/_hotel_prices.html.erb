@@ -1101,7 +1101,6 @@
   </div>
 </div>
 <script type="text/javascript">
-  console.log(<%= raw @prices.to_json %>)
   <% if params[:hotel].present? %>
     setTimeout(function(){ $("#myModal").modal(); }, 600000 );
   <% end %>
@@ -1144,7 +1143,6 @@
   $(document).ready(function($) {
     $(".fancy-images").click(function(){
       var get_id = $(this).parent().attr("class");
-      console.log(get_id);
       $("a."+get_id).fancybox();
     });
     $(".refresh-cp").click(function(){
