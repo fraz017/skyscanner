@@ -267,11 +267,11 @@ class FlightsController < ApplicationController
       @hotels.push(hot)
     end 
     @star_rating_asc = @hotels.sort_by {|a| a["hotel"]["star_rating"] } if @hotels[0]["hotel"]["star_rating"].present?
-    @star_rating_desc = @hotels.sort_by {|a| a["hotel"]["star_rating"] }.reverse if @hotels[0]["hotel"]["star_rating"].present?
+    @star_rating_desc = @star_rating_asc.reverse if @star_rating_asc.present?
     @hotels.map{|s| s["hotel"]["popularity"] = 0 if s["hotel"]["popularity"].nil? }
     @guests_ratings = @hotels.sort_by {|a| a["hotel"]["popularity"]}
     @p_low_to_high = @hotels.sort_by {|a| a["agents"].map{|s| s["price_total"]} }
-    @p_high_to_low = @hotels.sort_by {|a| a["agents"].map{|s| s["price_total"]} }.reverse
+    @p_high_to_low = @p_low_to_high.reverse
   end
 
   def set_grid
@@ -317,6 +317,6 @@ class FlightsController < ApplicationController
   private
 
   def notify_params
-    params.require(:user_notification).permit(:email, :name, :price, :query)
+    params.require(:user_notification).permit(:email, :name, :price, :query, :notification_type)
   end
 end

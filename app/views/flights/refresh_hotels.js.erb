@@ -1,3 +1,2 @@
 $(".hotels-content").html("<%= escape_javascript(render(:partial => 'hotel_prices', :locals => { :@hotels => @hotels, :@status => @status, :@star_rating_asc => @star_rating_asc, :@star_rating_desc => @star_rating_asc, :@guests_ratings => @guests_ratings, :@p_low_to_high => @p_low_to_high, :@p_high_to_low => @p_high_to_low })) %>");
-// $(".watchdog-area").html("<%= escape_javascript(render(:partial => 'watchdog', :locals => { :@success => false })) %>");
-$("#loader-wrapper").hide();
+// $(".watchdog-area").html("<%= escape_javascript(render(:partial => 'hotel_watchdog', :locals => { :@success => false })) %>");

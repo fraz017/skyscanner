@@ -217,6 +217,12 @@
 <section class="flights-content content hotels-content">
   <%= render partial: "hotel_prices", :locals => { :@hotels => @hotels, :@status => @status } %>
 </section>
+
+<div class="row">
+  <div class="watchdog-area">
+    <%= render partial: "hotel_watchdog" %>
+  </div>
+</div>
 <style type="text/css">
   .flights-content #loader-wrapper{
     background: none !important;
