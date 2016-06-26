@@ -23,15 +23,26 @@
   	  			<div class="timeline-item">
   	          <div class="timeline-body">
   	            <div class="row">
-  	              <div class="col-md-3 fancyBox">
-                    <% if hotel["images"].count == 1 %>
-                      <img src="<%= hotel["images"].first %>" class="hotel-img fancy-launch" style="height: 199px;width: 265px;">
-                    <% else %>  
-                      <% hotel["images"].each do |img| %>
-                        <a href="<%=img%>" class="fancy-images-<%= index %>" rel="fancy-images-<%= index %>">
-                          <img src="<%=img%>" class="fancy-images" alt="" style="height: 199px;width: 265px;" >
-                        </a>
+  	              <div class="col-md-3">
+                    <div class="fancyBox">
+                      <% if hotel["images"].count == 1 %>
+                        <img src="<%= hotel["images"].first %>" class="hotel-img fancy-launch" style="height: 199px;width: 265px;">
+                      <% else %>  
+                        <% hotel["images"].each do |img| %>
+                          <a href="<%=img%>" class="fancy-images-<%= index %>" rel="fancy-images-<%= index %>">
+                            <img src="<%=img%>" class="fancy-images" alt="">
+                          </a>
+                        <% end %>
                       <% end %>
+                    </div>
+                    <% if hotel["images"].count > 1 %>
+                      <div class="fancyBoxImages">
+                          <% hotel["images"].each do |img| %>
+                            <a href="<%=img%>" class="fancy-images-<%= index %>" rel="fancy-images-<%= index %>">
+                              <img src="<%=img%>" class="fancy-images fancySmall" alt="">
+                            </a>
+                          <% end %>
+                      </div>
                     <% end %>
                   </div>      
                   <div class="col-md-9">
@@ -44,7 +55,7 @@
                       </div>
                       <div class="col-md-4">
                         <a data-toggle="collapse" data-parent="#accordion" href="#popular<%= index %>">
-                          <span class="popularity">
+                          <span class="popularity <%= hotel["hotel"]["popularity"].present? && ((hotel["hotel"]["popularity"]/100.0)*10).round(1) < 5.0 ? 'yellow' : 'green' %>">
                             <%= ((hotel["hotel"]["popularity"]/100.0)*10).round(1) if hotel["hotel"]["popularity"].present? %> 
                           </span> 
                           <span class="pull-right popularity-desc">
@@ -196,17 +207,28 @@
               <div class="timeline-item">
                 <div class="timeline-body">
                   <div class="row">
-                    <div class="col-md-3 fancyBox">
-                      <% if hotel["images"].count == 1 %>
-                        <img src="<%= hotel["images"].first %>" class="hotel-img fancy-launch" style="height: 199px;width: 265px;">
-                      <% else %>  
-                        <% hotel["images"].each do |img| %>
-                          <a href="<%=img%>" class="fancy-images-<%= index %>" rel="fancy-images-<%= index %>">
-                            <img src="<%=img%>" class="fancy-images" alt="" style="height: 199px;width: 265px;" >
-                          </a>
+                    <div class="col-md-3">
+                      <div class="fancyBox">
+                        <% if hotel["images"].count == 1 %>
+                          <img src="<%= hotel["images"].first %>" class="hotel-img fancy-launch" style="height: 199px;width: 265px;">
+                        <% else %>  
+                          <% hotel["images"].each do |img| %>
+                            <a href="<%=img%>" class="fancy-images-<%= index %>" rel="fancy-images-<%= index %>">
+                              <img src="<%=img%>" class="fancy-images" alt="">
+                            </a>
+                          <% end %>
                         <% end %>
+                      </div>
+                      <% if hotel["images"].count > 1 %>
+                        <div class="fancyBoxImages">
+                            <% hotel["images"].each do |img| %>
+                              <a href="<%=img%>" class="fancy-images-<%= index %>" rel="fancy-images-<%= index %>">
+                                <img src="<%=img%>" class="fancy-images fancySmall" alt="">
+                              </a>
+                            <% end %>
+                        </div>
                       <% end %>
-                    </div>      
+                    </div>         
                     <div class="col-md-9">
                       <div class="row">
                         <div class="col-md-8">
@@ -217,7 +239,7 @@
                         </div>
                         <div class="col-md-4">
                           <a data-toggle="collapse" data-parent="#accordion" href="#star-asc<%= index %>">
-                            <span class="popularity">
+                            <span class="popularity <%= hotel["hotel"]["popularity"].present? && ((hotel["hotel"]["popularity"]/100.0)*10).round(1) < 5.0 ? 'yellow' : 'green' %>">
                               <%= ((hotel["hotel"]["popularity"]/100.0)*10).round(1) if hotel["hotel"]["popularity"].present? %> 
                             </span> 
                             <span class="pull-right popularity-desc">
@@ -370,17 +392,28 @@
               <div class="timeline-item">
                 <div class="timeline-body">
                   <div class="row">
-                    <div class="col-md-3 fancyBox">
-                      <% if hotel["images"].count == 1 %>
-                        <img src="<%= hotel["images"].first %>" class="hotel-img fancy-launch" style="height: 199px;width: 265px;">
-                      <% else %>  
-                        <% hotel["images"].each do |img| %>
-                          <a href="<%=img%>" class="fancy-images-<%= index %>" rel="fancy-images-<%= index %>">
-                            <img src="<%=img%>" class="fancy-images" alt="" style="height: 199px;width: 265px;" >
-                          </a>
+                    <div class="col-md-3">
+                      <div class="fancyBox">
+                        <% if hotel["images"].count == 1 %>
+                          <img src="<%= hotel["images"].first %>" class="hotel-img fancy-launch" style="height: 199px;width: 265px;">
+                        <% else %>  
+                          <% hotel["images"].each do |img| %>
+                            <a href="<%=img%>" class="fancy-images-<%= index %>" rel="fancy-images-<%= index %>">
+                              <img src="<%=img%>" class="fancy-images" alt="">
+                            </a>
+                          <% end %>
                         <% end %>
+                      </div>
+                      <% if hotel["images"].count > 1 %>
+                        <div class="fancyBoxImages">
+                            <% hotel["images"].each do |img| %>
+                              <a href="<%=img%>" class="fancy-images-<%= index %>" rel="fancy-images-<%= index %>">
+                                <img src="<%=img%>" class="fancy-images fancySmall" alt="">
+                              </a>
+                            <% end %>
+                        </div>
                       <% end %>
-                    </div>      
+                    </div>          
                     <div class="col-md-9">
                       <div class="row">
                         <div class="col-md-8">
@@ -391,7 +424,7 @@
                         </div>
                         <div class="col-md-4">
                           <a data-toggle="collapse" data-parent="#accordion" href="#star-desc<%= index %>">
-                            <span class="popularity">
+                            <span class="popularity <%= hotel["hotel"]["popularity"].present? && ((hotel["hotel"]["popularity"]/100.0)*10).round(1) < 5.0 ? 'yellow' : 'green' %>">
                               <%= ((hotel["hotel"]["popularity"]/100.0)*10).round(1) if hotel["hotel"]["popularity"].present? %> 
                             </span> 
                             <span class="pull-right popularity-desc">
@@ -544,17 +577,28 @@
               <div class="timeline-item">
                 <div class="timeline-body">
                   <div class="row">
-                    <div class="col-md-3 fancyBox">
-                      <% if hotel["images"].count == 1 %>
-                        <img src="<%= hotel["images"].first %>" class="hotel-img fancy-launch" style="height: 199px;width: 265px;">
-                      <% else %>  
-                        <% hotel["images"].each do |img| %>
-                          <a href="<%=img%>" class="fancy-images-<%= index %>" rel="fancy-images-<%= index %>">
-                            <img src="<%=img%>" class="fancy-images" alt="" style="height: 199px;width: 265px;" >
-                          </a>
+                    <div class="col-md-3">
+                      <div class="fancyBox">
+                        <% if hotel["images"].count == 1 %>
+                          <img src="<%= hotel["images"].first %>" class="hotel-img fancy-launch" style="height: 199px;width: 265px;">
+                        <% else %>  
+                          <% hotel["images"].each do |img| %>
+                            <a href="<%=img%>" class="fancy-images-<%= index %>" rel="fancy-images-<%= index %>">
+                              <img src="<%=img%>" class="fancy-images" alt="">
+                            </a>
+                          <% end %>
                         <% end %>
+                      </div>
+                      <% if hotel["images"].count > 1 %>
+                        <div class="fancyBoxImages">
+                            <% hotel["images"].each do |img| %>
+                              <a href="<%=img%>" class="fancy-images-<%= index %>" rel="fancy-images-<%= index %>">
+                                <img src="<%=img%>" class="fancy-images fancySmall" alt="">
+                              </a>
+                            <% end %>
+                        </div>
                       <% end %>
-                    </div>      
+                    </div>          
                     <div class="col-md-9">
                       <div class="row">
                         <div class="col-md-8">
@@ -565,7 +609,7 @@
                         </div>
                         <div class="col-md-4">
                           <a data-toggle="collapse" data-parent="#accordion" href="#guest<%= index %>">
-                            <span class="popularity">
+                            <span class="popularity <%= hotel["hotel"]["popularity"].present? && ((hotel["hotel"]["popularity"]/100.0)*10).round(1) < 5.0 ? 'yellow' : 'green' %>">
                               <%= ((hotel["hotel"]["popularity"]/100.0)*10).round(1) if hotel["hotel"]["popularity"].present? %> 
                             </span> 
                             <span class="pull-right popularity-desc">
@@ -718,17 +762,28 @@
               <div class="timeline-item">
                 <div class="timeline-body">
                   <div class="row">
-                    <div class="col-md-3 fancyBox">
-                      <% if hotel["images"].count == 1 %>
-                        <img src="<%= hotel["images"].first %>" class="hotel-img fancy-launch" style="height: 199px;width: 265px;">
-                      <% else %>  
-                        <% hotel["images"].each do |img| %>
-                          <a href="<%=img%>" class="fancy-images-<%= index %>" rel="fancy-images-<%= index %>">
-                            <img src="<%=img%>" class="fancy-images" alt="" style="height: 199px;width: 265px;" >
-                          </a>
+                    <div class="col-md-3">
+                      <div class="fancyBox">
+                        <% if hotel["images"].count == 1 %>
+                          <img src="<%= hotel["images"].first %>" class="hotel-img fancy-launch" style="height: 199px;width: 265px;">
+                        <% else %>  
+                          <% hotel["images"].each do |img| %>
+                            <a href="<%=img%>" class="fancy-images-<%= index %>" rel="fancy-images-<%= index %>">
+                              <img src="<%=img%>" class="fancy-images" alt="">
+                            </a>
+                          <% end %>
                         <% end %>
+                      </div>
+                      <% if hotel["images"].count > 1 %>
+                        <div class="fancyBoxImages">
+                            <% hotel["images"].each do |img| %>
+                              <a href="<%=img%>" class="fancy-images-<%= index %>" rel="fancy-images-<%= index %>">
+                                <img src="<%=img%>" class="fancy-images fancySmall" alt="">
+                              </a>
+                            <% end %>
+                        </div>
                       <% end %>
-                    </div>      
+                    </div>          
                     <div class="col-md-9">
                       <div class="row">
                         <div class="col-md-8">
@@ -739,7 +794,7 @@
                         </div>
                         <div class="col-md-4">
                           <a data-toggle="collapse" data-parent="#accordion" href="#low<%= index %>">
-                            <span class="popularity">
+                            <span class="popularity <%= hotel["hotel"]["popularity"].present? && ((hotel["hotel"]["popularity"]/100.0)*10).round(1) < 5.0 ? 'yellow' : 'green' %>">
                               <%= ((hotel["hotel"]["popularity"]/100.0)*10).round(1) if hotel["hotel"]["popularity"].present? %> 
                             </span> 
                             <span class="pull-right popularity-desc">
@@ -892,17 +947,28 @@
               <div class="timeline-item">
                 <div class="timeline-body">
                   <div class="row">
-                    <div class="col-md-3 fancyBox">
-                      <% if hotel["images"].count == 1 %>
-                        <img src="<%= hotel["images"].first %>" class="hotel-img fancy-launch" style="height: 199px;width: 265px;">
-                      <% else %>  
-                        <% hotel["images"].each do |img| %>
-                          <a href="<%=img%>" class="fancy-images-<%= index %>" rel="fancy-images-<%= index %>">
-                            <img src="<%=img%>" class="fancy-images" alt="" style="height: 199px;width: 265px;" >
-                          </a>
+                    <div class="col-md-3">
+                      <div class="fancyBox">
+                        <% if hotel["images"].count == 1 %>
+                          <img src="<%= hotel["images"].first %>" class="hotel-img fancy-launch" style="height: 199px;width: 265px;">
+                        <% else %>  
+                          <% hotel["images"].each do |img| %>
+                            <a href="<%=img%>" class="fancy-images-<%= index %>" rel="fancy-images-<%= index %>">
+                              <img src="<%=img%>" class="fancy-images" alt="">
+                            </a>
+                          <% end %>
                         <% end %>
+                      </div>
+                      <% if hotel["images"].count > 1 %>
+                        <div class="fancyBoxImages">
+                            <% hotel["images"].each do |img| %>
+                              <a href="<%=img%>" class="fancy-images-<%= index %>" rel="fancy-images-<%= index %>">
+                                <img src="<%=img%>" class="fancy-images fancySmall" alt="">
+                              </a>
+                            <% end %>
+                        </div>
                       <% end %>
-                    </div>      
+                    </div>          
                     <div class="col-md-9">
                       <div class="row">
                         <div class="col-md-8">
@@ -913,7 +979,7 @@
                         </div>
                         <div class="col-md-4">
                           <a data-toggle="collapse" data-parent="#accordion" href="#high<%= index %>">
-                            <span class="popularity">
+                            <span class="popularity <%= hotel["hotel"]["popularity"].present? && ((hotel["hotel"]["popularity"]/100.0)*10).round(1) < 5.0 ? 'yellow' : 'green' %>">
                               <%= ((hotel["hotel"]["popularity"]/100.0)*10).round(1) if hotel["hotel"]["popularity"].present? %> 
                             </span> 
                             <span class="pull-right popularity-desc">

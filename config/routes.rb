@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   get '/usa' => 'flights#usa'
   post '/watchdog' => 'flights#watchdog'
   get '/:city/:iata' => 'flights#grid'
+  get '/hotels' => 'welcome#index'
   root 'welcome#index'
 
   # Example of regular route:

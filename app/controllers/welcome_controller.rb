@@ -54,9 +54,9 @@ class WelcomeController < ApplicationController
     @results["results"].each do |r|
       h = Hash.new
       symbol = 'fa fa-building-o'
-      value = "<span class=\"#{symbol}\"></span>    "+r["display_name"] + " "
+      value = "<span class=\"#{symbol}\"></span>    "+r["display_name"]+"  "+" - "+"  "+r["localised_geo_type"]+" "
       h["id"] = r["individual_id"]
-      h["value"] = "#{r["display_name"]}"
+      h["value"] = "#{r["display_name"]} - #{r["localised_geo_type"]}"
       h["label"] = value
       data.push(h)
     end

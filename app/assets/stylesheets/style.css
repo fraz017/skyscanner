@@ -293,7 +293,24 @@ hr{
 .fancyBox{
   height: 195px;
   overflow: hidden;
+  width: 261px;
 }
+.yellow{
+  background-color: yellow !important;
+}
+.green{
+  background-color: green !important;
+}
+.fancySmall{
+  width: 50px !important;
+  height: 50px !important;
+}
+.fancyBoxImages{
+  height: 100px;
+  overflow: hidden;
+  margin-top: 5px;
+}
+
 
 @-webkit-keyframes spin {
   0%   { 

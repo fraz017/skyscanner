@@ -7,11 +7,11 @@
       <!-- Horizontal Form -->
       <div class="container">
         <ul class="nav nav-tabs">
-          <li class="active"><a data-toggle="tab" href="#flights-tab">Flights</a></li>
-          <li class="hotel-li"><a data-toggle="tab" href="#hotels-tab">Hotels</a></li>
+          <li class="<%= request.url.include?("hotels") ? '' : 'active' %>"><a data-toggle="tab" href="#flights-tab">Flights</a></li>
+          <li class="hotel-li <%= request.url.include?("hotels") ? 'active' : '' %>"><a data-toggle="tab" href="#hotels-tab">Hotels</a></li>
         </ul>
         <div class="tab-content">
-          <div id="flights-tab" class="tab-pane fade in active">
+          <div id="flights-tab" class="tab-pane fade in <%= request.url.include?("hotels") ? '' : 'active' %>">
             <div class="box box-info">
               <div class="box-header with-border">
                 <h3 class="box-title">Flight Search</h3>
@@ -137,7 +137,7 @@
               <!-- form start -->
             </div><!-- /.box -->
           </div>
-          <div id="hotels-tab" class="tab-pane fade in">
+          <div id="hotels-tab" class="tab-pane fade in <%= request.url.include?("hotels") ? 'active' : '' %>">
             <div class="box box-info">
               <div class="box-header with-border">
                 <h3 class="box-title">Hotel Search</h3>
