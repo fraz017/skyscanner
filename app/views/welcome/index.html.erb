@@ -9,6 +9,7 @@
         <ul class="nav nav-tabs">
           <li class="<%= request.url.include?("hotels") ? '' : 'active' %>"><a data-toggle="tab" href="#flights-tab">Flights</a></li>
           <li class="hotel-li <%= request.url.include?("hotels") ? 'active' : '' %>"><a data-toggle="tab" href="#hotels-tab">Hotels</a></li>
+          <li><a data-toggle="tab" href="#getaway-tab" id="hotel-getaway">Get Away</a></li>
         </ul>
         <div class="tab-content">
           <div id="flights-tab" class="tab-pane fade in <%= request.url.include?("hotels") ? '' : 'active' %>">
@@ -213,6 +214,9 @@
               </div>
             </div>    
           </div>
+          <div id="getaway-tab" class="tab-pane fade in">
+
+          </div>
         </div>
       </div>
     </div><!--/.col (right) -->
@@ -243,6 +247,7 @@
 </style>
 <script type="text/javascript">
   $(document).ready(function(){
+    
     $('input').iCheck({
       checkboxClass: 'icheckbox_minimal-blue',
       radioClass: 'iradio_minimal-blue',
@@ -372,7 +377,25 @@
       startDate: '0d',
       autoclose: true
     });
-  })
+      //   $("#hotel-getaway").click(function(){
+      //     $.ajax({
+      //       method: "GET",
+      //       url: "/en-US/hotels/results",
+      //       data: {
+      //         market: "<%= cookies[:countryCode] %>",
+      //         currency: "<%= cookies[:currency] %>",
+      //         locale: "en-US",
+      //         entityId: "27539908",
+      //         checkindate: "<%= date_of_next 'Friday' %>",
+      //         checkoutdate: "<%= date_of_next 'Sunday' %>",
+      //         guests: "2",
+      //         rooms: "1"
+      //       }
+      //       success:function(data){
+      //       }
+      //     });
+      //   });
+  });
   $.ajax({
     method: "GET",
     url: "/cities.js",
