@@ -310,6 +310,12 @@ hr{
   margin-top: 5px;
 }
 
+ul .parsley-errors-list{
+  margin-left: -40px !important;
+  list-style: none !important;
+  margin-top: 5px !important;
+}
+
 
 @-webkit-keyframes spin {
   0%   { 

@@ -29,7 +29,7 @@
                     <div class="timeline-body">
                       <div class="row">
                         <div class="col-md-2">
-                          <img src="<%= leg['carrierDetail'][0]['ImageUrl'] %>" />
+                          <img src="<%= leg['carrierDetail'][0]['ImageUrl'] %>" size="120x60" />
                         </div>
                         <div class="col-md-2">
                           <h2 data-toggle="popover" title="" data-content="<p><%= leg["Origin"]["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= leg["Origin"]["Name"] %></p>">
@@ -76,7 +76,7 @@
                         <div class="borderd"></div>
                         <div class="row">
                           <div class="col-md-2">
-                            <img src="<%= leg['carrierDetail'][0]['ImageUrl'] %>" />
+                            <img src="<%= leg['carrierDetail'][0]['ImageUrl'] %>" size="120x60" />
                           </div>
                           <div class="col-md-2">
                             <h2 data-toggle="popover" title="" data-content="<p><%= leg["Origin"]["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= leg["Origin"]["Name"] %></p>">
@@ -145,7 +145,7 @@
                     <div class="timeline-body">
                       <div class="row">
                         <div class="col-md-2">
-                          <img src="<%= leg['carrierDetail'][0]['ImageUrl'] %>" />
+                          <img src="<%= leg['carrierDetail'][0]['ImageUrl'] %>" size="120x60" />
                         </div>
                         <div class="col-md-2">
                           <h2 data-toggle="popover" title="" data-content="<p><%= leg["Origin"]["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= leg["Origin"]["Name"] %></p>">
@@ -192,7 +192,7 @@
                         <div class="borderd"></div>
                         <div class="row">
                           <div class="col-md-2">
-                            <img src="<%= leg['carrierDetail'][0]['ImageUrl'] %>" />
+                            <img src="<%= leg['carrierDetail'][0]['ImageUrl'] %>" size="120x60" />
                           </div>
                           <div class="col-md-2">
                             <h2 data-toggle="popover" title="" data-content="<p><%= leg["Origin"]["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= leg["Origin"]["Name"] %></p>">
@@ -257,7 +257,37 @@
       </div>
     </div><!-- /.col -->
   </div>
-  <script type="text/javascript">
+<%elsif @prices["Status"] == "UpdatesPending"%>
+  <ul class="timeline timeline-inverse">
+    <li>
+      <div class="timeline-item">
+        <h3 class="timeline-header">Please Wait</h3>
+        <div class="timeline-body">
+          Fetching results
+        </div>
+        <div class="timeline-footer">
+          <p></p>
+        </div>
+      </div>
+    </li>
+  </ul>
+<%else%>
+  <ul class="timeline timeline-inverse">
+    <li>
+      <div class="timeline-item">
+        <h3 class="timeline-header">Sorry, No results found</h3>
+        <div class="timeline-body">
+          Please try again later
+        </div>
+        <div class="timeline-footer">
+          <p></p>
+        </div>
+      </div>
+    </li>
+  </ul>  
+<%end%>
+
+<script type="text/javascript">
     var update = function(request){
       if (request == "UpdatesPending"){
         $.ajax({
@@ -323,19 +353,4 @@
       html: true     
     });    
   </script>
-<%else%>
-  <ul class="timeline timeline-inverse">
-    <li>
-      <div class="timeline-item">
-        <h3 class="timeline-header">Sorry, No results found</h3>
-        <div class="timeline-body">
-          Please try again with different locations
-        </div>
-        <div class="timeline-footer">
-          <p></p>
-        </div>
-      </div>
-    </li>
-  </ul>
-<%end%>
 
