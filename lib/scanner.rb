@@ -47,6 +47,7 @@ class Scanner
       else
         @prices = nil 
       end
+      index += 1
     end while !@results["hotels"].present? && index <= 5
     return @prices
   end

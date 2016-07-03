@@ -21,6 +21,7 @@
         <!-- Sidebar toggle button-->
       </nav>
     </header>
+    <%= render 'shared/flash_messages' if !flash.empty? %>
     <%= yield %>
     <footer class="main-footer">
       <div class="pull-right" style="margin-top: -17px;">

@@ -9,7 +9,7 @@ class NotifyUser
 
 
   def perform
-  	UserNotification.all.each do |user|
+  	UserNotification.where(active: true).each do |user|
   		if user.notification_type == "flight"
 		  	begin
 		  		object = eval(user.query)

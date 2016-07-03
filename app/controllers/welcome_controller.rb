@@ -62,4 +62,20 @@ class WelcomeController < ApplicationController
     end
     render :json => data 
   end
+
+  def unsubscribe
+    if params[:email].present?
+      user = UserNotification.find_by_email(params[:email])
+      if user.present?
+        user.active = false
+        user.save  
+        flash[:success] = "You have successfully unsubscribed!"
+      else
+        flash[:error] = "Invalid User!"
+      end
+    else
+      flash[:error] = "Invalid User!"
+    end
+    redirect_to root_url
+  end
 end

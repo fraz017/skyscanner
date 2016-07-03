@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   get '/africa' => 'flights#africa'
   get '/asia' => 'flights#asia'
   get '/usa' => 'flights#usa'
+  get '/unsubscribe' => 'welcome#unsubscribe'
   post '/watchdog' => 'flights#watchdog'
   get '/:city/:iata' => 'flights#grid'
   get '/hotels' => 'welcome#index'
