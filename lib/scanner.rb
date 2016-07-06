@@ -36,7 +36,7 @@ class Scanner
   def self.live_price_hotel(object)
     index = 0 
     begin
-      @results = HTTParty.get("http://partners.api.skyscanner.net/apiservices/hotels/liveprices/v2/#{object["market"]}/#{object["currency"]}/#{object["locale"]}/#{object["entityId"]}/#{object["checkindate"]}/#{object["checkoutdate"]}/#{object["guests"]}/#{object["rooms"]}?apiKey=#{ENV['API_KEY']}",
+      @results = HTTParty.get("http://partners.api.skyscanner.net/apiservices/hotels/liveprices/v2/#{object["market"]}/#{object["currency"]}/#{object["locale"]}/#{object["entityId"]}/#{object["checkindate"]}/#{object["checkoutdate"]}/#{object["guests"]}/#{object["rooms"]}?apiKey=#{ENV['API_KEY']}&pageSize=50",
         :headers => { 'Content-Type' => 'application/x-www-form-urlencoded', 'Accept' => 'application/json' }
       )
       if @results["hotels"].present?

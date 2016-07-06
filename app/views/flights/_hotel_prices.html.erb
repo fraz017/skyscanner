@@ -1156,7 +1156,7 @@
       <div class="modal-footer">
         <div class="row">
           <div class="col-md-6">
-            <a class="btn btn-primary" href="/" style="width: 100%">New search</a>
+            <a class="btn btn-primary" href="/hotels" style="width: 100%">New search</a>
           </div>
           <div class="col-md-6">
             <a class="btn btn-primary refresh-cp" href="javascript:void(0)" style="width: 100%">Refresh</a>
@@ -1167,9 +1167,7 @@
   </div>
 </div>
 <script type="text/javascript">
-  <% if params[:hotel].present? %>
-    setTimeout(function(){ $("#myModal").modal(); }, 600000 );
-  <% end %>
+  setTimeout(function(){ $("#myModal").modal(); }, 600000 );
 	var update = function(request){
     if (request == "PENDING" || request == "First"){
       $.ajax({
@@ -1209,7 +1207,18 @@
   $(document).ready(function($) {
     $(".fancy-images").click(function(){
       var get_id = $(this).parent().attr("class");
-      $("a."+get_id).fancybox();
+      $("a."+get_id).fancybox({
+          beforeShow: function () {
+          // apply new size to img
+          $(".fancybox-image").css({
+              "width": 800,
+              "height": 600
+          });
+          // set new values for parent container
+          this.width = 800;
+          this.height = 600;
+        }
+      });
     });
     $(".refresh-cp").click(function(){
       $("#myModal").modal("hide");

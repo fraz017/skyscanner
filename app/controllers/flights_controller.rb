@@ -166,6 +166,9 @@ class FlightsController < ApplicationController
     end
   end
 
+  def getaways
+  end
+
   private
   def set_hash
     legs = @prices["Legs"]

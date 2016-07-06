@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   get '/:market/flights/results' => 'flights#live_prices'
   get '/:lang/hotels/results' => 'flights#live_prices_hotels'
   # post '/live_prices_hotels' => 'flights#live_prices_hotels'
+  get '/getaways' => 'flights#getaways'
   get '/refresh' => 'flights#refresh'
   get '/refresh_hotels' => 'flights#refresh_hotels'
   get '/countries' => 'welcome#getCountries'
