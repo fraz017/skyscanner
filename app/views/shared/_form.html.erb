@@ -14,7 +14,6 @@
               <div class="box-header with-border">
                 <h3 class="box-title">Flight Search</h3>
                 <form action="/en-US/flights/results" method="get" class="form-horizontal" id="parsley">
-                  <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %> 
                   <input type="hidden" name="flight[country]" value="<%= cookies[:country] %>">
                   <input type="hidden" name="flight[currency]" value="<%= cookies[:currency] %>">
                   <input type="hidden" name="flight[locale]" value="en-US">
@@ -125,6 +124,7 @@
                       </div>
                     </div>
                   </div>
+                  <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %> 
                   <div class="col-sm-12">
                     <div class="box-footer">
                       <button type="submit" class="form-submit btn btn-info pull-right" tabindex="9">Search Flights</button>

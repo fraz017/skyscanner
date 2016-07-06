@@ -171,13 +171,21 @@ class FlightsController < ApplicationController
 
   private
   def set_hash
+    legs = Array.new
     legs = @prices["Legs"]
+    agents = Array.new
     agents = @prices["Agents"]
+    places = Array.new
     places = @prices["Places"]
+    segments = Array.new
     segments = @prices["Segments"]
+    itineraries = Array.new
     itineraries = @prices["Itineraries"]
+    carriers = Array.new
     carriers = @prices["Carriers"]
+    currencies = Array.new
     currencies = @prices["Currencies"]
+    stops = Array.new
     stops = @prices["Stops"]
     @cheap = Array.new
     itineraries.each do |it|

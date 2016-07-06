@@ -257,7 +257,7 @@
       </div>
     </div><!-- /.col -->
   </div>
-<%elsif @prices["Status"] == "UpdatesPending"%>
+<%else%>
   <ul class="timeline timeline-inverse">
     <li>
       <div class="timeline-item">
@@ -270,37 +270,26 @@
         </div>
       </div>
     </li>
-  </ul>
-<%else%>
-  <ul class="timeline timeline-inverse">
-    <li>
-      <div class="timeline-item">
-        <h3 class="timeline-header">Sorry, No results found</h3>
-        <div class="timeline-body">
-          Please try again later
-        </div>
-        <div class="timeline-footer">
-          <p></p>
-        </div>
-      </div>
-    </li>
   </ul>  
 <%end%>
 
 <script type="text/javascript">
-    var update = function(request){
-      if (request == "UpdatesPending"){
-        $.ajax({
-          type: 'GET',
-          url: '/refresh.js',
-          success: function () {
+    <%if @cheap.present? && @cheap.count > 0 %>
+      var request = <%= raw @prices["Status"].to_json %>
+    <%else%>
+      var request = "UpdatesPending"
+    <%end%>
+    if (request == "UpdatesPending"){
+      $.ajax({
+        type: 'GET',
+        url: '/refresh.js',
+        success: function () {
 
-          }
-        });
-      }
+        }
+      });
     }
     
-    update(<%= raw @prices["Status"].to_json %>)
+    // update(<%= raw @prices["Status"].to_json %>)
 
     NProgress.done();
     $('.cheap-prices').Paginationwithhashchange2({    
