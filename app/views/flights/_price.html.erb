@@ -254,9 +254,24 @@
         </div><!-- /.tab-content -->
       </div><!-- nav-tabs-custom -->
       <div class="watchdog-area">
+        <%= render "watchdog" %>
       </div>
     </div><!-- /.col -->
   </div>
+<%elsif @prices["Legs"].present? && @prices["Legs"].length == 0%>
+  <ul class="timeline timeline-inverse">
+    <li>
+      <div class="timeline-item">
+        <h3 class="timeline-header">Sorry</h3>
+        <div class="timeline-body">
+          No Results Found
+        </div>
+        <div class="timeline-footer">
+          <p></p>
+        </div>
+      </div>
+    </li>
+  </ul>  
 <%else%>
   <ul class="timeline timeline-inverse">
     <li>
@@ -270,76 +285,78 @@
         </div>
       </div>
     </li>
-  </ul>  
+  </ul>
 <%end%>
 
 <script type="text/javascript">
-    <%if @cheap.present? && @cheap.count > 0 %>
-      var request = <%= raw @prices["Status"].to_json %>
-    <%else%>
-      var request = "UpdatesPending"
-    <%end%>
-    if (request == "UpdatesPending"){
-      $.ajax({
-        type: 'GET',
-        url: '/refresh.js',
-        success: function () {
+  <%if @cheap.present? && @cheap.count > 0 %>
+    var request = <%= raw @prices["Status"].to_json %>
+  <%elsif @prices["Legs"].present?%>
+    var request = "UpdatesPending"
+  <%else%>
+    var request = "UpdatesPending"
+  <%end%>
+  if (request == "UpdatesPending"){
+    $.ajax({
+      type: 'GET',
+      url: '/refresh.js',
+      success: function () {
 
-        }
-      });
+      }
+    });
+  }
+  
+  // update(<%= raw @prices["Status"].to_json %>)
+
+  NProgress.done();
+  $('.cheap-prices').Paginationwithhashchange2({    
+    // default settings
+    nextSelector: '.next',
+    prevSelector: '.prev',
+    counterSelector: '.counter',
+    pagingSelector: '.cheap',
+    itemsPerPage: 5,
+    initialPage: 1
+  });
+
+  $('.duration-prices').Paginationwithhashchange2({    
+    // default settings
+    nextSelector: '.next',
+    prevSelector: '.prev',
+    counterSelector: '.counter',
+    pagingSelector: '.duration',
+    itemsPerPage: 5,
+    initialPage: 1
+  });
+
+  $(".cheap-pages").pagination({
+    items: <%= @cheap.present? ? @cheap.count : 0 %>,
+    itemsOnPage: 5,
+    cssStyle: 'light-theme',
+    hrefTextPrefix: '#',
+    onPageClick: function(pageNumber, event){
+      $(".cheap ."+pageNumber+" a").click();
     }
-    
-    // update(<%= raw @prices["Status"].to_json %>)
+  });
 
-    NProgress.done();
-    $('.cheap-prices').Paginationwithhashchange2({    
-      // default settings
-      nextSelector: '.next',
-      prevSelector: '.prev',
-      counterSelector: '.counter',
-      pagingSelector: '.cheap',
-      itemsPerPage: 5,
-      initialPage: 1
-    });
-
-    $('.duration-prices').Paginationwithhashchange2({    
-      // default settings
-      nextSelector: '.next',
-      prevSelector: '.prev',
-      counterSelector: '.counter',
-      pagingSelector: '.duration',
-      itemsPerPage: 5,
-      initialPage: 1
-    });
-
-    $(".cheap-pages").pagination({
-      items: <%= @cheap.present? ? @cheap.count : 0 %>,
-      itemsOnPage: 5,
-      cssStyle: 'light-theme',
-      hrefTextPrefix: '#',
-      onPageClick: function(pageNumber, event){
-        $(".cheap ."+pageNumber+" a").click();
-      }
-    });
-
-    $(".duration-pages").pagination({
-      items: <%= @duration.present? ? @duration.count : 0 %>,
-      itemsOnPage: 5,
-      cssStyle: 'light-theme',
-      hrefTextPrefix: '#',
-      onPageClick: function(pageNumber, event){
-        $(".duration ."+pageNumber+" a").click();
-      }
-    })
-    $("h2").popover({
-      trigger: 'hover', 
-      placement: 'bottom',
-      html: true     
-    });
-    $("span").popover({
-      trigger: 'hover', 
-      placement: 'bottom',
-      html: true     
-    });    
-  </script>
+  $(".duration-pages").pagination({
+    items: <%= @duration.present? ? @duration.count : 0 %>,
+    itemsOnPage: 5,
+    cssStyle: 'light-theme',
+    hrefTextPrefix: '#',
+    onPageClick: function(pageNumber, event){
+      $(".duration ."+pageNumber+" a").click();
+    }
+  })
+  $("h2").popover({
+    trigger: 'hover', 
+    placement: 'bottom',
+    html: true     
+  });
+  $("span").popover({
+    trigger: 'hover', 
+    placement: 'bottom',
+    html: true     
+  });    
+</script>
 

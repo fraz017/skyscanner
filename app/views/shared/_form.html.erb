@@ -19,18 +19,19 @@
                   <input type="hidden" name="flight[locale]" value="en-US">
                   <input type="hidden" name="flight[originplace]" class="flight_origin" value="<%=params[:flight].try(:[],:originplace)%>">
                   <input type="hidden" name="flight[destinationplace]" class="flight_dest" value="<%=params[:flight].try(:[],:destinationplace)%>">
+                  <input type="hidden" name="return" class="flight_return" value="<%=params[:return]%>">
                   <div class="col-md-12">
                     <div class="box-body">
                       <div class="form-group" style="width:10%;float: left;">
                         <label for="oneWay"> One Way </label>
                         <label>
-                          <input type="radio" name="return" id="oneWay" class="minimal" checked>
+                          <input type="radio" name="freturn" id="oneWay" class="minimal" <%= 'checked' if params[:return] != 'on' %>>
                         </label>
                       </div>
                       <div class="form-group" style="width:10%;float: left;">  
                         <label for="return"> Return </label>
                         <label>
-                          <input type="radio" name="return" id="return" class="minimal" <%= 'checked' if params[:return] == 'on' %>>
+                          <input type="radio" name="freturn" id="return" class="minimal" <%= 'checked' if params[:return] == 'on' %>>
                         </label>
                       </div>
                     </div>
@@ -129,8 +130,6 @@
                     </div>
                   </div>
                   <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %> 
-                  <input type="hidden" name="from_city" class="from_city" />
-                  <input type="hidden" name="to_city" class="to_city" />
                   <div class="col-sm-12">
                     <div class="box-footer">
                       <button type="submit" class="form-submit btn btn-info pull-right" tabindex="9">Search Flights</button>
@@ -240,11 +239,13 @@
       if (event.target.id == "return"){
         $(".original").show();
         $(".fake").hide();
+        $(".flight_return").val("on")
       }
       else{
         $(".original").hide();
         $(".original input[type='text']").val("");
         $(".fake").show();
+        $(".flight_return").val("off")
       }
     });
     <% if params[:return] == 'on' %>
@@ -286,7 +287,7 @@
       html: true,
       select: function (e, ui) {
         $(".flight_dest").val(ui.item.id)
-        // alert('You selected: ' + suggestion.value + ', ' + suggestion.data);
+        console.log(ui.item);
       },
       change: function(event,ui){
         $(this).val((ui.item ? ui.item.value : ""));
