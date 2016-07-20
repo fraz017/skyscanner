@@ -18,7 +18,7 @@
           <input type="text" class="form-control" name="user_notification[price]" data-parsley-error-message="Please a valid price!" placeholder="Price" data-parsley-required="true" tabindex="10">
         </div>
         <input type="hidden" name="user_notification[query]" value= "<%= { "entityId" => params[:entityId], "guests" => params[:guests], "rooms" => params[:rooms], "locale" => params[:locale], "market" => params[:market], "currency" => params[:currency]}.to_json %>" />
-        <input type="hidden" name="user_notification[type]" value="hotel" />
+        <input type="hidden" name="user_notification[notification_type]" value="hotel" />
         <div class="col-sm-3">
           <button type="submit" class="form-submit btn btn-info" tabindex="11">Add Watchdog</button>
         </div>

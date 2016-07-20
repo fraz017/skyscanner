@@ -1,0 +1,118 @@
+<div class="row">
+  <div class="col-md-12">
+    <!-- Custom Tabs -->
+    <div class="nav-tabs-custom">
+      <div class="tab-content">
+        <div class="tab-pane active">
+          <ul class="cheap-prices timeline timeline-inverse">
+            <% @cheap.each_with_index do |l, index| %>
+              <li>
+                <% leg = l["outbound"] %>
+                <div class="timeline-item">
+                  <h3 class="timeline-header"><%= leg["Stops"].count == 0 ? "Direct" : "Indirect" %></h3>
+                  <div class="timeline-body">
+                    <div class="row">
+                      <div class="col-md-2">
+                        <img src="<%= leg['carrierDetail'][0]['ImageUrl'] %>" size="120x60" />
+                      </div>
+                      <div class="col-md-2">
+                        <h2 data-toggle="popover" title="" data-content="<p><%= leg["Origin"]["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= leg["Origin"]["Name"] %></p>">
+                          <%= leg["Origin"]["Name"] %>
+                        </h2>
+                      </div>
+                      <%
+                        mins = leg["Duration"]
+                        hours = mins/60
+                        mins -= hours*60
+                      %>
+                      <div class="col-md-3 text-center">
+                        <h2>
+                          (<%= "#{hours}hrs #{mins}"%>)
+                        </h2>
+                        <br/>
+                        <p><%= leg["Stops"].count > 0 ? "#{leg["Stops"].count} Stop(s)" : "Direct" %>
+                          <% leg["StopPlaces"].each do |s| %>
+                            <span data-toggle="popover" title="" data-content="<p><%= s["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= s["Name"] %></p>"> <strong> <%=s["Code"] %> </strong></span>
+                          <%end%>
+                        </p>
+                      </div>
+                      <div class="col-md-2">
+                         <h2 data-content="<p><%= leg["Destination"]["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= leg["Destination"]["Name"] %></p>">
+                          <%= leg["Destination"]["Name"] %>
+                        </h2>
+                      </div>
+                      <div class="col-md-3 text-center <%= l["inbound"].present? ? 'middle' : '' %>">
+                        <p><a data-toggle="collapse" data-parent="#accordion" href="#<%= index %>"> <%= l["PriceInfo"].count %> deal(s) from </a></p>
+                        <h2>
+                          <%= leg["CurrencyCode"] %> <%= l["TotalPrice"] %>  
+                        </h2>
+                        <span> <%= leg["carrierDetail"][0]["Name"] %></span>
+                        <br/>  
+                      </div>
+                    </div>
+                    <%if l["inbound"].present?%>
+                      <% leg = l["inbound"] %>
+                      <div class="borderd"></div>
+                      <div class="row">
+                        <div class="col-md-2">
+                          <img src="<%= leg['carrierDetail'][0]['ImageUrl'] %>" size="120x60" />
+                        </div>
+                        <div class="col-md-2">
+                          <h2 data-toggle="popover" title="" data-content="<p><%= leg["Origin"]["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= leg["Origin"]["Name"] %></p>">
+                            <%= leg["Origin"]["Name"] %> 
+                          </h2>
+                        </div>
+                        <%
+                          mins = leg["Duration"]
+                          hours = mins/60
+                          mins -= hours*60
+                        %>
+                        <div class="col-md-3 text-center">
+                          <h2>
+                            (<%= "#{hours}hrs #{mins}"%>)
+                          </h2>
+                          <br/>
+                          <p><%= leg["Stops"].count > 0 ? "#{leg["Stops"].count} Stop(s)" : "Direct" %>
+                            <% leg["StopPlaces"].each do |s| %>
+                              <span data-toggle="popover" title="" data-content="<p><%= s["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= s["Name"] %></p>"> <strong> <%=s["Code"] %> </strong></span>
+                            <%end%>
+                          </p>
+                        </div>
+                        <div class="col-md-2">
+                           <h2 data-content="<p><%= leg["Destination"]["Type"] == 'Airport' ? '<span class="glyphicon glyphicon-plane"></span>' : '' %> <%= leg["Destination"]["Name"] %></p>">
+                            <%= leg["Destination"]["Name"] %>
+                          </h2>
+                        </div>
+                      </div>
+                    <%end%>
+                  </div>
+                  <div class="timeline-footer">
+                    <p>Operated By <%= leg["Operators"][0]["Name"] %></p>
+                  </div>
+                </div>
+                <div class="timeline-item panel-collapse collapse" id="<%= index %>">
+                  <div class="timeline-body">
+                    <%l["PriceInfo"].each do |pi|%>
+                      <div class="row">
+                        <div class="col-md-3">
+                          <h2><%= pi["AgentDetail"]["Name"] %></h2>
+                        </div>
+                        <div class="col-md-3">
+                          <h2><%= @cheap[0]["outbound"]["CurrencyCode"] %><%= pi["Price"] %></h2>
+                        </div>
+                        <div class="col-md-3">
+                          <h2><a href="<%= pi["DeeplinkUrl"] %>" class="btn btn-success" target="_blank" rel="nofollow">Select <span class="glyphicon glyphicon-chevron-right"></span></a></h2>
+                        </div>
+                      </div>
+                      <hr>
+                    <%end%>
+                  </div>
+                </div>
+              </li>
+            <%end%>
+          </ul>
+        </div><!-- /.tab-pane -->
+      </div><!-- /.tab-content -->
+    </div><!-- nav-tabs-custom -->
+  </div><!-- /.col -->
+</div>
