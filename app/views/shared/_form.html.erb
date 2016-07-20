@@ -17,8 +17,8 @@
                   <input type="hidden" name="flight[country]" value="<%= cookies[:country] %>">
                   <input type="hidden" name="flight[currency]" value="<%= cookies[:currency] %>">
                   <input type="hidden" name="flight[locale]" value="en-US">
-                  <input type="hidden" name="flight[originplace]" class="flight_origin">
-                  <input type="hidden" name="flight[destinationplace]" class="flight_dest">
+                  <input type="hidden" name="flight[originplace]" class="flight_origin" value="<%=params[:flight].try(:[],:originplace)%>">
+                  <input type="hidden" name="flight[destinationplace]" class="flight_dest" value="<%=params[:flight].try(:[],:destinationplace)%>">
                   <div class="col-md-12">
                     <div class="box-body">
                       <div class="form-group" style="width:10%;float: left;">
@@ -30,7 +30,7 @@
                       <div class="form-group" style="width:10%;float: left;">  
                         <label for="return"> Return </label>
                         <label>
-                          <input type="radio" name="return" id="return" class="minimal">
+                          <input type="radio" name="return" id="return" class="minimal" <%= 'checked' if params[:return] == 'on' %>>
                         </label>
                       </div>
                     </div>
@@ -40,18 +40,18 @@
                       <div class="form-group">
                         <label for="from" class="col-sm-2 control-label">From</label>
                         <div class="col-sm-10">
-                          <input type="text" class="form-control" id="from" data-parsley-error-message="Please insert from location!" placeholder="From" data-parsley-required="true" tabindex="1">
+                          <input type="text" class="form-control" id="from" data-parsley-error-message="Please insert from location!" placeholder="From" data-parsley-required="true" tabindex="1" value="<%=params[:flight].try(:[],:from)%>" name="flight[from]">
                         </div>
                       </div>
                       <div class="form-group">
                         <div class="input-daterange" id="datepicker" >
                           <label for="depart" class="col-sm-2 control-label">Depart</label>
                           <div class="col-sm-4 depart">
-                            <input type="text" class="form-control" id="depart" data-parsley-error-message="Please insert depart date!" data-parsley-required="true" name="flight[outbounddate]" placeholder="Depart" tabindex="3" readonly />
+                            <input type="text" class="form-control" id="depart" data-parsley-error-message="Please insert depart date!" data-parsley-required="true" name="flight[outbounddate]" placeholder="Depart" tabindex="3" readonly value="<%=params[:flight].try(:[],:outbounddate)%>" />
                           </div>
                           <label for="return" class="col-sm-2 control-label">Return</label>
                           <div class="col-sm-4 original">
-                            <input type="text" class="form-control" readonly name="flight[inbounddate]" tabindex="4" />
+                            <input type="text" class="form-control" readonly name="flight[inbounddate]" tabindex="4" value="<%=params[:flight].try(:[],:inbounddate)%>" />
                           </div>
                         </div>
                           <div class="col-sm-4 fake">
@@ -61,7 +61,7 @@
                       <div class="form-group">
                         <label for="children" class="col-sm-2 control-label">Children (under 12)</label>
                         <div class="col-sm-4">
-                          <select name="flight[children]" class="form-control" tabindex="7">
+                          <!-- <select name="flight[children]" class="form-control" tabindex="7">
                             <option value="0">0</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -71,11 +71,12 @@
                             <option value="6">6</option>
                             <option value="7">7</option>
                             <option value="8">8</option>
-                          </select>
+                          </select> -->
+                          <%= select_tag "flight[children]", options_for_select(0..8,params[:flight].try(:[],:children)), :class => "form-control", :tabindex => "7" %>
                         </div>
                         <label for="infants" class="col-sm-2 control-label">Infants (under 2)</label>
                         <div class="col-sm-4">
-                          <select name="flight[infants]" class="form-control" tabindex="8">
+                          <!-- <select name="flight[infants]" class="form-control" tabindex="8">
                             <option value="0">0</option>
                             <option value="1">1</option>
                             <option value="2">2</option>
@@ -85,7 +86,8 @@
                             <option value="6">6</option>
                             <option value="7">7</option>
                             <option value="8">8</option>
-                          </select>
+                          </select> -->
+                          <%= select_tag "flight[infants]", options_for_select(0..8,params[:flight].try(:[],:infants)), :class => "form-control", :tabindex => "8" %>
                         </div>
                       </div>
                     </div><!-- /.box-body -->
@@ -95,22 +97,23 @@
                       <div class="form-group">
                         <label for="destination" class="col-sm-2 control-label">To</label>
                         <div class="col-sm-10">
-                          <input type="text" class="form-control" data-parsley-error-message="Please insert your destination!" id="destination" placeholder="Destination" data-parsley-required="true" tabindex="2">
+                          <input type="text" class="form-control" data-parsley-error-message="Please insert your destination!" id="destination" placeholder="Destination" data-parsley-required="true" tabindex="2" value="<%=params[:flight].try(:[],:to)%>" name="flight[to]">
                         </div>
                       </div>
                       <div class="form-group">
                         <label for="cabin" class="col-sm-2 control-label">Cabin Class</label>
                         <div class="col-sm-4">
-                          <select name="flight[cabinclass]" class="form-control" tabindex="5">
+                          <!-- <select name="flight[cabinclass]" class="form-control" tabindex="5">
                             <option value="Economy">Economy</option>
                             <option value="PremiumEconomy">Premium Economy</option>
                             <option value="Business">Business Class</option>
                             <option value="First">First Class</option>
-                          </select>
+                          </select> -->
+                          <%= select_tag "flight[cabinclass]", options_for_select([ ["Economy","Economy"],["Premium Economy", "PremiumEconomy"],["Business Class","Business"],["First Class","First"]] ,params[:flight].try(:[],:cabinclass) ), :class => "form-control", :tabindex => "5" %>
                         </div>
                         <label for="adults" class="col-sm-2 control-label">Adults (12+ years)</label>
                         <div class="col-sm-4">
-                          <select name="flight[adults]" class="form-control" tabindex="6">
+                          <!-- <select name="flight[adults]" class="form-control" tabindex="6">
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
@@ -119,12 +122,15 @@
                             <option value="6">6</option>
                             <option value="7">7</option>
                             <option value="8">8</option>
-                          </select>
+                          </select> -->
+                          <%= select_tag "flight[adults]", options_for_select(1..8,params[:flight].try(:[],:adults)), :class => "form-control", :tabindex => "6" %>
                         </div>
                       </div>
                     </div>
                   </div>
                   <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %> 
+                  <input type="hidden" name="from_city" class="from_city" />
+                  <input type="hidden" name="to_city" class="to_city" />
                   <div class="col-sm-12">
                     <div class="box-footer">
                       <button type="submit" class="form-submit btn btn-info pull-right" tabindex="9">Search Flights</button>
@@ -143,13 +149,13 @@
                   <input type="hidden" name="market" value="<%= cookies[:countryCode] %>">
                   <input type="hidden" name="currency" value="<%= cookies[:currency] %>">
                   <input type="hidden" name="locale" value="en-US">
-                  <input type="hidden" name="entityId" class="hotel_dest">
+                  <input type="hidden" name="entityId" class="hotel_dest" value="<%=params[:entityId]%>">
                   <div class="col-md-5">
                     <div class="box-body">
                       <div class="form-group">
                         <label for="destination" class="col-sm-3 control-label">Destination</label>
                         <div class="col-sm-9">
-                          <input type="text" class="form-control" data-parsley-error-message="Please insert your destination!" id="hoteldestination" placeholder="Destination" data-parsley-required="true" tabindex="1">
+                          <input type="text" class="form-control" data-parsley-error-message="Please insert your destination!" id="hoteldestination" placeholder="Destination" data-parsley-required="true" tabindex="1" name="destination" value="<%=params[:destination]%>">
                         </div>
                       </div>
                     </div>
@@ -160,11 +166,11 @@
                         <div class="input-daterange" id="checkindate" >
                           <label for="checkin" class="col-sm-2 control-label">Check In</label>
                           <div class="col-sm-4">
-                            <input type="text" class="form-control" id="checkin" data-parsley-error-message="Please insert Check in date!" data-parsley-required="true" name="checkindate" placeholder="Check In" tabindex="3" />
+                            <input type="text" class="form-control" id="checkin" data-parsley-error-message="Please insert Check in date!" data-parsley-required="true" name="checkindate" placeholder="Check In" tabindex="2" value="<%=params[:checkindate]%>" />
                           </div>
                           <label for="checkout" class="col-sm-2 control-label">Check Out</label>
                           <div class="col-sm-4">
-                            <input type="text" class="form-control" name="checkoutdate" tabindex="4" data-parsley-error-message="Please insert Check out date!" data-parsley-required="true" placeholder="Check Out"/>
+                            <input type="text" class="form-control" name="checkoutdate" tabindex="3" data-parsley-error-message="Please insert Check out date!" data-parsley-required="true" placeholder="Check Out" value="<%= params[:checkoutdate] %>" />
                           </div>
                         </div>
                       </div>
@@ -175,7 +181,7 @@
                       <div class="form-group">
                         <label for="guests" class="col-sm-2 control-label">Guests</label>
                         <div class="col-sm-4">
-                          <select name="guests" class="form-control" tabindex="4">
+                          <!-- <select name="guests" class="form-control" tabindex="4">
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
@@ -186,17 +192,19 @@
                             <option value="8">8</option>
                             <option value="9">9</option>
                             <option value="10">10</option>
-                          </select>
+                          </select> -->
+                          <%= select_tag "guests", options_for_select(1..10,params[:guests]), :class => "form-control", :tabindex => "4" %>
                         </div>
                         <label for="rooms" class="col-sm-2 control-label">Rooms</label>
                         <div class="col-sm-4">
-                          <select name="rooms" class="form-control" tabindex="5">
+                          <!-- <select name="rooms" class="form-control" tabindex="5">
                             <option value="1">1</option>
                             <option value="2">2</option>
                             <option value="3">3</option>
                             <option value="4">4</option>
                             <option value="5">5</option>
-                          </select>
+                          </select> -->
+                          <%= select_tag "rooms", options_for_select(1..5,params[:rooms]), :class => "form-control", :tabindex => "5" %>
                         </div>
                       </div>
                     </div>
@@ -204,7 +212,7 @@
                   <%= tag(:input, :type => "hidden", :name => request_forgery_protection_token.to_s, :value => form_authenticity_token) %>
                   <div class="col-sm-12">
                     <div class="box-footer">
-                      <button type="submit" class="form-submit btn btn-info pull-right" tabindex="9">Search Hotels</button>
+                      <button type="submit" class="form-submit btn btn-info pull-right" tabindex="6">Search Hotels</button>
                     </div><!-- /.box-footer -->
                   </div>
                 </form>
@@ -239,9 +247,12 @@
         $(".fake").show();
       }
     });
-
-    $(".original").hide()
-    
+    <% if params[:return] == 'on' %>
+      $(".original").show();
+      $(".fake").hide();
+    <% else %>
+      $(".original").hide();
+    <% end %>
     $('#parsley').parsley();
     $('#parsley_hotel').parsley();
     NProgress.configure({ 
