@@ -51,23 +51,23 @@ class NotifyUser
 					date = Date.today
 					checkindate = date.strftime("%F")
 					checkoutdate = (date + 1.week).strftime("%F")
-					@object = JSON.parse(user.query)
+					@object = eval(user.query)
 					index = 0 
 			    begin
-			      @results = HTTParty.get("http://partners.api.skyscanner.net/apiservices/hotels/liveprices/v2/#{@object["market"]}/#{@object["currency"]}/#{@object["locale"]}/#{@object["entityId"]}/#{checkindate}/#{checkoutdate}/#{@object["guests"]}/#{@object["rooms"]}?apiKey=#{ENV['API_KEY']}",
+			      @results = HTTParty.get("http://partners.api.skyscanner.net/apiservices/hotels/liveprices/v2/#{@object[:market]}/#{@object[:currency]}/#{@object[:locale]}/#{@object[:entityId]}/#{checkindate}/#{checkoutdate}/#{@object[:guests]}/#{@object[:rooms]}?apiKey=#{ENV['API_KEY']}",
 			        :headers => { 'Content-Type' => 'application/x-www-form-urlencoded', 'Accept' => 'application/json' }
 			      )
 			    end while !@results["hotels_prices"].present? && index <= 5
 			    if @results["hotels_prices"].present?
-			    	results =  @results["hotels_prices"].select{|s| s["agent_prices"].map{|d| d["price_total"]}.first < user.price }
-			    	ids = results.map{|s| s["id"]}
-			    	@hotels = Array.new
-			    	ids.each_with_index do |i,index|
-			    		@hotels[index] = @results["hotels"].select{|s| s["hotel_id"] == i }.first
-			    	end
-			    	binding.pry
-			    	set_hotel_hash
-			    	Notifier.notify_user_hotels(user, @hotels, results).deliver_now
+			    	results =  @results["hotels_prices"].select{|s| s["agent_prices"].map{|d| d["price_total"]}.first }
+			    	ids = results.map{|s| s["id"]}.join(",")
+            response = HTTParty.get(ENV['HOTEL_POLLING_URL']+URI.decode(@results["urls"]["hotel_details"])+"&hotelIds="+ids)
+			    	if response.present?
+              @prices = JSON.parse(response)
+              set_hotel_hash
+              @currency = @object[:currency]
+  			    	Notifier.notify_user_hotels(user, @hotels, @currency).deliver_now
+            end
 			    end
 			  rescue
 			  	''
@@ -139,14 +139,13 @@ class NotifyUser
     @duration = @duration.sort_by { |k| k["Duration"]}
   end
 
-   def set_hotel_hash
+  def set_hotel_hash
     @hotels = Array.new 
     hotel_prices = @prices["hotels_prices"]
     hotels = @prices["hotels"]
     agents = @prices["agents"]
     amenities = @prices["amenities"]
     @hotel_ids = hotels.map{|s| s["hotel_id"]}.map{|s| s}.join(',')
-    cookies[:hotel_ids] = @hotel_ids
     @status = "First"
     hotel_prices.each do |hotel|
       amen = Array.new
